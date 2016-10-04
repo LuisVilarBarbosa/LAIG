@@ -27,7 +27,7 @@ MySceneGraph.prototype.onXMLReady=function()
 	var rootElement = this.reader.xmlDoc.documentElement;
 	
 	// Here should go the calls for different functions to parse the various blocks
-	var error = this.parseGlobalsExample(rootElement);
+	var error = this.parseDSXFile(rootElement);
 
 	if (error != null) {
 		this.onXMLError(error);
@@ -83,6 +83,39 @@ MySceneGraph.prototype.parseGlobalsExample= function(rootElement) {
 		console.log("Read list item id "+ e.id+" with value "+this.list[e.id]);
 	};
 
+};
+
+MySceneGraph.prototype.parseDSXFile = function (rootElement) {
+
+    this.background = [0, 0, 0, 1];
+
+    /* 'scene' tag loading */
+    var tempSceneElems = rootElement.getElementsByTagName('scene');
+    if (tempSceneElems == null || tempSceneElems.length != 1)
+        return "'scene' elements wrongly found.";
+    //console.log(tempSceneElems);
+    var root = tempSceneElems[0].attributes.getNamedItem("root");
+    var axis_length = tempSceneElems[0].attributes.getNamedItem("axis_length");
+    //console.log(root); console.log(axis_length);
+
+    /* 'perspective' tags loading */
+   /* var tempPerspectives = rootElement.getElementsByTagName('perspective');
+
+    if (tempPerspectives == null || tempPerspectives.length == 0) {
+        return "perspective element is missing.";
+    }
+
+     this.perspectives = [];
+    // iterate over every element
+     var nnodes = tempPerspectives.length;
+    for (var i = 0; i < nnodes; i++) {
+        var e = tempPerspectives[i];
+     
+        // process each element and store its information
+        this.perspectives[e.id] = e.attributes.getNamedItem("perspective");
+        console.log("Read view item id " + e.id + " with value " + this.perspectives[e.id]);
+    };*/
+    
 };
 	
 /*
