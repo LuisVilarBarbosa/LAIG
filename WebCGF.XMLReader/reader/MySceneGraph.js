@@ -85,7 +85,7 @@ MySceneGraph.prototype.parseGlobalsExample = function (rootElement) {
 
 MySceneGraph.prototype.parseDSXFile = function (rootElement) {
 
-    /* 'scene' tag loading */
+    /* 'scene' tags loading */
     var tempSceneElems = rootElement.getElementsByTagName('scene');
     if (tempSceneElems == null || tempSceneElems.length != 1)
         return "'scene' tag misbehavior.";
@@ -249,6 +249,58 @@ MySceneGraph.prototype.parseDSXFile = function (rootElement) {
     var nnodes = tempMaterialElems.length;
     for (var i = 0; i < nnodes; i++) {
         var id = tempMaterialElems[i].attributes.getNamedItem('id');
+        var emission_r = tempMaterialElems[i].children[0].attributes.getNamedItem('r').nodeValue;
+        var emission_g = tempMaterialElems[i].children[0].attributes.getNamedItem('g').nodeValue;
+        var emission_b = tempMaterialElems[i].children[0].attributes.getNamedItem('b').nodeValue;
+        var emission_a = tempMaterialElems[i].children[0].attributes.getNamedItem('a').nodeValue;
+        var ambient_r = tempMaterialElems[i].children[1].attributes.getNamedItem('r').nodeValue;
+        var ambient_g = tempMaterialElems[i].children[1].attributes.getNamedItem('g').nodeValue;
+        var ambient_b = tempMaterialElems[i].children[1].attributes.getNamedItem('b').nodeValue;
+        var ambient_a = tempMaterialElems[i].children[1].attributes.getNamedItem('a').nodeValue;
+        var diffuse_r = tempMaterialElems[i].children[2].attributes.getNamedItem('r').nodeValue;
+        var diffuse_g = tempMaterialElems[i].children[2].attributes.getNamedItem('g').nodeValue;
+        var diffuse_b = tempMaterialElems[i].children[2].attributes.getNamedItem('b').nodeValue;
+        var diffuse_a = tempMaterialElems[i].children[2].attributes.getNamedItem('a').nodeValue;
+        var specular_r = tempMaterialElems[i].children[3].attributes.getNamedItem('r').nodeValue;
+        var specular_g = tempMaterialElems[i].children[3].attributes.getNamedItem('g').nodeValue;
+        var specular_b = tempMaterialElems[i].children[3].attributes.getNamedItem('b').nodeValue;
+        var specular_a = tempMaterialElems[i].children[3].attributes.getNamedItem('a').nodeValue;
+        var shininess_r = tempMaterialElems[i].children[4].attributes.getNamedItem('r').nodeValue;
+        var shininess_g = tempMaterialElems[i].children[4].attributes.getNamedItem('g').nodeValue;
+        var shininess_b = tempMaterialElems[i].children[4].attributes.getNamedItem('b').nodeValue;
+        var shininess_a = tempMaterialElems[i].children[4].attributes.getNamedItem('a').nodeValue;
+
+        this.scene.appearance[i] = new CGFappearance(this.scene); // correct: sobrepostion of material over texture
+        this.scene.appearance[i].setEmission(emission_r, emission_g, emission_b, emission_a);
+        this.scene.appearance[i].setAmbient(ambient_r, ambient_g, ambient_b, ambient_a);
+        this.scene.appearance[i].setDiffuse(diffuse_r, diffuse_g, diffuse_b, diffuse_a);
+        this.scene.appearance[i].setSpecular(specular_r, specular_g, specular_b, specular_a);
+        this.scene.appearance[i].setShininess(shininess_r, shininess_g, shininess_b, shininess_a);
+    }
+
+    /* 'transformations' tags loading */
+    var tempTransformationsElems = rootElement.getElementsByTagName('transformations')
+    if (tempTransformationsElems == null || tempTransformationsElems.length != 1)
+        return "'transformations' tag misbehavior.";
+
+    /* 'transformation' tags loading */
+    var tempTransformationElems = tempTransformationsElems[0].getElementsByTagName('transformation');
+    if (tempTransformationElems == null || tempTransformationElems.length == 0)
+        return "'transformation' element is missing.";
+    var nnodes = tempTransformationElems.length;
+    for (var i = 0; i < nnodes; i++) {
+        var id = tempTransformationElems[i].attributes.getNamedItem('id');
+        var translate_x = tempTransformationElems[i].children[0].attributes.getNamedItem('x').nodeValue;
+        var translate_y = tempTransformationElems[i].children[0].attributes.getNamedItem('y').nodeValue;
+        var translate_z = tempTransformationElems[i].children[0].attributes.getNamedItem('z').nodeValue;
+        var rotate_x = tempTransformationElems[i].children[1].attributes.getNamedItem('x').nodeValue;
+        var rotate_y = tempTransformationElems[i].children[1].attributes.getNamedItem('y').nodeValue;
+        var rotate_z = tempTransformationElems[i].children[1].attributes.getNamedItem('z').nodeValue;
+        var scale_x = tempTransformationElems[i].children[2].attributes.getNamedItem('x').nodeValue;
+        var scale_y = tempTransformationElems[i].children[2].attributes.getNamedItem('y').nodeValue;
+        var scale_z = tempTransformationElems[i].children[2].attributes.getNamedItem('z').nodeValue;
+
+        // store transformation matrix
     }
 };
 
