@@ -95,15 +95,15 @@ MySceneGraph.prototype.parseDSXFile = function (rootElement) {
     //console.log(root); console.log(axis_length);
 
     /* 'perspectives' tags loading */
-    var tempPerspectives = rootElement.getElementsByTagName('perspective');
-    if (tempPerspectives == null || tempPerspectives.length == 0) {
+    var tempPerspectiveElems = rootElement.getElementsByTagName('perspective');
+    if (tempPerspectiveElems == null || tempPerspectiveElems.length == 0) {
         return "'perspective' element is missing.";
     }
     this.perspectives = [];
     // iterate over every element
-    var nnodes = tempPerspectives.length;
+    var nnodes = tempPerspectiveElems.length;
     for (var i = 0; i < nnodes; i++) {
-        var e = tempPerspectives[i];
+        var e = tempPerspectiveElems[i];
 
         // process each element and store its information
         //this.perspectives[e.id] = e.attributes.getNamedItem('perspective');
@@ -111,52 +111,52 @@ MySceneGraph.prototype.parseDSXFile = function (rootElement) {
     };
 
     /* 'illumination' tags loading */
-    var tempIllumination = rootElement.getElementsByTagName('illumination');
-    if (tempIllumination == null || tempIllumination.length != 1)
+    var tempIlluminationElems = rootElement.getElementsByTagName('illumination');
+    if (tempIlluminationElems == null || tempIlluminationElems.length != 1)
         return "'illumination' element is missing.";
-    console.log(tempIllumination);
-    var doublesided = this.reader.getBoolean(tempIllumination[0], 'doublesided', true);
-    var local = this.reader.getBoolean(tempIllumination[0], 'local', true);
+    console.log(tempIlluminationElems);
+    var doublesided = this.reader.getBoolean(tempIlluminationElems[0], 'doublesided', true);
+    var local = this.reader.getBoolean(tempIlluminationElems[0], 'local', true);
     //console.log(doublesided + " " + local);
-    var ambient_r = tempIllumination[0].children[0].attributes.getNamedItem('r').nodeValue;
-    var ambient_g = tempIllumination[0].children[0].attributes.getNamedItem('g').nodeValue;
-    var ambient_b = tempIllumination[0].children[0].attributes.getNamedItem('b').nodeValue;
-    var ambient_a = tempIllumination[0].children[0].attributes.getNamedItem('a').nodeValue;
+    var ambient_r = tempIlluminationElems[0].children[0].attributes.getNamedItem('r').nodeValue;
+    var ambient_g = tempIlluminationElems[0].children[0].attributes.getNamedItem('g').nodeValue;
+    var ambient_b = tempIlluminationElems[0].children[0].attributes.getNamedItem('b').nodeValue;
+    var ambient_a = tempIlluminationElems[0].children[0].attributes.getNamedItem('a').nodeValue;
     this.scene.setAmbient(ambient_r, ambient_g, ambient_b, ambient_a);
-    var background_r = tempIllumination[0].children[0].attributes.getNamedItem('r').nodeValue;
-    var background_g = tempIllumination[0].children[0].attributes.getNamedItem('g').nodeValue;
-    var background_b = tempIllumination[0].children[0].attributes.getNamedItem('b').nodeValue;
-    var background_a = tempIllumination[0].children[0].attributes.getNamedItem('a').nodeValue;
+    var background_r = tempIlluminationElems[0].children[0].attributes.getNamedItem('r').nodeValue;
+    var background_g = tempIlluminationElems[0].children[0].attributes.getNamedItem('g').nodeValue;
+    var background_b = tempIlluminationElems[0].children[0].attributes.getNamedItem('b').nodeValue;
+    var background_a = tempIlluminationElems[0].children[0].attributes.getNamedItem('a').nodeValue;
     this.background = [background_r, background_g, background_b, background_a];
     //console.log(this.ambient + " " + this.background);
 
     /* ''lights' tags loading */
-    var tempLights = rootElement.getElementsByTagName('lights');
-    if (tempLights.length != 1)
+    var tempLightsElems = rootElement.getElementsByTagName('lights');
+    if (tempLightsElems.length != 1)
         return "'lights' tag misbehavior.";
 
     /* 'omni' tags loading */
-    var tempOmni = tempLights[0].getElementsByTagName('omni');
-    var nnones = tempOmni.length;
+    var tempOmniElems = tempLightsElems[0].getElementsByTagName('omni');
+    var nnones = tempOmniElems.length;
     for (var i = 0; i < nnones; i++) {
-        var id = tempOmni[i].attributes.getNamedItem('id');
-        var enabled = this.reader.getBoolean(tempOmni[i], 'enabled', true);
-        var location_x = tempOmni[i].children[0].attributes.getNamedItem('x').nodeValue;
-        var location_y = tempOmni[i].children[0].attributes.getNamedItem('y').nodeValue;
-        var location_z = tempOmni[i].children[0].attributes.getNamedItem('z').nodeValue;
-        var location_w = tempOmni[i].children[0].attributes.getNamedItem('w').nodeValue;
-        var ambient_r = tempOmni[i].children[1].attributes.getNamedItem('r').nodeValue;
-        var ambient_g = tempOmni[i].children[1].attributes.getNamedItem('g').nodeValue;
-        var ambient_b = tempOmni[i].children[1].attributes.getNamedItem('b').nodeValue;
-        var ambient_a = tempOmni[i].children[1].attributes.getNamedItem('a').nodeValue;
-        var diffuse_r = tempOmni[i].children[2].attributes.getNamedItem('r').nodeValue;
-        var diffuse_g = tempOmni[i].children[2].attributes.getNamedItem('g').nodeValue;
-        var diffuse_b = tempOmni[i].children[2].attributes.getNamedItem('b').nodeValue;
-        var diffuse_a = tempOmni[i].children[2].attributes.getNamedItem('a').nodeValue;
-        var specular_r = tempOmni[i].children[3].attributes.getNamedItem('r').nodeValue;
-        var specular_g = tempOmni[i].children[3].attributes.getNamedItem('g').nodeValue;
-        var specular_b = tempOmni[i].children[3].attributes.getNamedItem('b').nodeValue;
-        var specular_a = tempOmni[i].children[3].attributes.getNamedItem('a').nodeValue;
+        var id = tempOmniElems[i].attributes.getNamedItem('id');
+        var enabled = this.reader.getBoolean(tempOmniElems[i], 'enabled', true);
+        var location_x = tempOmniElems[i].children[0].attributes.getNamedItem('x').nodeValue;
+        var location_y = tempOmniElems[i].children[0].attributes.getNamedItem('y').nodeValue;
+        var location_z = tempOmniElems[i].children[0].attributes.getNamedItem('z').nodeValue;
+        var location_w = tempOmniElems[i].children[0].attributes.getNamedItem('w').nodeValue;
+        var ambient_r = tempOmniElems[i].children[1].attributes.getNamedItem('r').nodeValue;
+        var ambient_g = tempOmniElems[i].children[1].attributes.getNamedItem('g').nodeValue;
+        var ambient_b = tempOmniElems[i].children[1].attributes.getNamedItem('b').nodeValue;
+        var ambient_a = tempOmniElems[i].children[1].attributes.getNamedItem('a').nodeValue;
+        var diffuse_r = tempOmniElems[i].children[2].attributes.getNamedItem('r').nodeValue;
+        var diffuse_g = tempOmniElems[i].children[2].attributes.getNamedItem('g').nodeValue;
+        var diffuse_b = tempOmniElems[i].children[2].attributes.getNamedItem('b').nodeValue;
+        var diffuse_a = tempOmniElems[i].children[2].attributes.getNamedItem('a').nodeValue;
+        var specular_r = tempOmniElems[i].children[3].attributes.getNamedItem('r').nodeValue;
+        var specular_g = tempOmniElems[i].children[3].attributes.getNamedItem('g').nodeValue;
+        var specular_b = tempOmniElems[i].children[3].attributes.getNamedItem('b').nodeValue;
+        var specular_a = tempOmniElems[i].children[3].attributes.getNamedItem('a').nodeValue;
 
         this.scene.lights[i] = new CGFlight(this.scene, id);
         if(enabled)
@@ -170,29 +170,29 @@ MySceneGraph.prototype.parseDSXFile = function (rootElement) {
     }
 
     /* 'spot' tags loading */
-    var tempSpot = tempLights[0].getElementsByTagName('spot');
-    var nnones = tempSpot.length;
+    var tempSpotElems = tempLightsElems[0].getElementsByTagName('spot');
+    var nnones = tempSpotElems.length;
     for (var i = 0; i < nnones; i++) {
-        var id = tempSpot[i].attributes.getNamedItem('id');
-        var enabled = this.reader.getBoolean(tempSpot[i], 'enabled', true);
-        var target_x = tempSpot[i].children[0].attributes.getNamedItem('x').nodeValue;
-        var target_y = tempSpot[i].children[0].attributes.getNamedItem('y').nodeValue;
-        var target_z = tempSpot[i].children[0].attributes.getNamedItem('z').nodeValue;
-        var location_x = tempSpot[i].children[1].attributes.getNamedItem('x').nodeValue;
-        var location_y = tempSpot[i].children[1].attributes.getNamedItem('y').nodeValue;
-        var location_z = tempSpot[i].children[1].attributes.getNamedItem('z').nodeValue;
-        var ambient_r = tempSpot[i].children[2].attributes.getNamedItem('r').nodeValue;
-        var ambient_g = tempSpot[i].children[2].attributes.getNamedItem('g').nodeValue;
-        var ambient_b = tempSpot[i].children[2].attributes.getNamedItem('b').nodeValue;
-        var ambient_a = tempSpot[i].children[2].attributes.getNamedItem('a').nodeValue;
-        var diffuse_r = tempSpot[i].children[3].attributes.getNamedItem('r').nodeValue;
-        var diffuse_g = tempSpot[i].children[3].attributes.getNamedItem('g').nodeValue;
-        var diffuse_b = tempSpot[i].children[3].attributes.getNamedItem('b').nodeValue;
-        var diffuse_a = tempSpot[i].children[3].attributes.getNamedItem('a').nodeValue;
-        var specular_r = tempSpot[i].children[4].attributes.getNamedItem('r').nodeValue;
-        var specular_g = tempSpot[i].children[4].attributes.getNamedItem('g').nodeValue;
-        var specular_b = tempSpot[i].children[4].attributes.getNamedItem('b').nodeValue;
-        var specular_a = tempSpot[i].children[4].attributes.getNamedItem('a').nodeValue;
+        var id = tempSpotElems[i].attributes.getNamedItem('id');
+        var enabled = this.reader.getBoolean(tempSpotElems[i], 'enabled', true);
+        var target_x = tempSpotElems[i].children[0].attributes.getNamedItem('x').nodeValue;
+        var target_y = tempSpotElems[i].children[0].attributes.getNamedItem('y').nodeValue;
+        var target_z = tempSpotElems[i].children[0].attributes.getNamedItem('z').nodeValue;
+        var location_x = tempSpotElems[i].children[1].attributes.getNamedItem('x').nodeValue;
+        var location_y = tempSpotElems[i].children[1].attributes.getNamedItem('y').nodeValue;
+        var location_z = tempSpotElems[i].children[1].attributes.getNamedItem('z').nodeValue;
+        var ambient_r = tempSpotElems[i].children[2].attributes.getNamedItem('r').nodeValue;
+        var ambient_g = tempSpotElems[i].children[2].attributes.getNamedItem('g').nodeValue;
+        var ambient_b = tempSpotElems[i].children[2].attributes.getNamedItem('b').nodeValue;
+        var ambient_a = tempSpotElems[i].children[2].attributes.getNamedItem('a').nodeValue;
+        var diffuse_r = tempSpotElems[i].children[3].attributes.getNamedItem('r').nodeValue;
+        var diffuse_g = tempSpotElems[i].children[3].attributes.getNamedItem('g').nodeValue;
+        var diffuse_b = tempSpotElems[i].children[3].attributes.getNamedItem('b').nodeValue;
+        var diffuse_a = tempSpotElems[i].children[3].attributes.getNamedItem('a').nodeValue;
+        var specular_r = tempSpotElems[i].children[4].attributes.getNamedItem('r').nodeValue;
+        var specular_g = tempSpotElems[i].children[4].attributes.getNamedItem('g').nodeValue;
+        var specular_b = tempSpotElems[i].children[4].attributes.getNamedItem('b').nodeValue;
+        var specular_a = tempSpotElems[i].children[4].attributes.getNamedItem('a').nodeValue;
 
         this.scene.lights[i] = new CGFlight(this.scene, id);
         if (enabled)
@@ -207,18 +207,18 @@ MySceneGraph.prototype.parseDSXFile = function (rootElement) {
     }
 
     /* 'textures' tags loading */
-    var tempTexturess = rootElement.getElementsByTagName('textures')
-    if (tempTexturess.length != 1)
+    var tempTexturesElems = rootElement.getElementsByTagName('textures')
+    if (tempTexturesElems.length != 1)
         return "'textures' tag misbehavior.";
 
     /* 'texture' tags loading */
-    var tempTextures = tempTexturess[0].getElementsByTagName('texture');
-    var nnones = tempTextures.length;
+    var tempTextureElems = tempTexturesElems[0].getElementsByTagName('texture');
+    var nnones = tempTextureElems.length;
     for (var i = 0; i < nnones; i++) {
-        var id = tempTextures[i].attributes.getNamedItem('id'); // not saved
-        var file = tempTextures[i].attributes.getNamedItem('file');
-        var length_s = tempTextures[i].attributes.getNamedItem('length_s');
-        var length_t = tempTextures[i].attributes.getNamedItem('length_t');
+        var id = tempTextureElems[i].attributes.getNamedItem('id'); // not saved
+        var file = tempTextureElems[i].attributes.getNamedItem('file');
+        var length_s = tempTextureElems[i].attributes.getNamedItem('length_s');
+        var length_t = tempTextureElems[i].attributes.getNamedItem('length_t');
 
         this.scene.appearance[i] = new CGFappearance(this.scene);
         this.scene.appearance[i].loadTexture(file);
@@ -226,15 +226,15 @@ MySceneGraph.prototype.parseDSXFile = function (rootElement) {
     }
 
     /* 'materials' tags loading */
-    var tempMaterialss = rootElement.getElementsByTagName('materials')
-    if (tempMaterialss.length != 1)
-        return "'textures' tag misbehavior.";
+    var tempMaterialsElems = rootElement.getElementsByTagName('materials')
+    if (tempMaterialsElems.length != 1)
+        return "'materials' tag misbehavior.";
 
     /* 'material' tags loading */
-    var tempMaterials = tempMaterialss[0].getElementsByTagName('material');
-    var nnones = tempMaterials.length;
+    var tempMaterialElems = tempMaterialsElems[0].getElementsByTagName('material');
+    var nnones = tempMaterialElems.length;
     for (var i = 0; i < nnones; i++) {
-        var id = tempMaterials[i].attributes.getNamedItem('id');
+        var id = tempMaterialElems[i].attributes.getNamedItem('id');
     }
 };
 
