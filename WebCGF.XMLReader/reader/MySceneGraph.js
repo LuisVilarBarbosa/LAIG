@@ -88,11 +88,17 @@ MySceneGraph.prototype.parseDSXFile = function (rootElement) {
     /* 'scene' tag loading */
     var tempSceneElems = rootElement.getElementsByTagName('scene');
     if (tempSceneElems == null || tempSceneElems.length != 1)
-        return "'scene' elements wrongly found.";
+        return "'scene' tag misbehavior.";
     //console.log(tempSceneElems);
     var root = tempSceneElems[0].attributes.getNamedItem("root");
     var axis_length = tempSceneElems[0].attributes.getNamedItem("axis_length");
     //console.log(root); console.log(axis_length);
+
+    /* 'views' tags loading */
+    var tempViewsElems = rootElement.getElementsByTagName('views');
+    if (tempViewsElems == null || tempViewsElems.length != 1) {
+        return "'views' tag misbehavior.";
+    }
 
     /* 'perspectives' tags loading */
     var tempPerspectiveElems = rootElement.getElementsByTagName('perspective');
@@ -113,7 +119,7 @@ MySceneGraph.prototype.parseDSXFile = function (rootElement) {
     /* 'illumination' tags loading */
     var tempIlluminationElems = rootElement.getElementsByTagName('illumination');
     if (tempIlluminationElems == null || tempIlluminationElems.length != 1)
-        return "'illumination' element is missing.";
+        return "'illumination' tag misbehavior.";
     console.log(tempIlluminationElems);
     var doublesided = this.reader.getBoolean(tempIlluminationElems[0], 'doublesided', true);
     var local = this.reader.getBoolean(tempIlluminationElems[0], 'local', true);
@@ -130,15 +136,17 @@ MySceneGraph.prototype.parseDSXFile = function (rootElement) {
     this.background = [background_r, background_g, background_b, background_a];
     //console.log(this.ambient + " " + this.background);
 
-    /* ''lights' tags loading */
+    /* 'lights' tags loading */
     var tempLightsElems = rootElement.getElementsByTagName('lights');
-    if (tempLightsElems.length != 1)
+    if (tempLightsElems == null || tempLightsElems.length != 1)
         return "'lights' tag misbehavior.";
 
     /* 'omni' tags loading */
     var tempOmniElems = tempLightsElems[0].getElementsByTagName('omni');
-    var nnones = tempOmniElems.length;
-    for (var i = 0; i < nnones; i++) {
+    /*if (tempOmniElems == null || tempOmniElems.length == 0)
+        return "'omni' element is missing.";*/
+    var nnodes = tempOmniElems.length;
+    for (var i = 0; i < nnodes; i++) {
         var id = tempOmniElems[i].attributes.getNamedItem('id');
         var enabled = this.reader.getBoolean(tempOmniElems[i], 'enabled', true);
         var location_x = tempOmniElems[i].children[0].attributes.getNamedItem('x').nodeValue;
@@ -171,8 +179,10 @@ MySceneGraph.prototype.parseDSXFile = function (rootElement) {
 
     /* 'spot' tags loading */
     var tempSpotElems = tempLightsElems[0].getElementsByTagName('spot');
-    var nnones = tempSpotElems.length;
-    for (var i = 0; i < nnones; i++) {
+    /*if (tempSpotElems == null || tempSpotElems.length == 0)
+        return "'spot' element is missing.";*/
+    var nnodes = tempSpotElems.length;
+    for (var i = 0; i < nnodes; i++) {
         var id = tempSpotElems[i].attributes.getNamedItem('id');
         var enabled = this.reader.getBoolean(tempSpotElems[i], 'enabled', true);
         var target_x = tempSpotElems[i].children[0].attributes.getNamedItem('x').nodeValue;
@@ -208,13 +218,15 @@ MySceneGraph.prototype.parseDSXFile = function (rootElement) {
 
     /* 'textures' tags loading */
     var tempTexturesElems = rootElement.getElementsByTagName('textures')
-    if (tempTexturesElems.length != 1)
+    if (tempTexturesElems == null || tempTexturesElems.length != 1)
         return "'textures' tag misbehavior.";
 
     /* 'texture' tags loading */
     var tempTextureElems = tempTexturesElems[0].getElementsByTagName('texture');
-    var nnones = tempTextureElems.length;
-    for (var i = 0; i < nnones; i++) {
+    if (tempTextureElems == null || tempTextureElems.length == 0)
+        return "'texture' element is missing.";
+    var nnodes = tempTextureElems.length;
+    for (var i = 0; i < nnodes; i++) {
         var id = tempTextureElems[i].attributes.getNamedItem('id'); // not saved
         var file = tempTextureElems[i].attributes.getNamedItem('file');
         var length_s = tempTextureElems[i].attributes.getNamedItem('length_s');
@@ -227,13 +239,15 @@ MySceneGraph.prototype.parseDSXFile = function (rootElement) {
 
     /* 'materials' tags loading */
     var tempMaterialsElems = rootElement.getElementsByTagName('materials')
-    if (tempMaterialsElems.length != 1)
+    if (tempMaterialsElems == null || tempMaterialsElems.length != 1)
         return "'materials' tag misbehavior.";
 
     /* 'material' tags loading */
     var tempMaterialElems = tempMaterialsElems[0].getElementsByTagName('material');
-    var nnones = tempMaterialElems.length;
-    for (var i = 0; i < nnones; i++) {
+    if (tempMaterialElems == null || tempMaterialElems.length == 0)
+        return "'material' element is missing.";
+    var nnodes = tempMaterialElems.length;
+    for (var i = 0; i < nnodes; i++) {
         var id = tempMaterialElems[i].attributes.getNamedItem('id');
     }
 };
