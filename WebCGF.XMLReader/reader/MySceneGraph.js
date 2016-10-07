@@ -99,6 +99,7 @@ MySceneGraph.prototype.parseDSXFile = function (rootElement) {
     if (tempViewsElems == null || tempViewsElems.length != 1) {
         return "'views' tag misbehavior.";
     }
+    var default_view = tempViewsElems[0].attributes.getNamedItem("default");
 
     /* 'perspectives' tags loading */
     var tempPerspectiveElems = rootElement.getElementsByTagName('perspective');
@@ -129,10 +130,10 @@ MySceneGraph.prototype.parseDSXFile = function (rootElement) {
     var ambient_b = tempIlluminationElems[0].children[0].attributes.getNamedItem('b').nodeValue;
     var ambient_a = tempIlluminationElems[0].children[0].attributes.getNamedItem('a').nodeValue;
     this.scene.setAmbient(ambient_r, ambient_g, ambient_b, ambient_a);
-    var background_r = tempIlluminationElems[0].children[0].attributes.getNamedItem('r').nodeValue;
-    var background_g = tempIlluminationElems[0].children[0].attributes.getNamedItem('g').nodeValue;
-    var background_b = tempIlluminationElems[0].children[0].attributes.getNamedItem('b').nodeValue;
-    var background_a = tempIlluminationElems[0].children[0].attributes.getNamedItem('a').nodeValue;
+    var background_r = tempIlluminationElems[0].children[1].attributes.getNamedItem('r').nodeValue;
+    var background_g = tempIlluminationElems[0].children[1].attributes.getNamedItem('g').nodeValue;
+    var background_b = tempIlluminationElems[0].children[1].attributes.getNamedItem('b').nodeValue;
+    var background_a = tempIlluminationElems[0].children[1].attributes.getNamedItem('a').nodeValue;
     this.background = [background_r, background_g, background_b, background_a];
     //console.log(this.ambient + " " + this.background);
 
@@ -204,12 +205,16 @@ MySceneGraph.prototype.parseDSXFile = function (rootElement) {
         var specular_b = tempSpotElems[i].children[4].attributes.getNamedItem('b').nodeValue;
         var specular_a = tempSpotElems[i].children[4].attributes.getNamedItem('a').nodeValue;
 
+        var direction_x = target_x - location_x;
+        var direction_y = target_y - location_y;
+        var direction_z = target_z - location_z;
+
         this.scene.lights[i] = new CGFlight(this.scene, id);
         if (enabled)
             this.scene.lights[i].enable();
         else
             this.scene.lights[i].disable();
-        this.scene.lights[i].setSpotDirection(target_x, target_y, target_z);    // verify function in use
+        this.scene.lights[i].setSpotDirection(direction_x, direction_y, direction_z);
         this.scene.lights[i].setPosition(location_x, location_y, location_z);
         this.scene.lights[i].setAmbient(ambient_r, ambient_g, ambient_b, ambient_a);
         this.scene.lights[i].setDiffuse(diffuse_r, diffuse_g, diffuse_b, diffuse_a);
@@ -232,14 +237,14 @@ MySceneGraph.prototype.parseDSXFile = function (rootElement) {
         var length_s = tempTextureElems[i].attributes.getNamedItem('length_s');
         var length_t = tempTextureElems[i].attributes.getNamedItem('length_t');
 
-        this.scene.appearance[i] = new CGFappearance(this.scene);
+        /*this.scene.appearance[i] = new CGFappearance(this.scene);
         this.scene.appearance[i].loadTexture(file);
-        this.scene.appearance[i].setTextureWrap(length_s, length_t);
+        this.scene.appearance[i].setTextureWrap(length_s, length_t);*/
     }
 
     /* 'materials' tags loading */
     var tempMaterialsElems = rootElement.getElementsByTagName('materials')
-    if (tempMaterialsElems == null || tempMaterialsElems.length != 1)
+    if (tempMaterialsElems == null || tempMaterialsElems.length != 2)
         return "'materials' tag misbehavior.";
 
     /* 'material' tags loading */
@@ -265,17 +270,15 @@ MySceneGraph.prototype.parseDSXFile = function (rootElement) {
         var specular_g = tempMaterialElems[i].children[3].attributes.getNamedItem('g').nodeValue;
         var specular_b = tempMaterialElems[i].children[3].attributes.getNamedItem('b').nodeValue;
         var specular_a = tempMaterialElems[i].children[3].attributes.getNamedItem('a').nodeValue;
-        var shininess_r = tempMaterialElems[i].children[4].attributes.getNamedItem('r').nodeValue;
-        var shininess_g = tempMaterialElems[i].children[4].attributes.getNamedItem('g').nodeValue;
-        var shininess_b = tempMaterialElems[i].children[4].attributes.getNamedItem('b').nodeValue;
-        var shininess_a = tempMaterialElems[i].children[4].attributes.getNamedItem('a').nodeValue;
+        var shininess_value = tempMaterialElems[i].children[4].attributes.getNamedItem('value').nodeValue;
 
-        this.scene.appearance[i] = new CGFappearance(this.scene); // correct: sobrepostion of material over texture
+       /* this.scene.appearance[i] = new CGFappearance(this.scene); // correct: sobrepostion of material over texture
         this.scene.appearance[i].setEmission(emission_r, emission_g, emission_b, emission_a);
         this.scene.appearance[i].setAmbient(ambient_r, ambient_g, ambient_b, ambient_a);
         this.scene.appearance[i].setDiffuse(diffuse_r, diffuse_g, diffuse_b, diffuse_a);
         this.scene.appearance[i].setSpecular(specular_r, specular_g, specular_b, specular_a);
-        this.scene.appearance[i].setShininess(shininess_r, shininess_g, shininess_b, shininess_a);
+        if(shininess_value > 0)
+            this.scene.appearance[i].setShininess(shininess_value);*/
     }
 
     /* 'transformations' tags loading */
@@ -293,9 +296,8 @@ MySceneGraph.prototype.parseDSXFile = function (rootElement) {
         var translate_x = tempTransformationElems[i].children[0].attributes.getNamedItem('x').nodeValue;
         var translate_y = tempTransformationElems[i].children[0].attributes.getNamedItem('y').nodeValue;
         var translate_z = tempTransformationElems[i].children[0].attributes.getNamedItem('z').nodeValue;
-        var rotate_x = tempTransformationElems[i].children[1].attributes.getNamedItem('x').nodeValue;
-        var rotate_y = tempTransformationElems[i].children[1].attributes.getNamedItem('y').nodeValue;
-        var rotate_z = tempTransformationElems[i].children[1].attributes.getNamedItem('z').nodeValue;
+        var rotate_axis = tempTransformationElems[i].children[1].attributes.getNamedItem('axis').nodeValue;
+        var rotate_angle = tempTransformationElems[i].children[1].attributes.getNamedItem('angle').nodeValue;
         var scale_x = tempTransformationElems[i].children[2].attributes.getNamedItem('x').nodeValue;
         var scale_y = tempTransformationElems[i].children[2].attributes.getNamedItem('y').nodeValue;
         var scale_z = tempTransformationElems[i].children[2].attributes.getNamedItem('z').nodeValue;
