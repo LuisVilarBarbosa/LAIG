@@ -101,20 +101,32 @@ MySceneGraph.prototype.parseDSXFile = function (rootElement) {
     }
     var default_view = tempViewsElems[0].attributes.getNamedItem("default");
 
-    /* 'perspectives' tags loading */
+    /* 'perspective' tags loading */
     var tempPerspectiveElems = rootElement.getElementsByTagName('perspective');
     if (tempPerspectiveElems == null || tempPerspectiveElems.length == 0) {
         return "'perspective' element is missing.";
     }
     this.perspectives = [];
-    // iterate over every element
     var nnodes = tempPerspectiveElems.length;
     for (var i = 0; i < nnodes; i++) {
         var e = tempPerspectiveElems[i];
 
-        // process each element and store its information
-        //this.perspectives[e.id] = e.attributes.getNamedItem('perspective');
-        //console.log("Read view item id " + e.id + " with value " + this.perspectives[e.id]);
+        var id = e.attributes.getNamedItem('id').nodeValue;
+        var near = e.attributes.getNamedItem('near').nodeValue;
+        var far = e.attributes.getNamedItem('far').nodeValue;
+        var angle = e.attributes.getNamedItem('angle').nodeValue;
+        var from_x = e.children[0].attributes.getNamedItem('x').nodeValue;
+        var from_y = e.children[0].attributes.getNamedItem('y').nodeValue;
+        var from_z = e.children[0].attributes.getNamedItem('z').nodeValue;
+        var to_x = e.children[1].attributes.getNamedItem('x').nodeValue;
+        var to_y = e.children[1].attributes.getNamedItem('y').nodeValue;
+        var to_z = e.children[1].attributes.getNamedItem('z').nodeValue;
+        var from = vec4.create();
+        from.set(from_x, from_y, from_z, 1.0);   // what value should be given to 'w'?
+        var to = vec4.create();
+        to.set(to_x, to_y, to_z, 1.0);   // what value should be given to 'w'?
+
+        this.perspectives[id] = new CGFcamera(angle, near, far, from, to);
     };
 
     /* 'illumination' tags loading */
