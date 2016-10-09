@@ -309,12 +309,24 @@ MySceneGraph.prototype.parseDSXFile = function (rootElement) {
         var translate_y = tempTransformationElems[i].children[0].attributes.getNamedItem('y').nodeValue;
         var translate_z = tempTransformationElems[i].children[0].attributes.getNamedItem('z').nodeValue;
         var rotate_axis = tempTransformationElems[i].children[1].attributes.getNamedItem('axis').nodeValue;
+        if (rotate_axis != 'x' && rotate_axis != 'X' &&
+            rotate_axis != 'y' && rotate_axis != 'Y' &&
+            rotate_axis != 'z' && rotate_axis != 'Z')
+            return "Invalid rotation axis: " + rotate_axis;
         var rotate_angle = tempTransformationElems[i].children[1].attributes.getNamedItem('angle').nodeValue;
         var scale_x = tempTransformationElems[i].children[2].attributes.getNamedItem('x').nodeValue;
         var scale_y = tempTransformationElems[i].children[2].attributes.getNamedItem('y').nodeValue;
         var scale_z = tempTransformationElems[i].children[2].attributes.getNamedItem('z').nodeValue;
 
-        // store transformation matrix
+        var transformation = mat4.create();
+        mat4.translate(transformation, transformation, [translate_x, translate_y, translate_z]);
+        if (rotate_axis == 'x' || rotate_axis == 'X')
+            mat4.rotate(transformation, transformation, rotate_angle, [1, 0, 0]);
+        else if (rotate_axis == 'y' || rotate_axis == 'Y')
+            mat4.rotate(transformation, transformation, rotate_angle, [0, 1, 0]);
+        else if (rotate_axis == 'z' || rotate_axis == 'Z')
+            mat4.rotate(transformation, transformation, rotate_angle, [0, 0, 1]);
+        mat4.scale(transformation, transformation, [scale_x, scale_y, scale_z]);
     }
 };
 
