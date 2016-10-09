@@ -328,6 +328,21 @@ MySceneGraph.prototype.parseDSXFile = function (rootElement) {
             mat4.rotate(transformation, transformation, rotate_angle, [0, 0, 1]);
         mat4.scale(transformation, transformation, [scale_x, scale_y, scale_z]);
     }
+
+    /* 'primitives' tags loading */
+    var tempPrimitivesElems = rootElement.getElementsByTagName('primitives')
+    if (tempPrimitivesElems == null || tempPrimitivesElems.length != 1)
+        return "'primitives' tag misbehavior.";
+
+    /* 'primitive' tags loading */
+    var tempPrimitiveElems = tempPrimitivesElems[0].getElementsByTagName('primitive');
+    if (tempPrimitiveElems == null || tempPrimitiveElems.length == 0)
+        return "'primitive' element is missing.";
+    var nnodes = tempPrimitiveElems.length;
+    for (var i = 0; i < nnodes; i++) {
+        var id = tempPrimitiveElems[i].attributes.getNamedItem('id');
+        // load primitives
+    }
 };
 
 /*
