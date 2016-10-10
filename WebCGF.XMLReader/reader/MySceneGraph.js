@@ -89,10 +89,8 @@ MySceneGraph.prototype.parseDSXFile = function (rootElement) {
     var tempSceneElems = rootElement.getElementsByTagName('scene');
     if (tempSceneElems == null || tempSceneElems.length != 1)
         return "'scene' tag misbehavior.";
-    //console.log(tempSceneElems);
     var root = tempSceneElems[0].attributes.getNamedItem("root");
     var axis_length = tempSceneElems[0].attributes.getNamedItem("axis_length");
-    //console.log(root); console.log(axis_length);
 
     /* 'views' tags loading */
     var tempViewsElems = rootElement.getElementsByTagName('views');
@@ -133,10 +131,8 @@ MySceneGraph.prototype.parseDSXFile = function (rootElement) {
     var tempIlluminationElems = rootElement.getElementsByTagName('illumination');
     if (tempIlluminationElems == null || tempIlluminationElems.length != 1)
         return "'illumination' tag misbehavior.";
-    console.log(tempIlluminationElems);
     var doublesided = this.reader.getBoolean(tempIlluminationElems[0], 'doublesided', true);
     var local = this.reader.getBoolean(tempIlluminationElems[0], 'local', true);
-    //console.log(doublesided + " " + local);
     var ambient_r = tempIlluminationElems[0].children[0].attributes.getNamedItem('r').nodeValue;
     var ambient_g = tempIlluminationElems[0].children[0].attributes.getNamedItem('g').nodeValue;
     var ambient_b = tempIlluminationElems[0].children[0].attributes.getNamedItem('b').nodeValue;
@@ -147,7 +143,6 @@ MySceneGraph.prototype.parseDSXFile = function (rootElement) {
     var background_b = tempIlluminationElems[0].children[1].attributes.getNamedItem('b').nodeValue;
     var background_a = tempIlluminationElems[0].children[1].attributes.getNamedItem('a').nodeValue;
     this.background = [background_r, background_g, background_b, background_a];
-    //console.log(this.ambient + " " + this.background);
 
     /* 'lights' tags loading */
     var tempLightsElems = rootElement.getElementsByTagName('lights');
