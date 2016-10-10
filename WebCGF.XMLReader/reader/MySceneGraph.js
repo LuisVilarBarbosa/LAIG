@@ -336,7 +336,47 @@ MySceneGraph.prototype.parseDSXFile = function (rootElement) {
     var nnodes = tempPrimitiveElems.length;
     for (var i = 0; i < nnodes; i++) {
         var id = tempPrimitiveElems[i].attributes.getNamedItem('id');
-        // load primitives
+       
+        var tempRectangleElems = tempPrimitiveElems[i].getElementsByTagName('rectangle');
+        if (tempRectangleElems != null && tempRectangleElems.length == 1) {
+            var x1 = tempRectangleElems[0].attributes.getNamedItem('x1').nodeValue;
+            var y1 = tempRectangleElems[0].attributes.getNamedItem('y1').nodeValue;
+            var x2 = tempRectangleElems[0].attributes.getNamedItem('x2').nodeValue;
+            var y2 = tempRectangleElems[0].attributes.getNamedItem('y2').nodeValue;
+        }
+        var tempTriangleElems = tempPrimitiveElems[i].getElementsByTagName('triangle');
+        if (tempTriangleElems != null && tempTriangleElems.length == 1) {
+            var x1 = tempTriangleElems[0].attributes.getNamedItem('x1').nodeValue;
+            var y1 = tempTriangleElems[0].attributes.getNamedItem('y1').nodeValue;
+            var z1 = tempTriangleElems[0].attributes.getNamedItem('z1').nodeValue;
+            var x2 = tempTriangleElems[0].attributes.getNamedItem('x2').nodeValue;
+            var y2 = tempTriangleElems[0].attributes.getNamedItem('y2').nodeValue;
+            var z2 = tempTriangleElems[0].attributes.getNamedItem('z2').nodeValue;
+            var x3 = tempTriangleElems[0].attributes.getNamedItem('x3').nodeValue;
+            var y3 = tempTriangleElems[0].attributes.getNamedItem('y3').nodeValue;
+            var z3 = tempTriangleElems[0].attributes.getNamedItem('z3').nodeValue;
+        }
+        var tempCylinderElems = tempPrimitiveElems[i].getElementsByTagName('cylinder');
+        if (tempCylinderElems != null && tempCylinderElems.length == 1) {
+            var base = tempCylinderElems[0].attributes.getNamedItem('base').nodeValue;
+            var top = tempCylinderElems[0].attributes.getNamedItem('top').nodeValue;
+            var height = tempCylinderElems[0].attributes.getNamedItem('height').nodeValue;
+            var slices = tempCylinderElems[0].attributes.getNamedItem('slices').nodeValue;
+            var stacks = tempCylinderElems[0].attributes.getNamedItem('stacks').nodeValue;
+        }
+        var tempSphereElems = tempPrimitiveElems[i].getElementsByTagName('sphere');
+        if (tempSphereElems != null && tempSphereElems.length == 1) {
+            var radius = tempSphereElems[0].attributes.getNamedItem('radius').nodeValue;
+            var slices = tempSphereElems[0].attributes.getNamedItem('slices').nodeValue;
+            var stacks = tempSphereElems[0].attributes.getNamedItem('stacks').nodeValue;
+        }
+        var tempTorusElems = tempPrimitiveElems[i].getElementsByTagName('torus');
+        if (tempTorusElems != null && tempTorusElems.length == 1) {
+            var inner = tempTorusElems[0].attributes.getNamedItem('inner').nodeValue;
+            var outer = tempTorusElems[0].attributes.getNamedItem('outer').nodeValue;
+            var slices = tempTorusElems[0].attributes.getNamedItem('slices').nodeValue;
+            var loops = tempTorusElems[0].attributes.getNamedItem('loops').nodeValue;
+        }
     }
 };
 
