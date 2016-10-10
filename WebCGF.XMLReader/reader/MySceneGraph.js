@@ -378,6 +378,72 @@ MySceneGraph.prototype.parseDSXFile = function (rootElement) {
             var loops = tempTorusElems[0].attributes.getNamedItem('loops').nodeValue;
         }
     }
+
+    /* 'components' tags loading */
+    var tempComponentsElems = rootElement.getElementsByTagName('components')
+    if (tempComponentsElems == null || tempComponentsElems.length != 1)
+        return "'components' tag misbehavior.";
+
+    /* 'component' tags loading */
+    var tempComponentElems = tempComponentsElems[0].getElementsByTagName('component');
+    if (tempComponentElems == null || tempComponentElems.length == 0)
+        return "'component' element is missing.";
+    var nnodes = tempComponentElems.length;
+    for (var i = 0; i < nnodes; i++) {
+        var id = tempComponentElems[i].attributes.getNamedItem('id');
+
+        /* 'transformation' tags loading */
+        var tempTransformationElems = tempComponentsElems[0].getElementsByTagName('transformation');
+        if (tempTransformationElems == null || tempTransformationElems.length == 0)
+            return "'transformation' element is missing.";
+        // transformationref and transformation loading to do
+
+        /* 'materials' tags loading */
+        var tempMaterialsElems = tempComponentsElems[0].getElementsByTagName('materials');
+        if (tempMaterialsElems == null || tempMaterialsElems.length == 0)
+            return "'materials' element is missing.";
+
+        /* 'material' tags loading */
+        var tempMaterialElems = tempComponentsElems[0].getElementsByTagName('material');
+        if (tempMaterialElems == null || tempMaterialElems.length == 0)
+            return "'material' element is missing.";
+        var nnodes = tempMaterialElems.length;
+        for (var i = 0; i < nnodes; i++) {
+            var material = tempMaterialElems[i].attributes.getNamedItem('id');
+        }
+
+        /* 'texture' tags loading */
+        var tempTextureElems = tempComponentsElems[0].getElementsByTagName('texture');
+        if (tempTextureElems == null || tempTextureElems.length != 1)
+            return "'texture' tag misbehavior.";
+        var nnodes = tempTextureElems.length;
+        for (var i = 0; i < nnodes; i++) {
+            var texture = tempTextureElems[i].attributes.getNamedItem('id');
+        }
+
+        /* 'children' tags loading */
+        var tempChildrenElems = tempComponentsElems[0].getElementsByTagName('children');
+        if (tempChildrenElems == null || tempChildrenElems.length != 1)
+            return "'children' tag misbehavior.";
+        var nnodes = tempChildrenElems.length;
+        for (var i = 0; i < nnodes; i++) {
+            /* 'componentref' and 'primitiveref' tags loading */
+            var tempComponentrefElems = tempChildrenElems[i].getElementsByTagName('componentref');
+            var tempPrimitiverefElems = tempChildrenElems[i].getElementsByTagName('primitiveref');
+            if ((tempComponentrefElems == null || tempComponentrefElems.length == 0) &&
+                (tempPrimitiverefElems == null || tempPrimitiverefElems.length == 0))
+                return "'componentref' or 'primitiveref' element is missing";
+            else {
+                var nnodes = tempComponentrefElems.length;
+                for (var i = 0; i < nnodes; i++)
+                    var id = tempComponentrefElems[i].attributes.getNamedItem('id');
+
+                var nnodes = tempPrimitiverefElems.length;
+                for (var i = 0; i < nnodes; i++)
+                    var id = tempPrimitiverefElems[i].attributes.getNamedItem('id');
+            }
+        }
+    }
 };
 
 /*
