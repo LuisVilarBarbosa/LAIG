@@ -83,7 +83,23 @@ MySceneGraph.prototype.parseGlobalsExample = function (rootElement) {
 
 };
 
+MySceneGraph.prototype.verifyDSXFileStructure = function (rootElement) {
+    if (rootElement.children[0].nodeName != 'scene') return "'scene' tag out of order";
+    if (rootElement.children[1].nodeName != 'views') return "'views' tag out of order";
+    if (rootElement.children[2].nodeName != 'illumination') return "'illumination' tag out of order";
+    if (rootElement.children[3].nodeName != 'lights') return "'lights' tag out of order";
+    if (rootElement.children[4].nodeName != 'textures') return "'textures' tag out of order";
+    if (rootElement.children[5].nodeName != 'materials') return "'materials' tag out of order";
+    if (rootElement.children[6].nodeName != 'transformations') return "'transformations' tag out of order";
+    if (rootElement.children[7].nodeName != 'primitives') return "'primitives' tag out of order";
+    if (rootElement.children[8].nodeName != 'components') return "'components' tag out of order";
+    // verify subsequent tags
+}
+
 MySceneGraph.prototype.parseDSXFile = function (rootElement) {
+    var error = this.verifyDSXFileStructure(rootElement);
+    if (error != null)
+        return error;
 
     /* 'scene' tags loading */
     var tempSceneElems = rootElement.getElementsByTagName('scene');
