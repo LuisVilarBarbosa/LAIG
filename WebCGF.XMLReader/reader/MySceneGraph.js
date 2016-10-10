@@ -84,6 +84,7 @@ MySceneGraph.prototype.parseGlobalsExample = function (rootElement) {
 };
 
 MySceneGraph.prototype.verifyDSXFileStructure = function (rootElement) {
+    if (rootElement.children.length != 9) return "invalid number of 'dsx' children tags detected";
     if (rootElement.children[0].nodeName != 'scene') return "'scene' tag out of order";
     if (rootElement.children[1].nodeName != 'views') return "'views' tag out of order";
     if (rootElement.children[2].nodeName != 'illumination') return "'illumination' tag out of order";
@@ -401,18 +402,21 @@ MySceneGraph.prototype.parseDSXFile = function (rootElement) {
         return "'components' tag misbehavior.";
 
     /* 'component' tags loading */
+    this.graph = [];
     var tempComponentElems = tempComponentsElems[0].getElementsByTagName('component');
     if (tempComponentElems == null || tempComponentElems.length == 0)
         return "'component' element is missing.";
     var nnodes = tempComponentElems.length;
     for (var i = 0; i < nnodes; i++) {
         var id = tempComponentElems[i].attributes.getNamedItem('id');
+        this.graph[id] = new Node();
 
         /* 'transformation' tags loading */
         var tempTransformationElems = tempComponentsElems[0].getElementsByTagName('transformation');
         if (tempTransformationElems == null || tempTransformationElems.length == 0)
             return "'transformation' element is missing.";
         // transformationref and transformation loading to do
+        // this.graph[id].setMatrix();
 
         /* 'materials' tags loading */
         var tempMaterialsElems = tempComponentsElems[0].getElementsByTagName('materials');
@@ -426,16 +430,16 @@ MySceneGraph.prototype.parseDSXFile = function (rootElement) {
         var nnodes = tempMaterialElems.length;
         for (var i = 0; i < nnodes; i++) {
             var material = tempMaterialElems[i].attributes.getNamedItem('id');
+            this.graph[id].addMaterial(material);
+            // misses 'inherit' condition
         }
 
         /* 'texture' tags loading */
         var tempTextureElems = tempComponentsElems[0].getElementsByTagName('texture');
         if (tempTextureElems == null || tempTextureElems.length != 1)
             return "'texture' tag misbehavior.";
-        var nnodes = tempTextureElems.length;
-        for (var i = 0; i < nnodes; i++) {
-            var texture = tempTextureElems[i].attributes.getNamedItem('id');
-        }
+        var texture = tempTextureElems[0].attributes.getNamedItem('id');
+        this.graph[id].setTexture(texture);
 
         /* 'children' tags loading */
         var tempChildrenElems = tempComponentsElems[0].getElementsByTagName('children');
@@ -452,11 +456,11 @@ MySceneGraph.prototype.parseDSXFile = function (rootElement) {
             else {
                 var nnodes = tempComponentrefElems.length;
                 for (var i = 0; i < nnodes; i++)
-                    var id = tempComponentrefElems[i].attributes.getNamedItem('id');
+                    this.graph[id].push(tempComponentrefElems[i].attributes.getNamedItem('id'));
 
                 var nnodes = tempPrimitiverefElems.length;
                 for (var i = 0; i < nnodes; i++)
-                    var id = tempPrimitiverefElems[i].attributes.getNamedItem('id');
+                    this.graph[id].push(tempPrimitiverefElems[i].attributes.getNamedItem('id'));
             }
         }
     }
