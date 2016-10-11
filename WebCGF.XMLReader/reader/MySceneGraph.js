@@ -55,34 +55,16 @@ MySceneGraph.prototype.verifyDSXFileStructure = function (rootElement) {
     // verify subsequent tags
 }
 
-MySceneGraph.prototype.parseDSXFile = function (rootElement) {
-    var error = this.verifyDSXFileStructure(rootElement);
-    if (error != null)
-        return error;
-
-    /* 'scene' tags loading */
-    var tempSceneElems = rootElement.getElementsByTagName('scene');
-    if (tempSceneElems == null || tempSceneElems.length != 1)
-        return "'scene' tag misbehavior.";
-    this.scene.rootNode = tempSceneElems[0].attributes.getNamedItem("root");
-    var axis_length = tempSceneElems[0].attributes.getNamedItem("axis_length");
+MySceneGraph.prototype.parseSceneTag = function (elem) {
+    this.scene.rootNode = elem.attributes.getNamedItem("root");
+    var axis_length = elem.attributes.getNamedItem("axis_length");
     this.scene.axis = new CGFaxis(this.scene, axis_length, 0.2);    // 0.2 = default thickness
+}
 
-    /* 'views' tags loading */
-    var tempViewsElems = rootElement.getElementsByTagName('views');
-    if (tempViewsElems == null || tempViewsElems.length != 1) {
-        return "'views' tag misbehavior.";
-    }
-    var default_view = tempViewsElems[0].attributes.getNamedItem("default");
-
-    /* 'perspective' tags loading */
-    var tempPerspectiveElems = rootElement.getElementsByTagName('perspective');
-    if (tempPerspectiveElems == null || tempPerspectiveElems.length == 0) {
-        return "'perspective' element is missing.";
-    }
+MySceneGraph.prototype.parsePerspectiveTags = function (elems) {
     this.perspectives = [];
-    for (var i = 0, nnodes = tempPerspectiveElems.length; i < nnodes; i++) {
-        var e = tempPerspectiveElems[i];
+    for (var i = 0, nnodes = elems.length; i < nnodes; i++) {
+        var e = elems[i];
 
         var id = e.attributes.getNamedItem('id').nodeValue;
         var near = e.attributes.getNamedItem('near').nodeValue;
@@ -101,186 +83,160 @@ MySceneGraph.prototype.parseDSXFile = function (rootElement) {
 
         //this.perspectives[id] = new CGFcamera(angle, near, far, from, to);
     };
-    //this.scene.camera = this.perspectives[default_view];
+}
 
-    /* 'illumination' tags loading */
-    var tempIlluminationElems = rootElement.getElementsByTagName('illumination');
-    if (tempIlluminationElems == null || tempIlluminationElems.length != 1)
-        return "'illumination' tag misbehavior.";
-    var doublesided = this.reader.getBoolean(tempIlluminationElems[0], 'doublesided', true);
-    var local = this.reader.getBoolean(tempIlluminationElems[0], 'local', true);
-    var ambient_r = tempIlluminationElems[0].children[0].attributes.getNamedItem('r').nodeValue;
-    var ambient_g = tempIlluminationElems[0].children[0].attributes.getNamedItem('g').nodeValue;
-    var ambient_b = tempIlluminationElems[0].children[0].attributes.getNamedItem('b').nodeValue;
-    var ambient_a = tempIlluminationElems[0].children[0].attributes.getNamedItem('a').nodeValue;
+MySceneGraph.prototype.parseIlluminationTag = function (elem) {
+    var doublesided = this.reader.getBoolean(elem, 'doublesided', true);
+    var local = this.reader.getBoolean(elem, 'local', true);
+
+    var ambientElems = elem.getElementsByTagName('ambient');
+    if (ambientElems == null || ambientElems.length != 1)
+        console.log("The number of 'ambient' tags is not 1");
+    var ambient_r = ambientElems[0].attributes.getNamedItem('r').nodeValue;
+    var ambient_g = ambientElems[0].attributes.getNamedItem('g').nodeValue;
+    var ambient_b = ambientElems[0].attributes.getNamedItem('b').nodeValue;
+    var ambient_a = ambientElems[0].attributes.getNamedItem('a').nodeValue;
     this.scene.setAmbient(ambient_r, ambient_g, ambient_b, ambient_a);
-    var background_r = tempIlluminationElems[0].children[1].attributes.getNamedItem('r').nodeValue;
-    var background_g = tempIlluminationElems[0].children[1].attributes.getNamedItem('g').nodeValue;
-    var background_b = tempIlluminationElems[0].children[1].attributes.getNamedItem('b').nodeValue;
-    var background_a = tempIlluminationElems[0].children[1].attributes.getNamedItem('a').nodeValue;
+
+    var backgroundElems = elem.getElementsByTagName('background');
+    if (ambientElems == null || ambientElems.length != 1)
+        console.log("The number of 'background' tags is not 1");
+    var background_r = backgroundElems[0].attributes.getNamedItem('r').nodeValue;
+    var background_g = backgroundElems[0].attributes.getNamedItem('g').nodeValue;
+    var background_b = backgroundElems[0].attributes.getNamedItem('b').nodeValue;
+    var background_a = backgroundElems[0].attributes.getNamedItem('a').nodeValue;
     this.background = [background_r, background_g, background_b, background_a];
+}
 
-    /* 'lights' tags loading */
-    var tempLightsElems = rootElement.getElementsByTagName('lights');
-    if (tempLightsElems == null || tempLightsElems.length != 1)
-        return "'lights' tag misbehavior.";
+MySceneGraph.prototype.parseLightsRelativeTags = function (elems, lightType, lightsArrayStartIndex) {
+    if (lightType != 'omni' && lightType != 'spot')
+        console.log("The light type '" + lightType + "' will be considered 'omni'")
 
-    /* 'omni' and 'spot' tags loading */
-    var tempOmniElems = tempLightsElems[0].getElementsByTagName('omni');
-    var tempSpotElems = tempLightsElems[0].getElementsByTagName('spot');
-    if ((tempOmniElems == null || tempOmniElems.length == 0) &&
-        (tempSpotElems == null || tempSpotElems.length == 0))
-        return "'omni' or 'spot' element is missing.";
-    for (var i = 0, nnodes = tempOmniElems.length; i < nnodes; i++) {
-        var id = tempOmniElems[i].attributes.getNamedItem('id');    // not in use
-        var enabled = this.reader.getBoolean(tempOmniElems[i], 'enabled', true);
-        var location_x = tempOmniElems[i].children[0].attributes.getNamedItem('x').nodeValue;
-        var location_y = tempOmniElems[i].children[0].attributes.getNamedItem('y').nodeValue;
-        var location_z = tempOmniElems[i].children[0].attributes.getNamedItem('z').nodeValue;
-        var location_w = tempOmniElems[i].children[0].attributes.getNamedItem('w').nodeValue;
-        var ambient_r = tempOmniElems[i].children[1].attributes.getNamedItem('r').nodeValue;
-        var ambient_g = tempOmniElems[i].children[1].attributes.getNamedItem('g').nodeValue;
-        var ambient_b = tempOmniElems[i].children[1].attributes.getNamedItem('b').nodeValue;
-        var ambient_a = tempOmniElems[i].children[1].attributes.getNamedItem('a').nodeValue;
-        var diffuse_r = tempOmniElems[i].children[2].attributes.getNamedItem('r').nodeValue;
-        var diffuse_g = tempOmniElems[i].children[2].attributes.getNamedItem('g').nodeValue;
-        var diffuse_b = tempOmniElems[i].children[2].attributes.getNamedItem('b').nodeValue;
-        var diffuse_a = tempOmniElems[i].children[2].attributes.getNamedItem('a').nodeValue;
-        var specular_r = tempOmniElems[i].children[3].attributes.getNamedItem('r').nodeValue;
-        var specular_g = tempOmniElems[i].children[3].attributes.getNamedItem('g').nodeValue;
-        var specular_b = tempOmniElems[i].children[3].attributes.getNamedItem('b').nodeValue;
-        var specular_a = tempOmniElems[i].children[3].attributes.getNamedItem('a').nodeValue;
+    var lightsArrayIndex = lightsArrayStartIndex;
+    for (var i = 0, nnodes = elems.length; i < nnodes; i++, lightsArrayIndex++) {
+        var id = elems[i].attributes.getNamedItem('id');    // not in use
+        var enabled = this.reader.getBoolean(elems[i], 'enabled', true);
 
-        if(enabled)
-            this.scene.lights[i].enable();
-        else
-            this.scene.lights[i].disable();
-        this.scene.lights[i].setPosition(location_x, location_y, location_z, location_w);
-        this.scene.lights[i].setAmbient(ambient_r, ambient_g, ambient_b, ambient_a);
-        this.scene.lights[i].setDiffuse(diffuse_r, diffuse_g, diffuse_b, diffuse_a);
-        this.scene.lights[i].setSpecular(specular_r, specular_g, specular_b, specular_a);
-    }
+        var location = elems[i].getElementsByTagName('location');
+        if (location == null || location.length != 1)
+            console.log("The number of 'location' tags is not 1");
+        var location_x = location[0].attributes.getNamedItem('x').nodeValue;
+        var location_y = location[0].attributes.getNamedItem('y').nodeValue;
+        var location_z = location[0].attributes.getNamedItem('z').nodeValue;
+       
+        var ambient = elems[i].getElementsByTagName('ambient');
+        if (ambient == null || ambient.length != 1)
+            console.log("The number of 'ambient' tags is not 1");
+        var ambient_r = ambient[0].attributes.getNamedItem('r').nodeValue;
+        var ambient_g = ambient[0].attributes.getNamedItem('g').nodeValue;
+        var ambient_b = ambient[0].attributes.getNamedItem('b').nodeValue;
+        var ambient_a = ambient[0].attributes.getNamedItem('a').nodeValue;
 
-    for (var i = 0, j = tempOmniElems.length, nnodes = tempSpotElems.length; i < nnodes; i++, j++) {
-        var id = tempSpotElems[i].attributes.getNamedItem('id');    // not in use
-        var enabled = this.reader.getBoolean(tempSpotElems[i], 'enabled', true);
-        var target_x = tempSpotElems[i].children[0].attributes.getNamedItem('x').nodeValue;
-        var target_y = tempSpotElems[i].children[0].attributes.getNamedItem('y').nodeValue;
-        var target_z = tempSpotElems[i].children[0].attributes.getNamedItem('z').nodeValue;
-        var location_x = tempSpotElems[i].children[1].attributes.getNamedItem('x').nodeValue;
-        var location_y = tempSpotElems[i].children[1].attributes.getNamedItem('y').nodeValue;
-        var location_z = tempSpotElems[i].children[1].attributes.getNamedItem('z').nodeValue;
-        var ambient_r = tempSpotElems[i].children[2].attributes.getNamedItem('r').nodeValue;
-        var ambient_g = tempSpotElems[i].children[2].attributes.getNamedItem('g').nodeValue;
-        var ambient_b = tempSpotElems[i].children[2].attributes.getNamedItem('b').nodeValue;
-        var ambient_a = tempSpotElems[i].children[2].attributes.getNamedItem('a').nodeValue;
-        var diffuse_r = tempSpotElems[i].children[3].attributes.getNamedItem('r').nodeValue;
-        var diffuse_g = tempSpotElems[i].children[3].attributes.getNamedItem('g').nodeValue;
-        var diffuse_b = tempSpotElems[i].children[3].attributes.getNamedItem('b').nodeValue;
-        var diffuse_a = tempSpotElems[i].children[3].attributes.getNamedItem('a').nodeValue;
-        var specular_r = tempSpotElems[i].children[4].attributes.getNamedItem('r').nodeValue;
-        var specular_g = tempSpotElems[i].children[4].attributes.getNamedItem('g').nodeValue;
-        var specular_b = tempSpotElems[i].children[4].attributes.getNamedItem('b').nodeValue;
-        var specular_a = tempSpotElems[i].children[4].attributes.getNamedItem('a').nodeValue;
+        var diffuse = elems[i].getElementsByTagName('diffuse');
+        if (diffuse == null || diffuse.length != 1)
+            console.log("The number of 'diffuse' tags is not 1");
+        var diffuse_r = diffuse[0].attributes.getNamedItem('r').nodeValue;
+        var diffuse_g = diffuse[0].attributes.getNamedItem('g').nodeValue;
+        var diffuse_b = diffuse[0].attributes.getNamedItem('b').nodeValue;
+        var diffuse_a = diffuse[0].attributes.getNamedItem('a').nodeValue;
 
-        var direction_x = target_x - location_x;
-        var direction_y = target_y - location_y;
-        var direction_z = target_z - location_z;
+        var specular = elems[i].getElementsByTagName('specular');
+        if (specular == null || specular.length != 1)
+            console.log("The number of 'specular' tags is not 1");
+        var specular_r = specular[0].attributes.getNamedItem('r').nodeValue;
+        var specular_g = specular[0].attributes.getNamedItem('g').nodeValue;
+        var specular_b = specular[0].attributes.getNamedItem('b').nodeValue;
+        var specular_a = specular[0].attributes.getNamedItem('a').nodeValue;
+
+        if (lightType == 'spot') {
+            var target = elems[i].getElementsByTagName('target');
+            if (target == null || target.length != 1)
+                console.log("The number of 'target' tags is not 1");
+            var target_x = target[0].attributes.getNamedItem('x').nodeValue;
+            var target_y = target[0].attributes.getNamedItem('y').nodeValue;
+            var target_z = target[0].attributes.getNamedItem('z').nodeValue;
+
+            var direction_x = target_x - location_x;
+            var direction_y = target_y - location_y;
+            var direction_z = target_z - location_z;
+
+            this.scene.lights[lightsArrayIndex].setSpotDirection(direction_x, direction_y, direction_z);
+        }
 
         if (enabled)
-            this.scene.lights[j].enable();
+            this.scene.lights[lightsArrayIndex].enable();
         else
-            this.scene.lights[j].disable();
-        this.scene.lights[j].setSpotDirection(direction_x, direction_y, direction_z);
-        this.scene.lights[j].setPosition(location_x, location_y, location_z);
-        this.scene.lights[j].setAmbient(ambient_r, ambient_g, ambient_b, ambient_a);
-        this.scene.lights[j].setDiffuse(diffuse_r, diffuse_g, diffuse_b, diffuse_a);
-        this.scene.lights[j].setSpecular(specular_r, specular_g, specular_b, specular_a);
+            this.scene.lights[lightsArrayIndex].disable();
+        this.scene.lights[lightsArrayIndex].setPosition(location_x, location_y, location_z);
+        this.scene.lights[lightsArrayIndex].setAmbient(ambient_r, ambient_g, ambient_b, ambient_a);
+        this.scene.lights[lightsArrayIndex].setDiffuse(diffuse_r, diffuse_g, diffuse_b, diffuse_a);
+        this.scene.lights[lightsArrayIndex].setSpecular(specular_r, specular_g, specular_b, specular_a);
     }
 
-    /* 'textures' tags loading */
-    var tempTexturesElems = rootElement.getElementsByTagName('textures')
-    if (tempTexturesElems == null || tempTexturesElems.length != 1)
-        return "'textures' tag misbehavior.";
+    return lightsArrayIndex;
+}
 
-    /* 'texture' tags loading */
-    var tempTextureElems = tempTexturesElems[0].getElementsByTagName('texture');
-    if (tempTextureElems == null || tempTextureElems.length == 0)
-        return "'texture' element is missing.";
+MySceneGraph.prototype.parseTextureTags = function (elems) {
     this.textures = [];
-    for (var i = 0, nnodes = tempTextureElems.length; i < nnodes; i++) {
-        var id = tempTextureElems[i].attributes.getNamedItem('id');
-        var file = tempTextureElems[i].attributes.getNamedItem('file');
-        var length_s = tempTextureElems[i].attributes.getNamedItem('length_s');
-        var length_t = tempTextureElems[i].attributes.getNamedItem('length_t');
+    for (var i = 0, nnodes = elems.length; i < nnodes; i++) {
+        var id = elems[i].attributes.getNamedItem('id');
+        var file = elems[i].attributes.getNamedItem('file');
+        var length_s = elems[i].attributes.getNamedItem('length_s');
+        var length_t = elems[i].attributes.getNamedItem('length_t');
 
         this.textures[id] = new CGFappearance(this.scene);
         //this.textures[id].loadTexture(file);
         this.textures[id].setTextureWrap(length_s, length_t);
     }
+}
 
-    /* 'materials' tags loading */
-    var tempMaterialsElems = rootElement.getElementsByTagName('materials')
-    if (tempMaterialsElems == null || tempMaterialsElems.length == 0)
-        return "'materials' tag misbehavior.";
-
-    /* 'material' tags loading */
-    var tempMaterialElems = tempMaterialsElems[0].getElementsByTagName('material');
-    if (tempMaterialElems == null || tempMaterialElems.length == 0)
-        return "'material' element is missing.";
+MySceneGraph.prototype.parseMaterialTags = function (elems) {
     this.materials = [];
-    for (var i = 0, nnodes = tempMaterialElems.length; i < nnodes; i++) {
-        var id = tempMaterialElems[i].attributes.getNamedItem('id');
-        var emission_r = tempMaterialElems[i].children[0].attributes.getNamedItem('r').nodeValue;
-        var emission_g = tempMaterialElems[i].children[0].attributes.getNamedItem('g').nodeValue;
-        var emission_b = tempMaterialElems[i].children[0].attributes.getNamedItem('b').nodeValue;
-        var emission_a = tempMaterialElems[i].children[0].attributes.getNamedItem('a').nodeValue;
-        var ambient_r = tempMaterialElems[i].children[1].attributes.getNamedItem('r').nodeValue;
-        var ambient_g = tempMaterialElems[i].children[1].attributes.getNamedItem('g').nodeValue;
-        var ambient_b = tempMaterialElems[i].children[1].attributes.getNamedItem('b').nodeValue;
-        var ambient_a = tempMaterialElems[i].children[1].attributes.getNamedItem('a').nodeValue;
-        var diffuse_r = tempMaterialElems[i].children[2].attributes.getNamedItem('r').nodeValue;
-        var diffuse_g = tempMaterialElems[i].children[2].attributes.getNamedItem('g').nodeValue;
-        var diffuse_b = tempMaterialElems[i].children[2].attributes.getNamedItem('b').nodeValue;
-        var diffuse_a = tempMaterialElems[i].children[2].attributes.getNamedItem('a').nodeValue;
-        var specular_r = tempMaterialElems[i].children[3].attributes.getNamedItem('r').nodeValue;
-        var specular_g = tempMaterialElems[i].children[3].attributes.getNamedItem('g').nodeValue;
-        var specular_b = tempMaterialElems[i].children[3].attributes.getNamedItem('b').nodeValue;
-        var specular_a = tempMaterialElems[i].children[3].attributes.getNamedItem('a').nodeValue;
-        var shininess_value = tempMaterialElems[i].children[4].attributes.getNamedItem('value').nodeValue;
+    for (var i = 0, nnodes = elems.length; i < nnodes; i++) {
+        var id = elems[i].attributes.getNamedItem('id');
+        var emission_r = elems[i].children[0].attributes.getNamedItem('r').nodeValue;
+        var emission_g = elems[i].children[0].attributes.getNamedItem('g').nodeValue;
+        var emission_b = elems[i].children[0].attributes.getNamedItem('b').nodeValue;
+        var emission_a = elems[i].children[0].attributes.getNamedItem('a').nodeValue;
+        var ambient_r = elems[i].children[1].attributes.getNamedItem('r').nodeValue;
+        var ambient_g = elems[i].children[1].attributes.getNamedItem('g').nodeValue;
+        var ambient_b = elems[i].children[1].attributes.getNamedItem('b').nodeValue;
+        var ambient_a = elems[i].children[1].attributes.getNamedItem('a').nodeValue;
+        var diffuse_r = elems[i].children[2].attributes.getNamedItem('r').nodeValue;
+        var diffuse_g = elems[i].children[2].attributes.getNamedItem('g').nodeValue;
+        var diffuse_b = elems[i].children[2].attributes.getNamedItem('b').nodeValue;
+        var diffuse_a = elems[i].children[2].attributes.getNamedItem('a').nodeValue;
+        var specular_r = elems[i].children[3].attributes.getNamedItem('r').nodeValue;
+        var specular_g = elems[i].children[3].attributes.getNamedItem('g').nodeValue;
+        var specular_b = elems[i].children[3].attributes.getNamedItem('b').nodeValue;
+        var specular_a = elems[i].children[3].attributes.getNamedItem('a').nodeValue;
+        var shininess_value = elems[i].children[4].attributes.getNamedItem('value').nodeValue;
 
         this.materials[id] = new CGFappearance(this.scene);
         this.materials[id].setEmission(emission_r, emission_g, emission_b, emission_a);
         this.materials[id].setAmbient(ambient_r, ambient_g, ambient_b, ambient_a);
         this.materials[id].setDiffuse(diffuse_r, diffuse_g, diffuse_b, diffuse_a);
         this.materials[id].setSpecular(specular_r, specular_g, specular_b, specular_a);
-        if(shininess_value > 0)
+        if (shininess_value > 0)
             this.materials[id].setShininess(shininess_value);
     }
+}
 
-    /* 'transformations' tags loading */
-    var tempTransformationsElems = rootElement.getElementsByTagName('transformations')
-    if (tempTransformationsElems == null || tempTransformationsElems.length != 1)
-        return "'transformations' tag misbehavior.";
-
-    /* 'transformation' tags loading */
-    var tempTransformationElems = tempTransformationsElems[0].getElementsByTagName('transformation');
-    if (tempTransformationElems == null || tempTransformationElems.length == 0)
-        return "'transformation' element is missing.";
-    for (var i = 0, nnodes = tempTransformationElems.length; i < nnodes; i++) {
-        var id = tempTransformationElems[i].attributes.getNamedItem('id');
-        /*var translate_x = tempTransformationElems[i].children[0].attributes.getNamedItem('x').nodeValue;
-        var translate_y = tempTransformationElems[i].children[0].attributes.getNamedItem('y').nodeValue;
-        var translate_z = tempTransformationElems[i].children[0].attributes.getNamedItem('z').nodeValue;
-        var rotate_axis = tempTransformationElems[i].children[1].attributes.getNamedItem('axis').nodeValue;
+MySceneGraph.prototype.parseTransformationTags = function (elems) {
+    for (var i = 0, nnodes = elems.length; i < nnodes; i++) {
+        var id = elems[i].attributes.getNamedItem('id');
+        /*var translate_x = elems[i].children[0].attributes.getNamedItem('x').nodeValue;
+        var translate_y = elems[i].children[0].attributes.getNamedItem('y').nodeValue;
+        var translate_z = elems[i].children[0].attributes.getNamedItem('z').nodeValue;
+        var rotate_axis = elems[i].children[1].attributes.getNamedItem('axis').nodeValue;
         if (rotate_axis != 'x' && rotate_axis != 'X' &&
             rotate_axis != 'y' && rotate_axis != 'Y' &&
             rotate_axis != 'z' && rotate_axis != 'Z')
             return "Invalid rotation axis: " + rotate_axis;
-        var rotate_angle = tempTransformationElems[i].children[1].attributes.getNamedItem('angle').nodeValue;
-        var scale_x = tempTransformationElems[i].children[2].attributes.getNamedItem('x').nodeValue;
-        var scale_y = tempTransformationElems[i].children[2].attributes.getNamedItem('y').nodeValue;
-        var scale_z = tempTransformationElems[i].children[2].attributes.getNamedItem('z').nodeValue;
+        var rotate_angle = elems[i].children[1].attributes.getNamedItem('angle').nodeValue;
+        var scale_x = elems[i].children[2].attributes.getNamedItem('x').nodeValue;
+        var scale_y = elems[i].children[2].attributes.getNamedItem('y').nodeValue;
+        var scale_z = elems[i].children[2].attributes.getNamedItem('z').nodeValue;
 
         var transformation = mat4.create();
         mat4.translate(transformation, transformation, [translate_x, translate_y, translate_z]);
@@ -292,27 +248,20 @@ MySceneGraph.prototype.parseDSXFile = function (rootElement) {
             mat4.rotate(transformation, transformation, rotate_angle, [0, 0, 1]);
         mat4.scale(transformation, transformation, [scale_x, scale_y, scale_z]);*/
     }
+}
 
-    /* 'primitives' tags loading */
-    var tempPrimitivesElems = rootElement.getElementsByTagName('primitives')
-    if (tempPrimitivesElems == null || tempPrimitivesElems.length != 1)
-        return "'primitives' tag misbehavior.";
+MySceneGraph.prototype.parsePrimitiveTags = function (elems) {
+    for (var i = 0, nnodes = elems.length; i < nnodes; i++) {
+        var id = elems[i].attributes.getNamedItem('id');
 
-    /* 'primitive' tags loading */
-    var tempPrimitiveElems = tempPrimitivesElems[0].getElementsByTagName('primitive');
-    if (tempPrimitiveElems == null || tempPrimitiveElems.length == 0)
-        return "'primitive' element is missing.";
-    for (var i = 0, nnodes = tempPrimitiveElems.length; i < nnodes; i++) {
-        var id = tempPrimitiveElems[i].attributes.getNamedItem('id');
-       
-        var tempRectangleElems = tempPrimitiveElems[i].getElementsByTagName('rectangle');
+        var tempRectangleElems = elems[i].getElementsByTagName('rectangle');
         if (tempRectangleElems != null && tempRectangleElems.length == 1) {
             var x1 = tempRectangleElems[0].attributes.getNamedItem('x1').nodeValue;
             var y1 = tempRectangleElems[0].attributes.getNamedItem('y1').nodeValue;
             var x2 = tempRectangleElems[0].attributes.getNamedItem('x2').nodeValue;
             var y2 = tempRectangleElems[0].attributes.getNamedItem('y2').nodeValue;
         }
-        var tempTriangleElems = tempPrimitiveElems[i].getElementsByTagName('triangle');
+        var tempTriangleElems = elems[i].getElementsByTagName('triangle');
         if (tempTriangleElems != null && tempTriangleElems.length == 1) {
             var x1 = tempTriangleElems[0].attributes.getNamedItem('x1').nodeValue;
             var y1 = tempTriangleElems[0].attributes.getNamedItem('y1').nodeValue;
@@ -324,7 +273,7 @@ MySceneGraph.prototype.parseDSXFile = function (rootElement) {
             var y3 = tempTriangleElems[0].attributes.getNamedItem('y3').nodeValue;
             var z3 = tempTriangleElems[0].attributes.getNamedItem('z3').nodeValue;
         }
-        var tempCylinderElems = tempPrimitiveElems[i].getElementsByTagName('cylinder');
+        var tempCylinderElems = elems[i].getElementsByTagName('cylinder');
         if (tempCylinderElems != null && tempCylinderElems.length == 1) {
             var base = tempCylinderElems[0].attributes.getNamedItem('base').nodeValue;
             var top = tempCylinderElems[0].attributes.getNamedItem('top').nodeValue;
@@ -332,13 +281,13 @@ MySceneGraph.prototype.parseDSXFile = function (rootElement) {
             var slices = tempCylinderElems[0].attributes.getNamedItem('slices').nodeValue;
             var stacks = tempCylinderElems[0].attributes.getNamedItem('stacks').nodeValue;
         }
-        var tempSphereElems = tempPrimitiveElems[i].getElementsByTagName('sphere');
+        var tempSphereElems = elems[i].getElementsByTagName('sphere');
         if (tempSphereElems != null && tempSphereElems.length == 1) {
             var radius = tempSphereElems[0].attributes.getNamedItem('radius').nodeValue;
             var slices = tempSphereElems[0].attributes.getNamedItem('slices').nodeValue;
             var stacks = tempSphereElems[0].attributes.getNamedItem('stacks').nodeValue;
         }
-        var tempTorusElems = tempPrimitiveElems[i].getElementsByTagName('torus');
+        var tempTorusElems = elems[i].getElementsByTagName('torus');
         if (tempTorusElems != null && tempTorusElems.length == 1) {
             var inner = tempTorusElems[0].attributes.getNamedItem('inner').nodeValue;
             var outer = tempTorusElems[0].attributes.getNamedItem('outer').nodeValue;
@@ -346,34 +295,27 @@ MySceneGraph.prototype.parseDSXFile = function (rootElement) {
             var loops = tempTorusElems[0].attributes.getNamedItem('loops').nodeValue;
         }
     }
+}
 
-    /* 'components' tags loading */
-    var tempComponentsElems = rootElement.getElementsByTagName('components')
-    if (tempComponentsElems == null || tempComponentsElems.length != 1)
-        return "'components' tag misbehavior.";
-
-    /* 'component' tags loading */
-    var tempComponentElems = tempComponentsElems[0].getElementsByTagName('component');
-    if (tempComponentElems == null || tempComponentElems.length == 0)
-        return "'component' element is missing.";
-    for (var i = 0, nnodes = tempComponentElems.length; i < nnodes; i++) {
-        var id = tempComponentElems[i].attributes.getNamedItem('id');
+MySceneGraph.prototype.parseComponentTags = function (elems) {
+    for (var i = 0, nnodes = elems.length; i < nnodes; i++) {
+        var id = elems[i].attributes.getNamedItem('id');
         this.scene.graph[id] = new Node();
 
         /* 'transformation' tags loading */
-        var tempTransformationElems = tempComponentElems[i].getElementsByTagName('transformation');
+        var tempTransformationElems = elems[i].getElementsByTagName('transformation');
         if (tempTransformationElems == null || tempTransformationElems.length == 0)
             return "'transformation' element is missing.";
         // transformationref and transformation loading to do
         // this.scene.graph[id].setMatrix();
 
         /* 'materials' tags loading */
-        var tempMaterialsElems = tempComponentElems[i].getElementsByTagName('materials');
+        var tempMaterialsElems = elems[i].getElementsByTagName('materials');
         if (tempMaterialsElems == null || tempMaterialsElems.length == 0)
             return "'materials' element is missing.";
 
         /* 'material' tags loading */
-        var tempMaterialElems = tempComponentElems[i].getElementsByTagName('material');
+        var tempMaterialElems = elems[i].getElementsByTagName('material');
         if (tempMaterialElems == null || tempMaterialElems.length == 0)
             return "'material' element is missing.";
         for (var i = 0, nnodes2 = tempMaterialElems.length; i < nnodes2; i++) {
@@ -383,14 +325,14 @@ MySceneGraph.prototype.parseDSXFile = function (rootElement) {
         }
 
         /* 'texture' tags loading */
-        var tempTextureElems = tempComponentElems[i].getElementsByTagName('texture');
+        var tempTextureElems = elems[i].getElementsByTagName('texture');
         if (tempTextureElems == null || tempTextureElems.length != 1)
             return "'texture' tag misbehavior.";
         var texture = tempTextureElems[0].attributes.getNamedItem('id');
         this.scene.graph[id].setTexture(this.textures[texture]);
 
         /* 'children' tags loading */
-        var tempChildrenElems = tempComponentElems[i].getElementsByTagName('children');
+        var tempChildrenElems = elems[i].getElementsByTagName('children');
         if (tempChildrenElems == null || tempChildrenElems.length != 1)
             return "'children' tag misbehavior.";
         for (var i = 0, nnodes2 = tempChildrenElems.length; i < nnodes2; i++) {
@@ -410,6 +352,108 @@ MySceneGraph.prototype.parseDSXFile = function (rootElement) {
             }
         }
     }
+}
+
+MySceneGraph.prototype.parseDSXFile = function (rootElement) {
+    var error = this.verifyDSXFileStructure(rootElement);
+    if (error != null)
+        return error;
+
+    /* 'scene' tags loading */
+    var tempSceneElems = rootElement.getElementsByTagName('scene');
+    if (tempSceneElems == null || tempSceneElems.length != 1)
+        return "'scene' tag misbehavior.";
+    this.parseSceneTag(tempSceneElems[0]);
+
+    /* 'views' tags loading */
+    var tempViewsElems = rootElement.getElementsByTagName('views');
+    if (tempViewsElems == null || tempViewsElems.length != 1) {
+        return "'views' tag misbehavior.";
+    }
+    var default_view = tempViewsElems[0].attributes.getNamedItem("default");
+
+    /* 'perspective' tags loading */
+    var tempPerspectiveElems = rootElement.getElementsByTagName('perspective');
+    if (tempPerspectiveElems == null || tempPerspectiveElems.length == 0) {
+        return "'perspective' element is missing.";
+    }
+    this.parsePerspectiveTags(tempPerspectiveElems)
+    //this.scene.camera = this.perspectives[default_view];
+
+    /* 'illumination' tags loading */
+    var tempIlluminationElems = rootElement.getElementsByTagName('illumination');
+    if (tempIlluminationElems == null || tempIlluminationElems.length != 1)
+        return "'illumination' tag misbehavior.";
+    this.parseIlluminationTag(tempIlluminationElems[0]);
+
+    /* 'lights' tags loading */
+    var tempLightsElems = rootElement.getElementsByTagName('lights');
+    if (tempLightsElems == null || tempLightsElems.length != 1)
+        return "'lights' tag misbehavior.";
+
+    /* 'omni' and 'spot' tags loading */
+    var tempOmniElems = tempLightsElems[0].getElementsByTagName('omni');
+    var tempSpotElems = tempLightsElems[0].getElementsByTagName('spot');
+    if ((tempOmniElems == null || tempOmniElems.length == 0) &&
+        (tempSpotElems == null || tempSpotElems.length == 0))
+        return "'omni' or 'spot' element is missing.";
+    var lastUsedIndex = this.parseLightsRelativeTags(tempOmniElems, 'omni', 0);
+    this.parseLightsRelativeTags(tempSpotElems, 'spot', lastUsedIndex + 1);
+
+    /* 'textures' tags loading */
+    var tempTexturesElems = rootElement.getElementsByTagName('textures')
+    if (tempTexturesElems == null || tempTexturesElems.length != 1)
+        return "'textures' tag misbehavior.";
+
+    /* 'texture' tags loading */
+    var tempTextureElems = tempTexturesElems[0].getElementsByTagName('texture');
+    if (tempTextureElems == null || tempTextureElems.length == 0)
+        return "'texture' element is missing.";
+    this.parseTextureTags(tempTextureElems);
+
+    /* 'materials' tags loading */
+    var tempMaterialsElems = rootElement.getElementsByTagName('materials')
+    if (tempMaterialsElems == null || tempMaterialsElems.length == 0)
+        return "'materials' tag misbehavior.";
+
+    /* 'material' tags loading */
+    var tempMaterialElems = tempMaterialsElems[0].getElementsByTagName('material');
+    if (tempMaterialElems == null || tempMaterialElems.length == 0)
+        return "'material' element is missing.";
+    this.parseMaterialTags(tempMaterialElems);
+
+    /* 'transformations' tags loading */
+    var tempTransformationsElems = rootElement.getElementsByTagName('transformations')
+    if (tempTransformationsElems == null || tempTransformationsElems.length != 1)
+        return "'transformations' tag misbehavior.";
+
+    /* 'transformation' tags loading */
+    var tempTransformationElems = tempTransformationsElems[0].getElementsByTagName('transformation');
+    if (tempTransformationElems == null || tempTransformationElems.length == 0)
+        return "'transformation' element is missing.";
+    this.parseTransformationTags(tempTransformationElems);
+
+    /* 'primitives' tags loading */
+    var tempPrimitivesElems = rootElement.getElementsByTagName('primitives')
+    if (tempPrimitivesElems == null || tempPrimitivesElems.length != 1)
+        return "'primitives' tag misbehavior.";
+
+    /* 'primitive' tags loading */
+    var tempPrimitiveElems = tempPrimitivesElems[0].getElementsByTagName('primitive');
+    if (tempPrimitiveElems == null || tempPrimitiveElems.length == 0)
+        return "'primitive' element is missing.";
+    this.parsePrimitiveTags(tempPrimitiveElems);
+
+    /* 'components' tags loading */
+    var tempComponentsElems = rootElement.getElementsByTagName('components')
+    if (tempComponentsElems == null || tempComponentsElems.length != 1)
+        return "'components' tag misbehavior.";
+
+    /* 'component' tags loading */
+    var tempComponentElems = tempComponentsElems[0].getElementsByTagName('component');
+    if (tempComponentElems == null || tempComponentElems.length == 0)
+        return "'component' element is missing.";
+    this.parseComponentTags(tempComponentElems);
 };
 
 /*
