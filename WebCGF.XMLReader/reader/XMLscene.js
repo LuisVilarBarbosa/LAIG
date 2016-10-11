@@ -23,6 +23,7 @@ XMLscene.prototype.init = function (application) {
     this.axis = new CGFaxis(this);
 
     this.rootNode = null;
+    this.processGraph(this.rootNode);
 };
 
 XMLscene.prototype.initLights = function () {
@@ -79,7 +80,6 @@ XMLscene.prototype.display = function () {
 	if (this.graph.loadedOk)
 	{
 	    this.lights[0].update();
-	    this.processGraph(this.rootNode);
 	};	
 };
 
@@ -87,9 +87,9 @@ XMLscene.prototype.processGraph = function (nodeName) {
     var material = null;
     if (nodeName != null) {
         var node = this.graph[nodeName];
-        /*if (node.material != null)
+        if (node.material != null)
             material = node.material;
-          if (material != null)
+        if (material != null)
             material.apply();
 
         this.multMatrix(node.mat);
@@ -100,7 +100,7 @@ XMLscene.prototype.processGraph = function (nodeName) {
             material.apply();
             this.processGraph(node.children[i]);
             this.popMatrix();
-        }*/
+        }
     }
 }
 
