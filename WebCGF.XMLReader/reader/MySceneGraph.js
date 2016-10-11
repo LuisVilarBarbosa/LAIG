@@ -172,7 +172,7 @@ MySceneGraph.prototype.parseDSXFile = function (rootElement) {
         return "'omni' element is missing.";*/
     var nnodes = tempOmniElems.length;
     for (var i = 0; i < nnodes; i++) {
-        var id = tempOmniElems[i].attributes.getNamedItem('id');
+        var id = tempOmniElems[i].attributes.getNamedItem('id');    // not in use
         var enabled = this.reader.getBoolean(tempOmniElems[i], 'enabled', true);
         var location_x = tempOmniElems[i].children[0].attributes.getNamedItem('x').nodeValue;
         var location_y = tempOmniElems[i].children[0].attributes.getNamedItem('y').nodeValue;
@@ -191,7 +191,6 @@ MySceneGraph.prototype.parseDSXFile = function (rootElement) {
         var specular_b = tempOmniElems[i].children[3].attributes.getNamedItem('b').nodeValue;
         var specular_a = tempOmniElems[i].children[3].attributes.getNamedItem('a').nodeValue;
 
-        this.scene.lights[i] = new CGFlight(this.scene, id);
         if(enabled)
             this.scene.lights[i].enable();
         else
@@ -207,8 +206,8 @@ MySceneGraph.prototype.parseDSXFile = function (rootElement) {
     /*if (tempSpotElems == null || tempSpotElems.length == 0)
         return "'spot' element is missing.";*/
     var nnodes = tempSpotElems.length;
-    for (var i = 0; i < nnodes; i++) {
-        var id = tempSpotElems[i].attributes.getNamedItem('id');
+    for (var i = tempOmniElems.length; i < nnodes; i++) {
+        var id = tempSpotElems[i].attributes.getNamedItem('id');    // not in use
         var enabled = this.reader.getBoolean(tempSpotElems[i], 'enabled', true);
         var target_x = tempSpotElems[i].children[0].attributes.getNamedItem('x').nodeValue;
         var target_y = tempSpotElems[i].children[0].attributes.getNamedItem('y').nodeValue;
@@ -233,7 +232,6 @@ MySceneGraph.prototype.parseDSXFile = function (rootElement) {
         var direction_y = target_y - location_y;
         var direction_z = target_z - location_z;
 
-        this.scene.lights[i] = new CGFlight(this.scene, id);
         if (enabled)
             this.scene.lights[i].enable();
         else
