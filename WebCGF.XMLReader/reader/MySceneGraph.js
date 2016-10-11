@@ -251,6 +251,7 @@ MySceneGraph.prototype.parseTransformationTags = function (elems) {
 }
 
 MySceneGraph.prototype.parsePrimitiveTags = function (elems) {
+    this.primitives = [];
     for (var i = 0, nnodes = elems.length; i < nnodes; i++) {
         var id = elems[i].attributes.getNamedItem('id');
 
@@ -260,6 +261,7 @@ MySceneGraph.prototype.parsePrimitiveTags = function (elems) {
             var y1 = tempRectangleElems[0].attributes.getNamedItem('y1').nodeValue;
             var x2 = tempRectangleElems[0].attributes.getNamedItem('x2').nodeValue;
             var y2 = tempRectangleElems[0].attributes.getNamedItem('y2').nodeValue;
+            this.primitives[id] = new Rectangle(this.scene, x1, y1, x2, y2);
         }
         var tempTriangleElems = elems[i].getElementsByTagName('triangle');
         if (tempTriangleElems != null && tempTriangleElems.length == 1) {
@@ -272,6 +274,7 @@ MySceneGraph.prototype.parsePrimitiveTags = function (elems) {
             var x3 = tempTriangleElems[0].attributes.getNamedItem('x3').nodeValue;
             var y3 = tempTriangleElems[0].attributes.getNamedItem('y3').nodeValue;
             var z3 = tempTriangleElems[0].attributes.getNamedItem('z3').nodeValue;
+            this.primitives[id] = new Triangle(this.scene, x1, y1, z1, x2, y2, z2, x3, y3, z3);
         }
         var tempCylinderElems = elems[i].getElementsByTagName('cylinder');
         if (tempCylinderElems != null && tempCylinderElems.length == 1) {
@@ -347,8 +350,8 @@ MySceneGraph.prototype.parseComponentTags = function (elems) {
                     this.scene.graph[id].push(tempComponentrefElems[i].attributes.getNamedItem('id'));
 
                 // more than one primitive must be allowed and verify if it is stored the name or the primitive itself
-                /*for (var i = 0, nnodes3 = tempPrimitiverefElems.length; i < nnodes3; i++)
-                    this.scene.graph[id].primitive = tempPrimitiverefElems[i].attributes.getNamedItem('id');*/
+                for (var i = 0, nnodes3 = tempPrimitiverefElems.length; i < nnodes3; i++)
+                    this.scene.graph[id].primitive = this.primitives[tempPrimitiverefElems[i].attributes.getNamedItem('id')];
             }
         }
     }
