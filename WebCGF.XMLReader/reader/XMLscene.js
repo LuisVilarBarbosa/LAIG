@@ -87,20 +87,20 @@ XMLscene.prototype.processGraph = function (nodeName) {
     var material = null;
     if (nodeName != null) {
         var node = this.graph[nodeName];
-        if (node.material != null)
+        /*if (node.material != null)
             material = node.material;
-        if (material != null)
-            this.material.apply();
+          if (material != null)
+            material.apply();
 
-        this.mulMatrix(node.mat);
+        this.multMatrix(node.mat);
         if (node.primitive != null)
             node.primitive.display();
         for (var i = 0; i < node.children.length; i++) {
             this.pushMatrix();
-            this.applyMaterial(material);
+            material.apply();
             this.processGraph(node.children[i]);
             this.popMatrix();
-        }
+        }*/
     }
 }
 

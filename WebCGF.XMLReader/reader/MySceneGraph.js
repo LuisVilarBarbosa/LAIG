@@ -66,6 +66,7 @@ MySceneGraph.prototype.parseDSXFile = function (rootElement) {
         return "'scene' tag misbehavior.";
     this.scene.rootNode = tempSceneElems[0].attributes.getNamedItem("root");
     var axis_length = tempSceneElems[0].attributes.getNamedItem("axis_length");
+    this.scene.axis = new CGFaxis(this.scene, axis_length, 0.2);    // 0.2 = default thickness
 
     /* 'views' tags loading */
     var tempViewsElems = rootElement.getElementsByTagName('views');
@@ -94,13 +95,14 @@ MySceneGraph.prototype.parseDSXFile = function (rootElement) {
         var to_x = e.children[1].attributes.getNamedItem('x').nodeValue;
         var to_y = e.children[1].attributes.getNamedItem('y').nodeValue;
         var to_z = e.children[1].attributes.getNamedItem('z').nodeValue;
-        var from = vec4.create();
-        from.set(from_x, from_y, from_z, 1.0);   // what value should be given to 'w'?
-        var to = vec4.create();
-        to.set(to_x, to_y, to_z, 1.0);   // what value should be given to 'w'?
+        //var from = vec4.create();
+        //from.set(from_x, from_y, from_z, 1.0);   // what value should be given to 'w'?
+        //var to = vec4.create();
+        //to.set(to_x, to_y, to_z, 1.0);   // what value should be given to 'w'?
 
-        this.perspectives[id] = new CGFcamera(angle, near, far, from, to);
+        //this.perspectives[id] = new CGFcamera(angle, near, far, from, to);
     };
+    //this.scene.camera = this.perspectives[default_view];
 
     /* 'illumination' tags loading */
     var tempIlluminationElems = rootElement.getElementsByTagName('illumination');
@@ -124,10 +126,12 @@ MySceneGraph.prototype.parseDSXFile = function (rootElement) {
     if (tempLightsElems == null || tempLightsElems.length != 1)
         return "'lights' tag misbehavior.";
 
-    /* 'omni' tags loading */
+    /* 'omni' and 'spot' tags loading */
     var tempOmniElems = tempLightsElems[0].getElementsByTagName('omni');
-    /*if (tempOmniElems == null || tempOmniElems.length == 0)
-        return "'omni' element is missing.";*/
+    var tempSpotElems = tempLightsElems[0].getElementsByTagName('spot');
+    if ((tempOmniElems == null || tempOmniElems.length == 0) &&
+        (tempSpotElems == null || tempSpotElems.length == 0))
+        return "'omni' or 'spot' element is missing.";
     var nnodes = tempOmniElems.length;
     for (var i = 0; i < nnodes; i++) {
         var id = tempOmniElems[i].attributes.getNamedItem('id');    // not in use
@@ -159,10 +163,6 @@ MySceneGraph.prototype.parseDSXFile = function (rootElement) {
         this.scene.lights[i].setSpecular(specular_r, specular_g, specular_b, specular_a);
     }
 
-    /* 'spot' tags loading */
-    var tempSpotElems = tempLightsElems[0].getElementsByTagName('spot');
-    /*if (tempSpotElems == null || tempSpotElems.length == 0)
-        return "'spot' element is missing.";*/
     var nnodes = tempSpotElems.length;
     for (var i = tempOmniElems.length; i < nnodes; i++) {
         var id = tempSpotElems[i].attributes.getNamedItem('id');    // not in use
@@ -210,6 +210,7 @@ MySceneGraph.prototype.parseDSXFile = function (rootElement) {
     var tempTextureElems = tempTexturesElems[0].getElementsByTagName('texture');
     if (tempTextureElems == null || tempTextureElems.length == 0)
         return "'texture' element is missing.";
+    this.textures = [];
     var nnodes = tempTextureElems.length;
     for (var i = 0; i < nnodes; i++) {
         var id = tempTextureElems[i].attributes.getNamedItem('id'); // not saved
@@ -217,9 +218,10 @@ MySceneGraph.prototype.parseDSXFile = function (rootElement) {
         var length_s = tempTextureElems[i].attributes.getNamedItem('length_s');
         var length_t = tempTextureElems[i].attributes.getNamedItem('length_t');
 
-        /*this.scene.appearance[i] = new CGFappearance(this.scene);
-        this.scene.appearance[i].loadTexture(file);
-        this.scene.appearance[i].setTextureWrap(length_s, length_t);*/
+        this.textures[id] = new CGFappearance(this.scene);
+        //this.textures[id].loadTexture(file);
+        //console.log(file);
+        this.textures[id].setTextureWrap(length_s, length_t);
     }
 
     /* 'materials' tags loading */
@@ -231,6 +233,7 @@ MySceneGraph.prototype.parseDSXFile = function (rootElement) {
     var tempMaterialElems = tempMaterialsElems[0].getElementsByTagName('material');
     if (tempMaterialElems == null || tempMaterialElems.length == 0)
         return "'material' element is missing.";
+    this.materials = [];
     var nnodes = tempMaterialElems.length;
     for (var i = 0; i < nnodes; i++) {
         var id = tempMaterialElems[i].attributes.getNamedItem('id');
@@ -252,13 +255,13 @@ MySceneGraph.prototype.parseDSXFile = function (rootElement) {
         var specular_a = tempMaterialElems[i].children[3].attributes.getNamedItem('a').nodeValue;
         var shininess_value = tempMaterialElems[i].children[4].attributes.getNamedItem('value').nodeValue;
 
-       /* this.scene.appearance[i] = new CGFappearance(this.scene); // correct: sobrepostion of material over texture
-        this.scene.appearance[i].setEmission(emission_r, emission_g, emission_b, emission_a);
-        this.scene.appearance[i].setAmbient(ambient_r, ambient_g, ambient_b, ambient_a);
-        this.scene.appearance[i].setDiffuse(diffuse_r, diffuse_g, diffuse_b, diffuse_a);
-        this.scene.appearance[i].setSpecular(specular_r, specular_g, specular_b, specular_a);
+        this.materials[id] = new CGFappearance(this.scene);
+        this.materials[id].setEmission(emission_r, emission_g, emission_b, emission_a);
+        this.materials[id].setAmbient(ambient_r, ambient_g, ambient_b, ambient_a);
+        this.materials[id].setDiffuse(diffuse_r, diffuse_g, diffuse_b, diffuse_a);
+        this.materials[id].setSpecular(specular_r, specular_g, specular_b, specular_a);
         if(shininess_value > 0)
-            this.scene.appearance[i].setShininess(shininess_value);*/
+            this.materials[id].setShininess(shininess_value);
     }
 
     /* 'transformations' tags loading */
@@ -385,7 +388,7 @@ MySceneGraph.prototype.parseDSXFile = function (rootElement) {
         var nnodes = tempMaterialElems.length;
         for (var i = 0; i < nnodes; i++) {
             var material = tempMaterialElems[i].attributes.getNamedItem('id');
-            this.scene.graph[id].addMaterial(material);
+            this.scene.graph[id].addMaterial(this.materials[material]);
             // misses 'inherit' condition
         }
 
@@ -394,7 +397,7 @@ MySceneGraph.prototype.parseDSXFile = function (rootElement) {
         if (tempTextureElems == null || tempTextureElems.length != 1)
             return "'texture' tag misbehavior.";
         var texture = tempTextureElems[0].attributes.getNamedItem('id');
-        this.scene.graph[id].setTexture(texture);
+        this.scene.graph[id].setTexture(this.textures[texture]);
 
         /* 'children' tags loading */
         var tempChildrenElems = tempComponentElems[i].getElementsByTagName('children');
@@ -414,8 +417,9 @@ MySceneGraph.prototype.parseDSXFile = function (rootElement) {
                     this.scene.graph[id].push(tempComponentrefElems[i].attributes.getNamedItem('id'));
 
                 var nnodes = tempPrimitiverefElems.length;
-                for (var i = 0; i < nnodes; i++)
-                    this.scene.graph[id].push(tempPrimitiverefElems[i].attributes.getNamedItem('id'));
+                // more than one primitive must be allowed and verify if it is stored the name or the primitive itself
+                /*for (var i = 0; i < nnodes; i++)
+                    this.scene.graph[id].primitive = tempPrimitiverefElems[i].attributes.getNamedItem('id');*/
             }
         }
     }
