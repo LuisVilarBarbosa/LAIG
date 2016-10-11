@@ -81,8 +81,7 @@ MySceneGraph.prototype.parseDSXFile = function (rootElement) {
         return "'perspective' element is missing.";
     }
     this.perspectives = [];
-    var nnodes = tempPerspectiveElems.length;
-    for (var i = 0; i < nnodes; i++) {
+    for (var i = 0, nnodes = tempPerspectiveElems.length; i < nnodes; i++) {
         var e = tempPerspectiveElems[i];
 
         var id = e.attributes.getNamedItem('id').nodeValue;
@@ -132,8 +131,7 @@ MySceneGraph.prototype.parseDSXFile = function (rootElement) {
     if ((tempOmniElems == null || tempOmniElems.length == 0) &&
         (tempSpotElems == null || tempSpotElems.length == 0))
         return "'omni' or 'spot' element is missing.";
-    var nnodes = tempOmniElems.length;
-    for (var i = 0; i < nnodes; i++) {
+    for (var i = 0, nnodes = tempOmniElems.length; i < nnodes; i++) {
         var id = tempOmniElems[i].attributes.getNamedItem('id');    // not in use
         var enabled = this.reader.getBoolean(tempOmniElems[i], 'enabled', true);
         var location_x = tempOmniElems[i].children[0].attributes.getNamedItem('x').nodeValue;
@@ -163,8 +161,7 @@ MySceneGraph.prototype.parseDSXFile = function (rootElement) {
         this.scene.lights[i].setSpecular(specular_r, specular_g, specular_b, specular_a);
     }
 
-    var nnodes = tempSpotElems.length;
-    for (var i = tempOmniElems.length; i < nnodes; i++) {
+    for (var i = 0, j = tempOmniElems.length, nnodes = tempSpotElems.length; i < nnodes; i++, j++) {
         var id = tempSpotElems[i].attributes.getNamedItem('id');    // not in use
         var enabled = this.reader.getBoolean(tempSpotElems[i], 'enabled', true);
         var target_x = tempSpotElems[i].children[0].attributes.getNamedItem('x').nodeValue;
@@ -191,14 +188,14 @@ MySceneGraph.prototype.parseDSXFile = function (rootElement) {
         var direction_z = target_z - location_z;
 
         if (enabled)
-            this.scene.lights[i].enable();
+            this.scene.lights[j].enable();
         else
-            this.scene.lights[i].disable();
-        this.scene.lights[i].setSpotDirection(direction_x, direction_y, direction_z);
-        this.scene.lights[i].setPosition(location_x, location_y, location_z);
-        this.scene.lights[i].setAmbient(ambient_r, ambient_g, ambient_b, ambient_a);
-        this.scene.lights[i].setDiffuse(diffuse_r, diffuse_g, diffuse_b, diffuse_a);
-        this.scene.lights[i].setSpecular(specular_r, specular_g, specular_b, specular_a);
+            this.scene.lights[j].disable();
+        this.scene.lights[j].setSpotDirection(direction_x, direction_y, direction_z);
+        this.scene.lights[j].setPosition(location_x, location_y, location_z);
+        this.scene.lights[j].setAmbient(ambient_r, ambient_g, ambient_b, ambient_a);
+        this.scene.lights[j].setDiffuse(diffuse_r, diffuse_g, diffuse_b, diffuse_a);
+        this.scene.lights[j].setSpecular(specular_r, specular_g, specular_b, specular_a);
     }
 
     /* 'textures' tags loading */
@@ -211,16 +208,14 @@ MySceneGraph.prototype.parseDSXFile = function (rootElement) {
     if (tempTextureElems == null || tempTextureElems.length == 0)
         return "'texture' element is missing.";
     this.textures = [];
-    var nnodes = tempTextureElems.length;
-    for (var i = 0; i < nnodes; i++) {
-        var id = tempTextureElems[i].attributes.getNamedItem('id'); // not saved
+    for (var i = 0, nnodes = tempTextureElems.length; i < nnodes; i++) {
+        var id = tempTextureElems[i].attributes.getNamedItem('id');
         var file = tempTextureElems[i].attributes.getNamedItem('file');
         var length_s = tempTextureElems[i].attributes.getNamedItem('length_s');
         var length_t = tempTextureElems[i].attributes.getNamedItem('length_t');
 
         this.textures[id] = new CGFappearance(this.scene);
         //this.textures[id].loadTexture(file);
-        //console.log(file);
         this.textures[id].setTextureWrap(length_s, length_t);
     }
 
@@ -234,8 +229,7 @@ MySceneGraph.prototype.parseDSXFile = function (rootElement) {
     if (tempMaterialElems == null || tempMaterialElems.length == 0)
         return "'material' element is missing.";
     this.materials = [];
-    var nnodes = tempMaterialElems.length;
-    for (var i = 0; i < nnodes; i++) {
+    for (var i = 0, nnodes = tempMaterialElems.length; i < nnodes; i++) {
         var id = tempMaterialElems[i].attributes.getNamedItem('id');
         var emission_r = tempMaterialElems[i].children[0].attributes.getNamedItem('r').nodeValue;
         var emission_g = tempMaterialElems[i].children[0].attributes.getNamedItem('g').nodeValue;
@@ -273,8 +267,7 @@ MySceneGraph.prototype.parseDSXFile = function (rootElement) {
     var tempTransformationElems = tempTransformationsElems[0].getElementsByTagName('transformation');
     if (tempTransformationElems == null || tempTransformationElems.length == 0)
         return "'transformation' element is missing.";
-    var nnodes = tempTransformationElems.length;
-    for (var i = 0; i < nnodes; i++) {
+    for (var i = 0, nnodes = tempTransformationElems.length; i < nnodes; i++) {
         var id = tempTransformationElems[i].attributes.getNamedItem('id');
         /*var translate_x = tempTransformationElems[i].children[0].attributes.getNamedItem('x').nodeValue;
         var translate_y = tempTransformationElems[i].children[0].attributes.getNamedItem('y').nodeValue;
@@ -309,8 +302,7 @@ MySceneGraph.prototype.parseDSXFile = function (rootElement) {
     var tempPrimitiveElems = tempPrimitivesElems[0].getElementsByTagName('primitive');
     if (tempPrimitiveElems == null || tempPrimitiveElems.length == 0)
         return "'primitive' element is missing.";
-    var nnodes = tempPrimitiveElems.length;
-    for (var i = 0; i < nnodes; i++) {
+    for (var i = 0, nnodes = tempPrimitiveElems.length; i < nnodes; i++) {
         var id = tempPrimitiveElems[i].attributes.getNamedItem('id');
        
         var tempRectangleElems = tempPrimitiveElems[i].getElementsByTagName('rectangle');
@@ -364,8 +356,7 @@ MySceneGraph.prototype.parseDSXFile = function (rootElement) {
     var tempComponentElems = tempComponentsElems[0].getElementsByTagName('component');
     if (tempComponentElems == null || tempComponentElems.length == 0)
         return "'component' element is missing.";
-    var nnodes = tempComponentElems.length;
-    for (var i = 0; i < nnodes; i++) {
+    for (var i = 0, nnodes = tempComponentElems.length; i < nnodes; i++) {
         var id = tempComponentElems[i].attributes.getNamedItem('id');
         this.scene.graph[id] = new Node();
 
@@ -385,8 +376,7 @@ MySceneGraph.prototype.parseDSXFile = function (rootElement) {
         var tempMaterialElems = tempComponentElems[i].getElementsByTagName('material');
         if (tempMaterialElems == null || tempMaterialElems.length == 0)
             return "'material' element is missing.";
-        var nnodes = tempMaterialElems.length;
-        for (var i = 0; i < nnodes; i++) {
+        for (var i = 0, nnodes2 = tempMaterialElems.length; i < nnodes2; i++) {
             var material = tempMaterialElems[i].attributes.getNamedItem('id');
             this.scene.graph[id].addMaterial(this.materials[material]);
             // misses 'inherit' condition
@@ -403,8 +393,7 @@ MySceneGraph.prototype.parseDSXFile = function (rootElement) {
         var tempChildrenElems = tempComponentElems[i].getElementsByTagName('children');
         if (tempChildrenElems == null || tempChildrenElems.length != 1)
             return "'children' tag misbehavior.";
-        var nnodes = tempChildrenElems.length;
-        for (var i = 0; i < nnodes; i++) {
+        for (var i = 0, nnodes2 = tempChildrenElems.length; i < nnodes2; i++) {
             /* 'componentref' and 'primitiveref' tags loading */
             var tempComponentrefElems = tempChildrenElems[i].getElementsByTagName('componentref');
             var tempPrimitiverefElems = tempChildrenElems[i].getElementsByTagName('primitiveref');
@@ -412,13 +401,11 @@ MySceneGraph.prototype.parseDSXFile = function (rootElement) {
                 (tempPrimitiverefElems == null || tempPrimitiverefElems.length == 0))
                 return "'componentref' or 'primitiveref' element is missing";
             else {
-                var nnodes = tempComponentrefElems.length;
-                for (var i = 0; i < nnodes; i++)
+                for (var i = 0, nnodes3 = tempComponentrefElems.length; i < nnodes3; i++)
                     this.scene.graph[id].push(tempComponentrefElems[i].attributes.getNamedItem('id'));
 
-                var nnodes = tempPrimitiverefElems.length;
                 // more than one primitive must be allowed and verify if it is stored the name or the primitive itself
-                /*for (var i = 0; i < nnodes; i++)
+                /*for (var i = 0, nnodes3 = tempPrimitiverefElems.length; i < nnodes3; i++)
                     this.scene.graph[id].primitive = tempPrimitiverefElems[i].attributes.getNamedItem('id');*/
             }
         }
