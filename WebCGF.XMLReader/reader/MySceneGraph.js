@@ -268,7 +268,7 @@ MySceneGraph.prototype.parseDSXFile = function (rootElement) {
 
     /* 'materials' tags loading */
     var tempMaterialsElems = rootElement.getElementsByTagName('materials')
-    if (tempMaterialsElems == null || tempMaterialsElems.length != 2)
+    if (tempMaterialsElems == null || tempMaterialsElems.length == 0)
         return "'materials' tag misbehavior.";
 
     /* 'material' tags loading */
@@ -317,7 +317,7 @@ MySceneGraph.prototype.parseDSXFile = function (rootElement) {
     var nnodes = tempTransformationElems.length;
     for (var i = 0; i < nnodes; i++) {
         var id = tempTransformationElems[i].attributes.getNamedItem('id');
-        var translate_x = tempTransformationElems[i].children[0].attributes.getNamedItem('x').nodeValue;
+        /*var translate_x = tempTransformationElems[i].children[0].attributes.getNamedItem('x').nodeValue;
         var translate_y = tempTransformationElems[i].children[0].attributes.getNamedItem('y').nodeValue;
         var translate_z = tempTransformationElems[i].children[0].attributes.getNamedItem('z').nodeValue;
         var rotate_axis = tempTransformationElems[i].children[1].attributes.getNamedItem('axis').nodeValue;
@@ -338,7 +338,7 @@ MySceneGraph.prototype.parseDSXFile = function (rootElement) {
             mat4.rotate(transformation, transformation, rotate_angle, [0, 1, 0]);
         else if (rotate_axis == 'z' || rotate_axis == 'Z')
             mat4.rotate(transformation, transformation, rotate_angle, [0, 0, 1]);
-        mat4.scale(transformation, transformation, [scale_x, scale_y, scale_z]);
+        mat4.scale(transformation, transformation, [scale_x, scale_y, scale_z]);*/
     }
 
     /* 'primitives' tags loading */
@@ -412,19 +412,19 @@ MySceneGraph.prototype.parseDSXFile = function (rootElement) {
         this.graph[id] = new Node();
 
         /* 'transformation' tags loading */
-        var tempTransformationElems = tempComponentsElems[0].getElementsByTagName('transformation');
+        var tempTransformationElems = tempComponentElems[i].getElementsByTagName('transformation');
         if (tempTransformationElems == null || tempTransformationElems.length == 0)
             return "'transformation' element is missing.";
         // transformationref and transformation loading to do
         // this.graph[id].setMatrix();
 
         /* 'materials' tags loading */
-        var tempMaterialsElems = tempComponentsElems[0].getElementsByTagName('materials');
+        var tempMaterialsElems = tempComponentElems[i].getElementsByTagName('materials');
         if (tempMaterialsElems == null || tempMaterialsElems.length == 0)
             return "'materials' element is missing.";
 
         /* 'material' tags loading */
-        var tempMaterialElems = tempComponentsElems[0].getElementsByTagName('material');
+        var tempMaterialElems = tempComponentElems[i].getElementsByTagName('material');
         if (tempMaterialElems == null || tempMaterialElems.length == 0)
             return "'material' element is missing.";
         var nnodes = tempMaterialElems.length;
@@ -435,14 +435,14 @@ MySceneGraph.prototype.parseDSXFile = function (rootElement) {
         }
 
         /* 'texture' tags loading */
-        var tempTextureElems = tempComponentsElems[0].getElementsByTagName('texture');
+        var tempTextureElems = tempComponentElems[i].getElementsByTagName('texture');
         if (tempTextureElems == null || tempTextureElems.length != 1)
             return "'texture' tag misbehavior.";
         var texture = tempTextureElems[0].attributes.getNamedItem('id');
         this.graph[id].setTexture(texture);
 
         /* 'children' tags loading */
-        var tempChildrenElems = tempComponentsElems[0].getElementsByTagName('children');
+        var tempChildrenElems = tempComponentElems[i].getElementsByTagName('children');
         if (tempChildrenElems == null || tempChildrenElems.length != 1)
             return "'children' tag misbehavior.";
         var nnodes = tempChildrenElems.length;
