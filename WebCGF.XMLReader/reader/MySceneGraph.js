@@ -106,7 +106,7 @@ MySceneGraph.prototype.parseDSXFile = function (rootElement) {
     var tempSceneElems = rootElement.getElementsByTagName('scene');
     if (tempSceneElems == null || tempSceneElems.length != 1)
         return "'scene' tag misbehavior.";
-    var root = tempSceneElems[0].attributes.getNamedItem("root");
+    this.scene.rootNode = tempSceneElems[0].attributes.getNamedItem("root");
     var axis_length = tempSceneElems[0].attributes.getNamedItem("axis_length");
 
     /* 'views' tags loading */
@@ -400,21 +400,20 @@ MySceneGraph.prototype.parseDSXFile = function (rootElement) {
         return "'components' tag misbehavior.";
 
     /* 'component' tags loading */
-    this.graph = [];
     var tempComponentElems = tempComponentsElems[0].getElementsByTagName('component');
     if (tempComponentElems == null || tempComponentElems.length == 0)
         return "'component' element is missing.";
     var nnodes = tempComponentElems.length;
     for (var i = 0; i < nnodes; i++) {
         var id = tempComponentElems[i].attributes.getNamedItem('id');
-        this.graph[id] = new Node();
+        this.scene.graph[id] = new Node();
 
         /* 'transformation' tags loading */
         var tempTransformationElems = tempComponentElems[i].getElementsByTagName('transformation');
         if (tempTransformationElems == null || tempTransformationElems.length == 0)
             return "'transformation' element is missing.";
         // transformationref and transformation loading to do
-        // this.graph[id].setMatrix();
+        // this.scene.graph[id].setMatrix();
 
         /* 'materials' tags loading */
         var tempMaterialsElems = tempComponentElems[i].getElementsByTagName('materials');
@@ -428,7 +427,7 @@ MySceneGraph.prototype.parseDSXFile = function (rootElement) {
         var nnodes = tempMaterialElems.length;
         for (var i = 0; i < nnodes; i++) {
             var material = tempMaterialElems[i].attributes.getNamedItem('id');
-            this.graph[id].addMaterial(material);
+            this.scene.graph[id].addMaterial(material);
             // misses 'inherit' condition
         }
 
@@ -437,7 +436,7 @@ MySceneGraph.prototype.parseDSXFile = function (rootElement) {
         if (tempTextureElems == null || tempTextureElems.length != 1)
             return "'texture' tag misbehavior.";
         var texture = tempTextureElems[0].attributes.getNamedItem('id');
-        this.graph[id].setTexture(texture);
+        this.scene.graph[id].setTexture(texture);
 
         /* 'children' tags loading */
         var tempChildrenElems = tempComponentElems[i].getElementsByTagName('children');
@@ -454,11 +453,11 @@ MySceneGraph.prototype.parseDSXFile = function (rootElement) {
             else {
                 var nnodes = tempComponentrefElems.length;
                 for (var i = 0; i < nnodes; i++)
-                    this.graph[id].push(tempComponentrefElems[i].attributes.getNamedItem('id'));
+                    this.scene.graph[id].push(tempComponentrefElems[i].attributes.getNamedItem('id'));
 
                 var nnodes = tempPrimitiverefElems.length;
                 for (var i = 0; i < nnodes; i++)
-                    this.graph[id].push(tempPrimitiverefElems[i].attributes.getNamedItem('id'));
+                    this.scene.graph[id].push(tempPrimitiverefElems[i].attributes.getNamedItem('id'));
             }
         }
     }

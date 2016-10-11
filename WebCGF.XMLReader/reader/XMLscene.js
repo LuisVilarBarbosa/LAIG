@@ -20,7 +20,9 @@ XMLscene.prototype.init = function (application) {
 	this.gl.enable(this.gl.CULL_FACE);
     this.gl.depthFunc(this.gl.LEQUAL);
 
-	this.axis=new CGFaxis(this);
+    this.axis = new CGFaxis(this);
+
+    this.rootNode = null;
 };
 
 XMLscene.prototype.initLights = function () {
@@ -76,7 +78,29 @@ XMLscene.prototype.display = function () {
 	// This is one possible way to do it
 	if (this.graph.loadedOk)
 	{
-		this.lights[0].update();
+	    this.lights[0].update();
+	    this.processGraph(this.rootNode);
 	};	
 };
+
+XMLscene.prototype.processGraph = function (nodeName) {
+    var material = null;
+    if (nodeName != null) {
+        var node = this.graph[nodeName];
+        if (node.material != null)
+            material = node.material;
+        if (material != null)
+            this.material.apply();
+
+        this.mulMatrix(node.mat);
+        if (node.primitive != null)
+            node.primitive.display();
+        for (var i = 0; i < node.children.length; i++) {
+            this.pushMatrix();
+            this.applyMaterial(material);
+            this.processGraph(node.children[i]);
+            this.popMatrix();
+        }
+    }
+}
 
