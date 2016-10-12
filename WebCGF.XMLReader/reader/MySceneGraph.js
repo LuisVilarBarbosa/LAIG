@@ -16,6 +16,12 @@ function MySceneGraph(filename, scene) {
 	 */
 
     this.reader.open('scenes/' + filename, this);
+
+    this.perspectives = [];
+    this.textures = [];
+    this.materials = [];
+    this.transformations = [];
+    this.primitives = [];
 }
 
 /*
@@ -63,7 +69,6 @@ MySceneGraph.prototype.parseSceneTag = function (elem) {
 }
 
 MySceneGraph.prototype.parsePerspectiveTags = function (elems) {
-    this.perspectives = [];
     for (var i = 0, nnodes = elems.length; i < nnodes; i++) {
         var e = elems[i];
 
@@ -113,7 +118,7 @@ MySceneGraph.prototype.parseLightsRelativeTags = function (elems, lightType, lig
 
     var lightsArrayIndex = lightsArrayStartIndex;
     for (var i = 0, nnodes = elems.length; i < nnodes; i++, lightsArrayIndex++) {
-        var id = elems[i].attributes.getNamedItem('id');    // not in use
+        var id = elems[i].attributes.getNamedItem('id').nodeValue;    // not in use
         var enabled = this.reader.getBoolean(elems[i], 'enabled', true);
 
         var location = elems[i].getElementsByTagName('location');
@@ -176,9 +181,8 @@ MySceneGraph.prototype.parseLightsRelativeTags = function (elems, lightType, lig
 }
 
 MySceneGraph.prototype.parseTextureTags = function (elems) {
-    this.textures = [];
     for (var i = 0, nnodes = elems.length; i < nnodes; i++) {
-        var id = elems[i].attributes.getNamedItem('id');
+        var id = elems[i].attributes.getNamedItem('id').nodeValue;
         var file = elems[i].attributes.getNamedItem('file');
         var length_s = elems[i].attributes.getNamedItem('length_s');
         var length_t = elems[i].attributes.getNamedItem('length_t');
@@ -190,9 +194,8 @@ MySceneGraph.prototype.parseTextureTags = function (elems) {
 }
 
 MySceneGraph.prototype.parseMaterialTags = function (elems) {
-    this.materials = [];
     for (var i = 0, nnodes = elems.length; i < nnodes; i++) {
-        var id = elems[i].attributes.getNamedItem('id');
+        var id = elems[i].attributes.getNamedItem('id').nodeValue;
         var emission_r = elems[i].children[0].attributes.getNamedItem('r').nodeValue;
         var emission_g = elems[i].children[0].attributes.getNamedItem('g').nodeValue;
         var emission_b = elems[i].children[0].attributes.getNamedItem('b').nodeValue;
@@ -223,8 +226,8 @@ MySceneGraph.prototype.parseMaterialTags = function (elems) {
 
 MySceneGraph.prototype.parseTransformationTags = function (elems) {
     for (var i = 0, nnodes = elems.length; i < nnodes; i++) {
-        var transformation = mat4.create();
-        var id = elems[i].attributes.getNamedItem('id');
+        var id = elems[i].attributes.getNamedItem('id').nodeValue;
+        this.transformations[id] = mat4.create();
 
         var operation = elems[i].children;
         for (var j = 0, ops = operation.length; j < ops; j++) {
@@ -232,17 +235,17 @@ MySceneGraph.prototype.parseTransformationTags = function (elems) {
                 var translate_x = operation[j].attributes.getNamedItem('x').nodeValue;
                 var translate_y = operation[j].attributes.getNamedItem('y').nodeValue;
                 var translate_z = operation[j].attributes.getNamedItem('z').nodeValue;
-                mat4.translate(transformation, transformation, [translate_x, translate_y, translate_z]);
+                mat4.translate(this.transformations[id], this.transformations[id], [translate_x, translate_y, translate_z]);
             }
             else if (operation[j].tagName == 'rotate') {
                 var rotate_axis = operation[j].attributes.getNamedItem('axis').nodeValue;
                 var rotate_angle = operation[j].attributes.getNamedItem('angle').nodeValue;
                 if (rotate_axis == 'x' || rotate_axis == 'X')
-                    mat4.rotate(transformation, transformation, rotate_angle, [1, 0, 0]);
+                    mat4.rotate(this.transformations[id], this.transformations[id], rotate_angle, [1, 0, 0]);
                 else if (rotate_axis == 'y' || rotate_axis == 'Y')
-                    mat4.rotate(transformation, transformation, rotate_angle, [0, 1, 0]);
+                    mat4.rotate(this.transformations[id], this.transformations[id], rotate_angle, [0, 1, 0]);
                 else if (rotate_axis == 'z' || rotate_axis == 'Z')
-                    mat4.rotate(transformation, transformation, rotate_angle, [0, 0, 1]);
+                    mat4.rotate(this.transformations[id], this.transformations[id], rotate_angle, [0, 0, 1]);
                 else
                     return "Invalid rotation axis: " + rotate_axis;
             }
@@ -250,7 +253,7 @@ MySceneGraph.prototype.parseTransformationTags = function (elems) {
                 var scale_x = operation[j].attributes.getNamedItem('x').nodeValue;
                 var scale_y = operation[j].attributes.getNamedItem('y').nodeValue;
                 var scale_z = operation[j].attributes.getNamedItem('z').nodeValue;
-                mat4.scale(transformation, transformation, [scale_x, scale_y, scale_z]);
+                mat4.scale(this.transformations[id], this.transformations[id], [scale_x, scale_y, scale_z]);
             }
             else
                 console.log("Invalid matricial operation: " + operation[j].tagName);
@@ -259,9 +262,8 @@ MySceneGraph.prototype.parseTransformationTags = function (elems) {
 }
 
 MySceneGraph.prototype.parsePrimitiveTags = function (elems) {
-    this.primitives = [];
     for (var i = 0, nnodes = elems.length; i < nnodes; i++) {
-        var id = elems[i].attributes.getNamedItem('id');
+        var id = elems[i].attributes.getNamedItem('id').nodeValue;
 
         var tempRectangleElems = elems[i].getElementsByTagName('rectangle');
         if (tempRectangleElems != null && tempRectangleElems.length == 1) {
@@ -310,7 +312,7 @@ MySceneGraph.prototype.parsePrimitiveTags = function (elems) {
 
 MySceneGraph.prototype.parseComponentTags = function (elems) {
     for (var i = 0, nnodes = elems.length; i < nnodes; i++) {
-        var id = elems[i].attributes.getNamedItem('id');
+        var id = elems[i].attributes.getNamedItem('id').nodeValue;
         this.scene.graph[id] = new Node();
 
         /* 'transformation' tags loading */
@@ -330,7 +332,7 @@ MySceneGraph.prototype.parseComponentTags = function (elems) {
         if (tempMaterialElems == null || tempMaterialElems.length == 0)
             return "'material' element is missing.";
         for (var i = 0, nnodes2 = tempMaterialElems.length; i < nnodes2; i++) {
-            var material = tempMaterialElems[i].attributes.getNamedItem('id');
+            var material = tempMaterialElems[i].attributes.getNamedItem('id').nodeValue;
             this.scene.graph[id].addMaterial(this.materials[material]);
             // misses 'inherit' condition
         }
@@ -339,7 +341,7 @@ MySceneGraph.prototype.parseComponentTags = function (elems) {
         var tempTextureElems = elems[i].getElementsByTagName('texture');
         if (tempTextureElems == null || tempTextureElems.length != 1)
             return "'texture' tag misbehavior.";
-        var texture = tempTextureElems[0].attributes.getNamedItem('id');
+        var texture = tempTextureElems[0].attributes.getNamedItem('id').nodeValue;
         this.scene.graph[id].setTexture(this.textures[texture]);
 
         /* 'children' tags loading */
@@ -355,11 +357,11 @@ MySceneGraph.prototype.parseComponentTags = function (elems) {
                 return "'componentref' or 'primitiveref' element is missing";
             else {
                 for (var i = 0, nnodes3 = tempComponentrefElems.length; i < nnodes3; i++)
-                    this.scene.graph[id].push(tempComponentrefElems[i].attributes.getNamedItem('id'));
+                    this.scene.graph[id].push(tempComponentrefElems[i].attributes.getNamedItem('id').nodeValue);
 
                 // more than one primitive must be allowed and verify if it is stored the name or the primitive itself
                 for (var i = 0, nnodes3 = tempPrimitiverefElems.length; i < nnodes3; i++)
-                    this.scene.graph[id].primitive = this.primitives[tempPrimitiverefElems[i].attributes.getNamedItem('id')];
+                    this.scene.graph[id].primitive = this.primitives[tempPrimitiverefElems[i].attributes.getNamedItem('id').nodeValue];
             }
         }
     }
@@ -381,7 +383,7 @@ MySceneGraph.prototype.parseDSXFile = function (rootElement) {
     if (tempViewsElems == null || tempViewsElems.length != 1) {
         return "'views' tag misbehavior.";
     }
-    var default_view = tempViewsElems[0].attributes.getNamedItem("default");
+    var default_view = tempViewsElems[0].attributes.getNamedItem("default").nodeValue;
 
     /* 'perspective' tags loading */
     var tempPerspectiveElems = rootElement.getElementsByTagName('perspective');
@@ -389,7 +391,7 @@ MySceneGraph.prototype.parseDSXFile = function (rootElement) {
         return "'perspective' element is missing.";
     }
     this.parsePerspectiveTags(tempPerspectiveElems)
-    //this.scene.camera = this.perspectives[default_view];
+    this.scene.camera = this.perspectives[default_view];
 
     /* 'illumination' tags loading */
     var tempIlluminationElems = rootElement.getElementsByTagName('illumination');
