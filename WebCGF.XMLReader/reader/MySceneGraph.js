@@ -42,16 +42,17 @@ MySceneGraph.prototype.onXMLReady = function () {
 
 
 MySceneGraph.prototype.verifyDSXFileStructure = function (rootElement) {
+    var name;
     if (rootElement.children.length != 9) return "invalid number of 'dsx' children tags detected";
-    if (rootElement.children[0].nodeName != 'scene') return "'scene' tag out of order";
-    if (rootElement.children[1].nodeName != 'views') return "'views' tag out of order";
-    if (rootElement.children[2].nodeName != 'illumination') return "'illumination' tag out of order";
-    if (rootElement.children[3].nodeName != 'lights') return "'lights' tag out of order";
-    if (rootElement.children[4].nodeName != 'textures') return "'textures' tag out of order";
-    if (rootElement.children[5].nodeName != 'materials') return "'materials' tag out of order";
-    if (rootElement.children[6].nodeName != 'transformations') return "'transformations' tag out of order";
-    if (rootElement.children[7].nodeName != 'primitives') return "'primitives' tag out of order";
-    if (rootElement.children[8].nodeName != 'components') return "'components' tag out of order";
+    if (name = rootElement.children[0].nodeName != 'scene') return "expected 'scene' tag instead of " + name;
+    if (name = rootElement.children[1].nodeName != 'views') return "expected 'views' tag instead of " + name;
+    if (name = rootElement.children[2].nodeName != 'illumination') return "expected 'illumination' tag instead of " + name;
+    if (name = rootElement.children[3].nodeName != 'lights') return "expected 'lights' tag instead of " + name;
+    if (name = rootElement.children[4].nodeName != 'textures') return "expected 'textures' tag instead of " + name;
+    if (name = rootElement.children[5].nodeName != 'materials') return "expected 'materials' tag instead of " + name;
+    if (name = rootElement.children[6].nodeName != 'transformations') return "expected 'transformations' tag instead of " + name;
+    if (name = rootElement.children[7].nodeName != 'primitives') return "expected 'primitives' tag instead of " + name;
+    if (name = rootElement.children[8].nodeName != 'components') return "expected 'components' tag instead of " + name;
     // verify subsequent tags
 }
 
@@ -76,12 +77,10 @@ MySceneGraph.prototype.parsePerspectiveTags = function (elems) {
         var to_x = e.children[1].attributes.getNamedItem('x').nodeValue;
         var to_y = e.children[1].attributes.getNamedItem('y').nodeValue;
         var to_z = e.children[1].attributes.getNamedItem('z').nodeValue;
-        //var from = vec4.create();
-        //from.set(from_x, from_y, from_z, 1.0);   // what value should be given to 'w'?
-        //var to = vec4.create();
-        //to.set(to_x, to_y, to_z, 1.0);   // what value should be given to 'w'?
+        var from = vec3.fromValues(from_x, from_y, from_z);
+        var to = vec3.fromValues(to_x, to_y, to_z);
 
-        //this.perspectives[id] = new CGFcamera(angle, near, far, from, to);
+        this.perspectives[id] = new CGFcamera(angle, near, far, from, to);
     };
 }
 
@@ -224,29 +223,38 @@ MySceneGraph.prototype.parseMaterialTags = function (elems) {
 
 MySceneGraph.prototype.parseTransformationTags = function (elems) {
     for (var i = 0, nnodes = elems.length; i < nnodes; i++) {
-        var id = elems[i].attributes.getNamedItem('id');
-        /*var translate_x = elems[i].children[0].attributes.getNamedItem('x').nodeValue;
-        var translate_y = elems[i].children[0].attributes.getNamedItem('y').nodeValue;
-        var translate_z = elems[i].children[0].attributes.getNamedItem('z').nodeValue;
-        var rotate_axis = elems[i].children[1].attributes.getNamedItem('axis').nodeValue;
-        if (rotate_axis != 'x' && rotate_axis != 'X' &&
-            rotate_axis != 'y' && rotate_axis != 'Y' &&
-            rotate_axis != 'z' && rotate_axis != 'Z')
-            return "Invalid rotation axis: " + rotate_axis;
-        var rotate_angle = elems[i].children[1].attributes.getNamedItem('angle').nodeValue;
-        var scale_x = elems[i].children[2].attributes.getNamedItem('x').nodeValue;
-        var scale_y = elems[i].children[2].attributes.getNamedItem('y').nodeValue;
-        var scale_z = elems[i].children[2].attributes.getNamedItem('z').nodeValue;
-
         var transformation = mat4.create();
-        mat4.translate(transformation, transformation, [translate_x, translate_y, translate_z]);
-        if (rotate_axis == 'x' || rotate_axis == 'X')
-            mat4.rotate(transformation, transformation, rotate_angle, [1, 0, 0]);
-        else if (rotate_axis == 'y' || rotate_axis == 'Y')
-            mat4.rotate(transformation, transformation, rotate_angle, [0, 1, 0]);
-        else if (rotate_axis == 'z' || rotate_axis == 'Z')
-            mat4.rotate(transformation, transformation, rotate_angle, [0, 0, 1]);
-        mat4.scale(transformation, transformation, [scale_x, scale_y, scale_z]);*/
+        var id = elems[i].attributes.getNamedItem('id');
+
+        var operation = elems[i].children;
+        for (var j = 0, ops = operation.length; j < ops; j++) {
+            if (operation[j].tagName == 'translate') {
+                var translate_x = operation[j].attributes.getNamedItem('x').nodeValue;
+                var translate_y = operation[j].attributes.getNamedItem('y').nodeValue;
+                var translate_z = operation[j].attributes.getNamedItem('z').nodeValue;
+                mat4.translate(transformation, transformation, [translate_x, translate_y, translate_z]);
+            }
+            else if (operation[j].tagName == 'rotate') {
+                var rotate_axis = operation[j].attributes.getNamedItem('axis').nodeValue;
+                var rotate_angle = operation[j].attributes.getNamedItem('angle').nodeValue;
+                if (rotate_axis == 'x' || rotate_axis == 'X')
+                    mat4.rotate(transformation, transformation, rotate_angle, [1, 0, 0]);
+                else if (rotate_axis == 'y' || rotate_axis == 'Y')
+                    mat4.rotate(transformation, transformation, rotate_angle, [0, 1, 0]);
+                else if (rotate_axis == 'z' || rotate_axis == 'Z')
+                    mat4.rotate(transformation, transformation, rotate_angle, [0, 0, 1]);
+                else
+                    return "Invalid rotation axis: " + rotate_axis;
+            }
+            else if (operation[j].tagName == 'scale') {
+                var scale_x = operation[j].attributes.getNamedItem('x').nodeValue;
+                var scale_y = operation[j].attributes.getNamedItem('y').nodeValue;
+                var scale_z = operation[j].attributes.getNamedItem('z').nodeValue;
+                mat4.scale(transformation, transformation, [scale_x, scale_y, scale_z]);
+            }
+            else
+                console.log("Invalid matricial operation: " + operation[j].tagName);
+        }
     }
 }
 
