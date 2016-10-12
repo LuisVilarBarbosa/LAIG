@@ -63,8 +63,8 @@ MySceneGraph.prototype.verifyDSXFileStructure = function (rootElement) {
 }
 
 MySceneGraph.prototype.parseSceneTag = function (elem) {
-    this.scene.rootNode = elem.attributes.getNamedItem("root");
-    var axis_length = elem.attributes.getNamedItem("axis_length");
+    this.scene.rootNode = elem.attributes.getNamedItem("root").nodeValue;
+    var axis_length = elem.attributes.getNamedItem("axis_length").nodeValue;
     this.scene.axis = new CGFaxis(this.scene, axis_length, 0.2);    // 0.2 = default thickness
 }
 
@@ -183,9 +183,9 @@ MySceneGraph.prototype.parseLightsRelativeTags = function (elems, lightType, lig
 MySceneGraph.prototype.parseTextureTags = function (elems) {
     for (var i = 0, nnodes = elems.length; i < nnodes; i++) {
         var id = elems[i].attributes.getNamedItem('id').nodeValue;
-        var file = elems[i].attributes.getNamedItem('file');
-        var length_s = elems[i].attributes.getNamedItem('length_s');
-        var length_t = elems[i].attributes.getNamedItem('length_t');
+        var file = elems[i].attributes.getNamedItem('file').nodeValue;
+        var length_s = elems[i].attributes.getNamedItem('length_s').nodeValue;
+        var length_t = elems[i].attributes.getNamedItem('length_t').nodeValue;
 
         this.textures[id] = new CGFappearance(this.scene);
         //this.textures[id].loadTexture(file);
