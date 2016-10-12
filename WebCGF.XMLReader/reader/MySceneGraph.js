@@ -17,6 +17,7 @@ function MySceneGraph(filename, scene) {
 
     this.reader.open('scenes/' + filename, this);
 
+    this.rootNode = null;
     this.perspectives = [];
     this.textures = [];
     this.materials = [];
@@ -50,20 +51,20 @@ MySceneGraph.prototype.onXMLReady = function () {
 MySceneGraph.prototype.verifyDSXFileStructure = function (rootElement) {
     var name;
     if (rootElement.children.length != 9) return "invalid number of 'dsx' children tags detected";
-    if (name = rootElement.children[0].nodeName != 'scene') return "expected 'scene' tag instead of " + name;
-    if (name = rootElement.children[1].nodeName != 'views') return "expected 'views' tag instead of " + name;
-    if (name = rootElement.children[2].nodeName != 'illumination') return "expected 'illumination' tag instead of " + name;
-    if (name = rootElement.children[3].nodeName != 'lights') return "expected 'lights' tag instead of " + name;
-    if (name = rootElement.children[4].nodeName != 'textures') return "expected 'textures' tag instead of " + name;
-    if (name = rootElement.children[5].nodeName != 'materials') return "expected 'materials' tag instead of " + name;
-    if (name = rootElement.children[6].nodeName != 'transformations') return "expected 'transformations' tag instead of " + name;
-    if (name = rootElement.children[7].nodeName != 'primitives') return "expected 'primitives' tag instead of " + name;
-    if (name = rootElement.children[8].nodeName != 'components') return "expected 'components' tag instead of " + name;
+    if ((name = rootElement.children[0].nodeName) != 'scene') return "expected 'scene' tag instead of " + name;
+    if ((name = rootElement.children[1].nodeName) != 'views') return "expected 'views' tag instead of " + name;
+    if ((name = rootElement.children[2].nodeName) != 'illumination') return "expected 'illumination' tag instead of " + name;
+    if ((name = rootElement.children[3].nodeName) != 'lights') return "expected 'lights' tag instead of " + name;
+    if ((name = rootElement.children[4].nodeName) != 'textures') return "expected 'textures' tag instead of " + name;
+    if ((name = rootElement.children[5].nodeName) != 'materials') return "expected 'materials' tag instead of " + name;
+    if ((name = rootElement.children[6].nodeName) != 'transformations') return "expected 'transformations' tag instead of " + name;
+    if ((name = rootElement.children[7].nodeName) != 'primitives') return "expected 'primitives' tag instead of " + name;
+    if ((name = rootElement.children[8].nodeName) != 'components') return "expected 'components' tag instead of " + name;
     // verify subsequent tags
 }
 
 MySceneGraph.prototype.parseSceneTag = function (elem) {
-    this.scene.rootNode = elem.attributes.getNamedItem("root").nodeValue;
+    this.rootNode = elem.attributes.getNamedItem("root").nodeValue;
     var axis_length = elem.attributes.getNamedItem("axis_length").nodeValue;
     this.scene.axis = new CGFaxis(this.scene, axis_length, 0.2);    // 0.2 = default thickness
 }
@@ -319,8 +320,7 @@ MySceneGraph.prototype.parseComponentTags = function (elems) {
         var tempTransformationElems = elems[i].getElementsByTagName('transformation');
         if (tempTransformationElems == null || tempTransformationElems.length == 0)
             return "'transformation' element is missing.";
-        // transformationref and transformation loading to do
-        // this.scene.graph[id].setMatrix();
+        this.scene.graph[id].setMatrix(this.transformations["identity"]);   // transformationref and transformation loading to do
 
         /* 'materials' tags loading */
         var tempMaterialsElems = elems[i].getElementsByTagName('materials');
@@ -390,9 +390,9 @@ MySceneGraph.prototype.parseDSXFile = function (rootElement) {
     if (tempPerspectiveElems == null || tempPerspectiveElems.length == 0) {
         return "'perspective' element is missing.";
     }
-    this.parsePerspectiveTags(tempPerspectiveElems)
-    this.scene.camera = this.perspectives[default_view];
-
+    this.parsePerspectiveTags(tempPerspectiveElems);
+    //this.scene.camera = this.perspectives[default_view];
+    
     /* 'illumination' tags loading */
     var tempIlluminationElems = rootElement.getElementsByTagName('illumination');
     if (tempIlluminationElems == null || tempIlluminationElems.length != 1)

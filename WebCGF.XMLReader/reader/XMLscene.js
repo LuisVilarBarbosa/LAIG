@@ -21,9 +21,6 @@ XMLscene.prototype.init = function (application) {
     this.gl.depthFunc(this.gl.LEQUAL);
 
     this.axis = new CGFaxis(this);
-
-    this.rootNode = null;
-    this.processGraph(this.rootNode);
 };
 
 XMLscene.prototype.initLights = function () {
@@ -80,7 +77,8 @@ XMLscene.prototype.display = function () {
 	if (this.graph.loadedOk)
 	{
 	    this.lights[0].update();
-	};	
+	    this.processGraph(this.graph.rootNode);
+	};
 };
 
 XMLscene.prototype.processGraph = function (nodeName) {
