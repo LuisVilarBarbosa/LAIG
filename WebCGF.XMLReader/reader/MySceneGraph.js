@@ -63,6 +63,31 @@ MySceneGraph.prototype.verifyDSXFileStructure = function (rootElement) {
     // verify subsequent tags
 }
 
+MySceneGraph.prototype.getAllDSXFileIds = function (elem, ids) {
+    if (elem != null && elem.nodeName != 'components') {
+        var id = elem.attributes.getNamedItem('id');
+        if (id != null)
+            ids.push(id.nodeValue);
+
+        if (elem.children != null) {
+            for (var i = 0, length = elem.children.length; i < length; i++)
+                this.getAllDSXFileIds(elem.children[i], ids);
+        }
+    }
+}
+
+MySceneGraph.prototype.verifyDSXFileIds = function (rootElement) {
+    if (rootElement != null) {
+        var ids = [];
+        this.getAllDSXFileIds(rootElement, ids);
+        ids.sort();
+        
+        for (var i = 1, length = ids.length; i < length; i++)
+            if (ids[i - 1] == ids[i])
+                console.log("'" + ids[i] + "' is not an unique id");
+    }
+}
+
 MySceneGraph.prototype.parseSceneTag = function (elem) {
     this.rootNode = elem.attributes.getNamedItem("root").nodeValue;
     var axis_length = elem.attributes.getNamedItem("axis_length").nodeValue;
@@ -371,6 +396,7 @@ MySceneGraph.prototype.parseDSXFile = function (rootElement) {
     var error = this.verifyDSXFileStructure(rootElement);
     if (error != null)
         return error;
+    this.verifyDSXFileIds(rootElement);
 
     /* 'scene' tags loading */
     var tempSceneElems = rootElement.getElementsByTagName('scene');
