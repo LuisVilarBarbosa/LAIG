@@ -331,8 +331,8 @@ MySceneGraph.prototype.parseComponentTags = function (elems) {
         var tempMaterialElems = elems[i].getElementsByTagName('material');
         if (tempMaterialElems == null || tempMaterialElems.length == 0)
             return "'material' element is missing.";
-        for (var i = 0, nnodes2 = tempMaterialElems.length; i < nnodes2; i++) {
-            var material = tempMaterialElems[i].attributes.getNamedItem('id').nodeValue;
+        for (var j = 0, nnodes2 = tempMaterialElems.length; j < nnodes2; j++) {
+            var material = tempMaterialElems[j].attributes.getNamedItem('id').nodeValue;
             if(material != "inherit")   // it is considered that if "inherit" is declared, no more materials exist
                 this.scene.graph[id].addMaterial(this.materials[material]);
         }
@@ -348,20 +348,20 @@ MySceneGraph.prototype.parseComponentTags = function (elems) {
         var tempChildrenElems = elems[i].getElementsByTagName('children');
         if (tempChildrenElems == null || tempChildrenElems.length != 1)
             return "'children' tag misbehavior.";
-        for (var i = 0, nnodes2 = tempChildrenElems.length; i < nnodes2; i++) {
+        for (var j = 0, nnodes2 = tempChildrenElems.length; j < nnodes2; j++) {
             /* 'componentref' and 'primitiveref' tags loading */
-            var tempComponentrefElems = tempChildrenElems[i].getElementsByTagName('componentref');
-            var tempPrimitiverefElems = tempChildrenElems[i].getElementsByTagName('primitiveref');
+            var tempComponentrefElems = tempChildrenElems[j].getElementsByTagName('componentref');
+            var tempPrimitiverefElems = tempChildrenElems[j].getElementsByTagName('primitiveref');
             if ((tempComponentrefElems == null || tempComponentrefElems.length == 0) &&
                 (tempPrimitiverefElems == null || tempPrimitiverefElems.length == 0))
                 return "'componentref' or 'primitiveref' element is missing";
             else {
-                for (var i = 0, nnodes3 = tempComponentrefElems.length; i < nnodes3; i++)
-                    this.scene.graph[id].push(tempComponentrefElems[i].attributes.getNamedItem('id').nodeValue);
+                for (var k = 0, nnodes3 = tempComponentrefElems.length; k < nnodes3; k++)
+                    this.scene.graph[id].push(tempComponentrefElems[k].attributes.getNamedItem('id').nodeValue);
 
                 // more than one primitive must be allowed and verify if it is stored the name or the primitive itself
-                for (var i = 0, nnodes3 = tempPrimitiverefElems.length; i < nnodes3; i++)
-                    this.scene.graph[id].primitive = this.primitives[tempPrimitiverefElems[i].attributes.getNamedItem('id').nodeValue];
+                for (var k = 0, nnodes3 = tempPrimitiverefElems.length; k < nnodes3; k++)
+                    this.scene.graph[id].primitive = this.primitives[tempPrimitiverefElems[k].attributes.getNamedItem('id').nodeValue];
             }
         }
     }
