@@ -188,7 +188,7 @@ MySceneGraph.prototype.parseTextureTags = function (elems) {
         var length_t = elems[i].attributes.getNamedItem('length_t').nodeValue;
 
         this.textures[id] = new CGFappearance(this.scene);
-        //this.textures[id].loadTexture(file);
+        this.textures[id].loadTexture(file);
         this.textures[id].setTextureWrap(length_s, length_t);
     }
 }
@@ -333,8 +333,8 @@ MySceneGraph.prototype.parseComponentTags = function (elems) {
             return "'material' element is missing.";
         for (var i = 0, nnodes2 = tempMaterialElems.length; i < nnodes2; i++) {
             var material = tempMaterialElems[i].attributes.getNamedItem('id').nodeValue;
-            this.scene.graph[id].addMaterial(this.materials[material]);
-            // misses 'inherit' condition
+            if(material != "inherit")   // it is considered that if "inherit" is declared, no more materials exist
+                this.scene.graph[id].addMaterial(this.materials[material]);
         }
 
         /* 'texture' tags loading */
