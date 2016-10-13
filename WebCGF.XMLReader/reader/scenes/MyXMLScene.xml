@@ -20,14 +20,22 @@
   <scene root="root" axis_length="5" />
 
 
-  <views default="perspective_1" >
+  <views default="perspective_2" >
 
     <!-- declaracao obrigatoria de pelo menos uma vista; -->
     <!-- se varias vistas declaradas, o default e' a -->
     <!-- primeira vista; de cada vez que se pressione a tecla v/V, -->
     <!-- a vista muda para a proxima da lista; da -->
     <!-- ultima vista da lista volta 'a primeira -->
-    <perspective id="perspective_1" near="0" far="15" angle="2.1">
+    <perspective id="perspective_1" near="0" far="5" angle="2.1">
+      <from x="2" y="2" z="2" />
+      <to x="0" y="0" z="0" />
+    </perspective>
+    <perspective id="perspective_2" near="0" far="15" angle="2.1">
+      <from x="0" y="0" z="2" />
+      <to x="0" y="0" z="0" />
+    </perspective>
+    <perspective id="perspective_3" near="0" far="15" angle="2.1">
       <from x="15" y="0" z="15" />
       <to x="0" y="0" z="0" />
     </perspective>
@@ -179,7 +187,7 @@
 
         <!-- deve conter uma referencia a uma das "transformation" -->
         <!-- declaradas anteriormente -->
-        <transformationref id="rotate_90y" />
+        <transformationref id="enlarge_2x" />
 
         <!-- ou, ALTERNATIVAMENTE, transformacoes explicitas, -->
         <!-- usando zero ou mais das instrucoes seguintes, sem -->
@@ -213,16 +221,36 @@
         <!-- deve existir uma ou mais tags "componentref" e/ou -->
         <!-- "primitiveref", identificando outros -->
         <!-- componentes ou primitivas -->
-        <componentref id="son" />
+        <componentref id="son_rectangle" />
+        <componentref id="son_triangle" />
+        <componentref id="son_cylinder" />
+        <componentref id="son_sphere" />
+        <componentref id="son_torus" />
 
       </children>
 
     </component>
 
-    <component id="son">
-
+    <component id="son_rectangle">
       <transformation>
-        <rotate axis="y" angle="1.5708" />
+        <translate x="-2" y="0" z="0" />
+      </transformation>
+
+      <materials>
+        <material id="inherit" />
+      </materials>
+
+      <texture id="fabric" />
+
+      <children>
+        <primitiveref id="rectangle" />
+      </children>
+    </component>
+
+    <component id="son_triangle">
+      <transformation>
+        <rotate axis="z" angle="-1.5708" />
+        <translate x="0" y="1" z="0" />
       </transformation>
 
       <materials>
@@ -233,9 +261,55 @@
 
       <children>
         <primitiveref id="triangle" />
-
       </children>
+    </component>
 
+    <component id="son_cylinder">
+      <transformation>
+        <translate x="2" y="0" z="0" />
+      </transformation>
+
+      <materials>
+        <material id="inherit" />
+      </materials>
+
+      <texture id="fabric" />
+
+      <children>
+        <primitiveref id="cylinder" />
+      </children>
+    </component>
+
+    <component id="son_sphere">
+      <transformation>
+        <translate x="0" y="-1" z="0" />
+      </transformation>
+
+      <materials>
+        <material id="inherit" />
+      </materials>
+
+      <texture id="fabric" />
+
+      <children>
+        <primitiveref id="sphere" />
+      </children>
+    </component>
+
+    <component id="son_torus">
+      <transformation>
+        <scale x="0.5" y="0.5" z="0.5" />
+      </transformation>
+
+      <materials>
+        <material id="inherit" />
+      </materials>
+
+      <texture id="fabric" />
+
+      <children>
+        <primitiveref id="torus" />
+      </children>
     </component>
 
   </components>

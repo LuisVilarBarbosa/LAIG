@@ -270,7 +270,7 @@ MySceneGraph.prototype.parseMaterialTags = function (elems) {
 
 MySceneGraph.prototype.parseTransformationTag = function (elem, matrix) {
     var operation = elem.children;
-    for (var j = 0, ops = operation.length; j < ops; j++) {
+    for (var j = operation.length - 1; j >= 0; j--) {
         if (operation[j].tagName == "translate") {
             var translate_x = this.reader.getFloat(operation[j], "x", true);
             var translate_y = this.reader.getFloat(operation[j], "y", true);
