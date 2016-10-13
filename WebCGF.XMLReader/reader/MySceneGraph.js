@@ -81,7 +81,7 @@ MySceneGraph.prototype.verifyDSXFileIds = function (rootElement) {
         var ids = [];
         this.getAllDSXFileIds(rootElement, ids);
         ids.sort();
-        
+
         for (var i = 1, length = ids.length; i < length; i++)
             if (ids[i - 1] == ids[i])
                 console.log("'" + ids[i] + "' is not an unique id");
@@ -268,7 +268,7 @@ MySceneGraph.prototype.parseMaterialTags = function (elems) {
     }
 }
 
-MySceneGraph.prototype.parseTransformationTag = function (elem, matrix) { 
+MySceneGraph.prototype.parseTransformationTag = function (elem, matrix) {
     var operation = elem.children;
     for (var j = 0, ops = operation.length; j < ops; j++) {
         if (operation[j].tagName == "translate") {
@@ -382,7 +382,7 @@ MySceneGraph.prototype.parseComponentTags = function (elems) {
         var tempMaterialElems = this.findChildren(elems[i], "material");
         for (var j = 0, nnodes2 = tempMaterialElems.length; j < nnodes2; j++) {
             var material = this.reader.getString(tempMaterialElems[j], "id", true);
-            if(material != "inherit")   // it is considered that if "inherit" is declared, no more materials exist
+            if (material != "inherit")   // it is considered that if "inherit" is declared, no more materials exist
                 this.scene.graph[id].addMaterial(this.materials[material]);
         }
 
@@ -437,7 +437,7 @@ MySceneGraph.prototype.parseDSXFile = function (rootElement) {
     }
     this.parsePerspectiveTags(tempPerspectiveElems);
     this.scene.camera = this.perspectives[default_view];
-    
+
     /* 'illumination' tags loading */
     var tempIlluminationElems = rootElement.getElementsByTagName("illumination");
     if (tempIlluminationElems == null || tempIlluminationElems.length != 1)
