@@ -20,7 +20,7 @@
   <scene root="root" axis_length="5" />
 
 
-  <views default="perspective_2" >
+  <views default="perspective_1" >
 
     <!-- declaracao obrigatoria de pelo menos uma vista; -->
     <!-- se varias vistas declaradas, o default e' a -->
@@ -46,7 +46,7 @@
   <illumination doublesided="0" local="0" >
 
     <ambient r="1" g="1" b="0" a="1" />
-    <background r="0.5" g="0.5" b="0.5" a="0.5" />
+    <background r="0.5" g="0.5" b="0.5" a="1" />
 
   </illumination>
 
@@ -89,6 +89,8 @@
     <!-- quadricas (esfera, ciclindro...) -->
     <texture id="cork" file="./images/cork.jpg" length_s="1" length_t="1" />
     <texture id="fabric" file="./images/fabric.jpg" length_s="1" length_t="1" />
+    <texture id="wood" file="./images/wood.jpg" length_s="1" length_t="1" />
+    <texture id="metal" file="./images/metal.jpg" length_s="1" length_t="1" />
 
   </textures>
 
@@ -103,6 +105,14 @@
       <diffuse r="0.1" g="0.1" b="0.9" a="1" />
       <specular r="0.1" g="0.1" b="0.1" a="0.5" />
       <shininess value="5" />
+    </material>
+
+    <material id="green_material" >
+      <emission r="0" g="0.9" b="0" a="1" />
+      <ambient r="0" g="1" b="0" a="1" />
+      <diffuse r="0.1" g="0.1" b="0.9" a="1" />
+      <specular r="0" g="0.9" b="0" a="1" />
+      <shininess value="15" />
     </material>
 
   </materials>
@@ -221,94 +231,130 @@
         <!-- deve existir uma ou mais tags "componentref" e/ou -->
         <!-- "primitiveref", identificando outros -->
         <!-- componentes ou primitivas -->
-        <componentref id="son_rectangle" />
-        <componentref id="son_triangle" />
-        <componentref id="son_cylinder" />
-        <componentref id="son_sphere" />
-        <componentref id="son_torus" />
+        <componentref id="table" />
+    <!--    <componentref id="piramid" />
+        <componentref id="ball" />
+        <componentref id="donut" /> -->
 
       </children>
 
     </component>
 
-    <component id="son_rectangle">
+    <component id="table">
       <transformation>
-        <translate x="-2" y="0" z="0" />
       </transformation>
 
       <materials>
-        <material id="inherit" />
+        <material id="blue_material" />
       </materials>
 
-      <texture id="fabric" />
+      <texture id="none" />
+
+      <children>
+        <componentref id="table_top" />
+        <componentref id="leg_1" />
+        <componentref id="leg_2" />
+        <componentref id="leg_3" />
+        <componentref id="leg_4" />
+      </children>
+    </component>
+
+    <component id="table_top">
+      <transformation>
+        <rotate axis="x" angle="-1.5708" />
+        <translate x="0.5" y="1" z="0.5" />
+      </transformation>
+
+      <materials>
+        <material id="blue_material" />
+      </materials>
+
+      <texture id="none" />
 
       <children>
         <primitiveref id="rectangle" />
       </children>
     </component>
 
-    <component id="son_triangle">
+    <component id="leg">
       <transformation>
-        <rotate axis="z" angle="-1.5708" />
-        <translate x="0" y="1" z="0" />
+        <scale x="0.1" y="0.1" z="1" />
+        <rotate axis="x" angle="-1.5708" />
+        <translate x="0" y="0.5" z="0" />
       </transformation>
 
       <materials>
-        <material id="inherit" />
+        <material id="blue_material" />
       </materials>
 
-      <texture id="fabric" />
-
-      <children>
-        <primitiveref id="triangle" />
-      </children>
-    </component>
-
-    <component id="son_cylinder">
-      <transformation>
-        <translate x="2" y="0" z="0" />
-      </transformation>
-
-      <materials>
-        <material id="inherit" />
-      </materials>
-
-      <texture id="fabric" />
+      <texture id="none" />
 
       <children>
         <primitiveref id="cylinder" />
       </children>
     </component>
 
-    <component id="son_sphere">
+    <component id="leg_1">
       <transformation>
-        <translate x="0" y="-1" z="0" />
+        <translate x="0.1" y="0" z="0.9" />
       </transformation>
 
       <materials>
-        <material id="inherit" />
+        <material id="blue_material" />
       </materials>
 
-      <texture id="fabric" />
+      <texture id="none" />
 
       <children>
-        <primitiveref id="sphere" />
+        <componentref id="leg" />
       </children>
     </component>
 
-    <component id="son_torus">
+    <component id="leg_2">
       <transformation>
-        <scale x="0.5" y="0.5" z="0.5" />
+        <translate x="0.9" y="0" z="0.9" />
       </transformation>
 
       <materials>
-        <material id="inherit" />
+        <material id="blue_material" />
       </materials>
 
-      <texture id="fabric" />
+      <texture id="none" />
 
       <children>
-        <primitiveref id="torus" />
+        <componentref id="leg" />
+      </children>
+    </component>
+
+    <component id="leg_3">
+      <transformation>
+        <translate x="0.9" y="0" z="0.1" />
+      </transformation>
+
+      <materials>
+        <material id="blue_material" />
+      </materials>
+
+      <texture id="none" />
+
+      <children>
+        <componentref id="leg" />
+      </children>
+    </component>
+
+    <component id="leg_4">
+      <transformation>
+        <translate x="0.1" y="0" z="0.1" />
+      </transformation>
+
+      <materials>
+        <material id="blue_material" />
+      </materials>
+
+      <texture id="none" />
+
+      <children>
+        <componentref id="leg" />
       </children>
     </component>
 
