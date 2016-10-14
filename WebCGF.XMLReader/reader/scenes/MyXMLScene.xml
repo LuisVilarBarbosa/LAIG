@@ -20,23 +20,27 @@
   <scene root="root" axis_length="5" />
 
 
-  <views default="perspective_1" >
+  <views default="perspective_4" >
 
     <!-- declaracao obrigatoria de pelo menos uma vista; -->
     <!-- se varias vistas declaradas, o default e' a -->
     <!-- primeira vista; de cada vez que se pressione a tecla v/V, -->
     <!-- a vista muda para a proxima da lista; da -->
     <!-- ultima vista da lista volta 'a primeira -->
-    <perspective id="perspective_1" near="0" far="5" angle="2.1">
+    <perspective id="perspective_4" near="0" far="5" angle="120">
       <from x="2" y="2" z="2" />
       <to x="0" y="0" z="0" />
     </perspective>
-    <perspective id="perspective_2" near="0" far="15" angle="2.1">
+    <perspective id="perspective_2" near="0" far="15" angle="120">
       <from x="0" y="0" z="2" />
       <to x="0" y="0" z="0" />
     </perspective>
-    <perspective id="perspective_3" near="0" far="15" angle="2.1">
+    <perspective id="perspective_3" near="0" far="15" angle="120">
       <from x="15" y="0" z="15" />
+      <to x="0" y="0" z="0" />
+    </perspective>
+    <perspective id="perspective_4" near="0.1" far="500" angle="22.9">
+      <from x="15" y="15" z="15" />
       <to x="0" y="0" z="0" />
     </perspective>
 
@@ -62,7 +66,7 @@
       <specular r="0.3" g="0.3" b="0.3" a="1" />
     </omni>
 
-    <spot id="spot1" enabled="0" angle="1.5708" exponent="5">
+    <spot id="spot1" enabled="0" angle="90" exponent="5">
       <!-- atencao, "target" e' diferente de "direction" -->
       <target x="0" y="0" z="0" />
       <location x="0" y="0" z="5" />
@@ -141,7 +145,7 @@
     <transformation id="rotate_90y">
       <!-- instrucoes a usar sem limite nem ordem -->
       <!-- deve existir pelo menos uma transformacao -->
-      <rotate axis="y" angle="1.5708" />
+      <rotate axis="y" angle="90" />
     </transformation>
 
     <transformation id="enlarge_2x">
@@ -160,7 +164,7 @@
       <!-- instrucoes a usar sem limite nem ordem -->
       <!-- deve existir pelo menos uma transformacao -->
       <translate x="0" y="5" z="0" />
-      <rotate axis="y" angle="1.5708" />
+      <rotate axis="y" angle="90" />
       <scale x="2" y="2" z="2" />
     </transformation>
 
@@ -330,7 +334,7 @@
 	
 	<component id="cube_side_2">
       <transformation>
-		<rotate axis="x" angle="3.1415" />
+		<rotate axis="x" angle="180" />
 		<translate x="0" y="0" z="-0.5" />
       </transformation>
 
@@ -347,7 +351,7 @@
 	
 	<component id="cube_side_3">
       <transformation>
-		<rotate axis="x" angle="1.5708" />
+		<rotate axis="x" angle="90" />
 		<translate x="0" y="-0.5" z="0" />
       </transformation>
 
@@ -364,7 +368,7 @@
 
 	<component id="cube_side_4">
       <transformation>
-		<rotate axis="x" angle="-1.5708" />
+		<rotate axis="x" angle="-90" />
 		<translate x="0" y="0.5" z="0" />
       </transformation>
 
@@ -381,7 +385,7 @@
 	
 	<component id="cube_side_5">
       <transformation>
-		<rotate axis="y" angle="1.5708" />
+		<rotate axis="y" angle="90" />
 		<translate x="0.5" y="0" z="0" />
       </transformation>
 
@@ -398,7 +402,7 @@
 	
 	<component id="cube_side_6">
       <transformation>
-		<rotate axis="y" angle="-1.5708" />
+		<rotate axis="y" angle="-90" />
 		<translate x="-0.5" y="0" z="0" />
       </transformation>
 
@@ -416,7 +420,7 @@
     <component id="leg">
       <transformation>
         <scale x="0.1" y="0.1" z="1" />
-        <rotate axis="x" angle="-1.5708" />
+        <rotate axis="x" angle="-90" />
         <translate x="0" y="0.5" z="0" />
       </transformation>
 
@@ -518,7 +522,7 @@
 	
 	<component id="pyramid_base">
       <transformation>
-		<rotate axis="x" angle="1.5708" />
+		<rotate axis="x" angle="90" />
       </transformation>
 
       <materials>
@@ -534,7 +538,7 @@
 	
 	<component id="triangle_1">
       <transformation>
-		<rotate axis="x" angle="-0.523599" />
+		<rotate axis="x" angle="-30" />
 		<translate x="0" y="0" z="0.5" />
       </transformation>
 
@@ -551,8 +555,8 @@
 	
 	<component id="triangle_2">
       <transformation>
-		<rotate axis="x" angle="-0.523599" />
-		<rotate axis="y" angle="1.5708" />
+		<rotate axis="x" angle="-30" />
+		<rotate axis="y" angle="90" />
 		<translate x="0.5" y="0" z="0" />
       </transformation>
 
@@ -569,8 +573,8 @@
 	
 	<component id="triangle_3">
       <transformation>
-		<rotate axis="x" angle="-0.523599" />
-		<rotate axis="y" angle="3.1415" />
+		<rotate axis="x" angle="-30" />
+		<rotate axis="y" angle="180" />
 		<translate x="0" y="0" z="-0.5" />
       </transformation>
 
@@ -587,8 +591,8 @@
 	
 	<component id="triangle_4">
       <transformation>
-		<rotate axis="x" angle="-0.523599" />
-		<rotate axis="y" angle="4.71239" />
+		<rotate axis="x" angle="-30" />
+		<rotate axis="y" angle="270" />
 		<translate x="-0.5" y="0" z="0" />
       </transformation>
 

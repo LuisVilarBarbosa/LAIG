@@ -17,6 +17,7 @@ function MySceneGraph(filename, scene) {
 
     this.reader.open('scenes/' + filename, this);
 
+    this.degToRad = Math.PI / 180;
     this.rootNode = null;
     this.perspectives = [];
     this.textures = [];
@@ -118,7 +119,7 @@ MySceneGraph.prototype.parsePerspectiveTags = function (elems) {
         var id = this.reader.getString(e, "id", true);
         var near = this.reader.getFloat(e, "near", true);
         var far = this.reader.getFloat(e, "far", true);
-        var angle = this.reader.getFloat(e, "angle", true);
+        var angle = this.reader.getFloat(e, "angle", true) * this.degToRad;
 
         var fromElem = this.findOneChild(e, "from");
         var from_x = this.reader.getFloat(fromElem, "x", true);
@@ -189,6 +190,9 @@ MySceneGraph.prototype.parseLightsRelativeTags = function (elems, lightType, lig
         var specular_a = this.reader.getFloat(specularElem, "a", true);
 
         if (lightType == "spot") {
+            var angle = this.reader.getFloat(elems[i], "angle", true) * this.degToRad;
+            var exponent = this.reader.getFloat(elems[i], "exponent", true);
+
             var targetElem = this.findOneChild(elems[i], "target");
             var target_x = this.reader.getFloat(targetElem, "x", true);
             var target_y = this.reader.getFloat(targetElem, "y", true);
@@ -198,7 +202,9 @@ MySceneGraph.prototype.parseLightsRelativeTags = function (elems, lightType, lig
             var direction_y = target_y - location_y;
             var direction_z = target_z - location_z;
 
+            this.scene.lights[lightsArrayIndex].setSpotCutOff(angle);
             this.scene.lights[lightsArrayIndex].setSpotDirection(direction_x, direction_y, direction_z);
+            this.scene.lights[lightsArrayIndex].setSpotExponent(exponent);
         }
 
         if (enabled)
@@ -279,7 +285,7 @@ MySceneGraph.prototype.parseTransformationTag = function (elem, matrix) {
         }
         else if (operation[j].tagName == "rotate") {
             var rotate_axis = this.reader.getString(operation[j], "axis", true);
-            var rotate_angle = this.reader.getFloat(operation[j], "angle", true);
+            var rotate_angle = this.reader.getFloat(operation[j], "angle", true) * this.degToRad;
             if (rotate_axis == "x" || rotate_axis == "X")
                 mat4.rotate(matrix, matrix, rotate_angle, [1, 0, 0]);
             else if (rotate_axis == "y" || rotate_axis == "Y")
