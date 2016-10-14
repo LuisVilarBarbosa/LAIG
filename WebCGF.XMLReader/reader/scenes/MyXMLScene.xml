@@ -114,6 +114,22 @@
       <specular r="0" g="0.9" b="0" a="1" />
       <shininess value="15" />
     </material>
+	
+	<material id="orange_material" >
+      <emission r="0" g="0" b="0" a="1" />
+      <ambient r="1" g="0.65" b="0" a="1" />
+      <diffuse r="1" g="0.65" b="0" a="1" />
+      <specular r="1" g="0.65" b="0" a="1" />
+      <shininess value="15" />
+    </material>
+	
+	<material id="donut_material" >
+      <emission r="0" g="0" b="0" a="1" />
+      <ambient r="0.89" g="0.65" b="0.4" a="1" />
+      <diffuse r="0.89" g="0.65" b="0.4" a="1" />
+      <specular r="0.89" g="0.65" b="0.4" a="1" />
+      <shininess value="15" />
+    </material>
 
   </materials>
 
@@ -170,7 +186,7 @@
     </primitive>
 
     <primitive id="triangle">
-      <triangle x1="-0.5" y1="-0.5" z1="0" x2="0.5" y2="-0.5" z2="0" x3="0" y3="0.5" z3="0" />
+      <triangle x1="-0.5" y1="0" z1="0" x2="0.5" y2="0" z2="0" x3="0" y3="1" z3="0" />
     </primitive>
 
     <primitive id="cylinder">
@@ -232,9 +248,9 @@
         <!-- "primitiveref", identificando outros -->
         <!-- componentes ou primitivas -->
         <componentref id="table" />
-    <!--    <componentref id="piramid" />
+		<componentref id="pyramid" />
         <componentref id="ball" />
-        <componentref id="donut" /> -->
+        <componentref id="donut" />
 
       </children>
 
@@ -261,8 +277,78 @@
 
     <component id="table_top">
       <transformation>
-        <rotate axis="x" angle="-1.5708" />
-        <translate x="0.5" y="1" z="0.5" />
+		<scale x="1" y="0.1" z="1" />
+        <translate x="0.5" y="1.05" z="0.5" />
+      </transformation>
+
+      <materials>
+        <material id="blue_material" />
+      </materials>
+
+      <texture id="none" />
+
+      <children>
+        <componentref id="cube" />
+      </children>
+    </component>
+	
+	<component id="cube">
+      <transformation>
+      </transformation>
+
+      <materials>
+        <material id="blue_material" />
+      </materials>
+
+      <texture id="none" />
+
+      <children>
+        <componentref id="cube_side_1" />
+		 <componentref id="cube_side_2" />
+		<componentref id="cube_side_3" />
+		<componentref id="cube_side_4" />
+		<componentref id="cube_side_5" />
+		<componentref id="cube_side_6" />
+      </children>
+    </component>
+	
+	<component id="cube_side_1">
+      <transformation>
+		<translate x="0" y="0" z="0.5" />
+      </transformation>
+
+      <materials>
+        <material id="blue_material" />
+      </materials>
+
+      <texture id="none" />
+
+      <children>
+        <primitiveref id="rectangle" />
+      </children>
+    </component>
+	
+	<component id="cube_side_2">
+      <transformation>
+		<rotate axis="x" angle="3.1415" />
+		<translate x="0" y="0" z="-0.5" />
+      </transformation>
+
+      <materials>
+        <material id="blue_material" />
+      </materials>
+
+      <texture id="none" />
+
+      <children>
+        <primitiveref id="rectangle" />
+      </children>
+    </component>
+	
+	<component id="cube_side_3">
+      <transformation>
+		<rotate axis="x" angle="1.5708" />
+		<translate x="0" y="-0.5" z="0" />
       </transformation>
 
       <materials>
@@ -276,6 +362,57 @@
       </children>
     </component>
 
+	<component id="cube_side_4">
+      <transformation>
+		<rotate axis="x" angle="-1.5708" />
+		<translate x="0" y="0.5" z="0" />
+      </transformation>
+
+      <materials>
+        <material id="blue_material" />
+      </materials>
+
+      <texture id="none" />
+
+      <children>
+        <primitiveref id="rectangle" />
+      </children>
+    </component>
+	
+	<component id="cube_side_5">
+      <transformation>
+		<rotate axis="y" angle="1.5708" />
+		<translate x="0.5" y="0" z="0" />
+      </transformation>
+
+      <materials>
+        <material id="blue_material" />
+      </materials>
+
+      <texture id="none" />
+
+      <children>
+        <primitiveref id="rectangle" />
+      </children>
+    </component>
+	
+	<component id="cube_side_6">
+      <transformation>
+		<rotate axis="y" angle="-1.5708" />
+		<translate x="-0.5" y="0" z="0" />
+      </transformation>
+
+      <materials>
+        <material id="blue_material" />
+      </materials>
+
+      <texture id="none" />
+
+      <children>
+        <primitiveref id="rectangle" />
+      </children>
+    </component>
+	
     <component id="leg">
       <transformation>
         <scale x="0.1" y="0.1" z="1" />
@@ -355,6 +492,146 @@
 
       <children>
         <componentref id="leg" />
+      </children>
+    </component>
+	
+	<component id="pyramid">
+      <transformation>
+		<scale x="0.3" y="0.3" z="0.3" />
+        <translate x="0.3" y="1.1" z="0.7" />
+      </transformation>
+
+      <materials>
+        <material id="green_material" />
+      </materials>
+
+      <texture id="none" />
+
+      <children>
+		<componentref id="triangle_1" />
+		<componentref id="triangle_2" />
+		<componentref id="triangle_3" />
+		<componentref id="triangle_4" />
+		<componentref id="pyramid_base" /> 
+      </children>
+    </component>
+	
+	<component id="pyramid_base">
+      <transformation>
+		<rotate axis="x" angle="1.5708" />
+      </transformation>
+
+      <materials>
+        <material id="inherit" />
+      </materials>
+
+      <texture id="none" />
+
+      <children>
+        <primitiveref id="rectangle" />
+      </children>
+    </component>
+	
+	<component id="triangle_1">
+      <transformation>
+		<rotate axis="x" angle="-0.523599" />
+		<translate x="0" y="0" z="0.5" />
+      </transformation>
+
+      <materials>
+        <material id="inherit" />
+      </materials>
+
+      <texture id="none" />
+
+      <children>
+        <primitiveref id="triangle" />
+      </children>
+    </component>
+	
+	<component id="triangle_2">
+      <transformation>
+		<rotate axis="x" angle="-0.523599" />
+		<rotate axis="y" angle="1.5708" />
+		<translate x="0.5" y="0" z="0" />
+      </transformation>
+
+      <materials>
+        <material id="inherit" />
+      </materials>
+
+      <texture id="none" />
+
+      <children>
+        <primitiveref id="triangle" />
+      </children>
+    </component>
+	
+	<component id="triangle_3">
+      <transformation>
+		<rotate axis="x" angle="-0.523599" />
+		<rotate axis="y" angle="3.1415" />
+		<translate x="0" y="0" z="-0.5" />
+      </transformation>
+
+      <materials>
+        <material id="inherit" />
+      </materials>
+
+      <texture id="none" />
+
+      <children>
+        <primitiveref id="triangle" />
+      </children>
+    </component>
+	
+	<component id="triangle_4">
+      <transformation>
+		<rotate axis="x" angle="-0.523599" />
+		<rotate axis="y" angle="4.71239" />
+		<translate x="-0.5" y="0" z="0" />
+      </transformation>
+
+      <materials>
+        <material id="inherit" />
+      </materials>
+
+      <texture id="none" />
+
+      <children>
+        <primitiveref id="triangle" />
+      </children>
+    </component>
+	
+	<component id="ball">
+      <transformation>
+		<translate x="0.2" y="0.1" z="-0.4" />	
+      </transformation>
+
+      <materials>
+        <material id="orange_material" />
+      </materials>
+
+      <texture id="none" />
+
+      <children>
+        <primitiveref id="sphere" />
+      </children>
+    </component>
+	
+	<component id="donut">
+      <transformation>
+		<translate x="0.4" y="0" z="0" />
+      </transformation>
+
+      <materials>
+        <material id="donut_material" />
+      </materials>
+
+      <texture id="none" />
+
+      <children>
+        <primitiveref id="torus" />
       </children>
     </component>
 
