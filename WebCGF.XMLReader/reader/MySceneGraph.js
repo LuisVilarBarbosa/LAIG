@@ -360,6 +360,7 @@ MySceneGraph.prototype.parsePrimitiveTags = function (elems) {
             var outer = this.reader.getFloat(tempTorusElems[0], "outer", true);
             var slices = this.reader.getInteger(tempTorusElems[0], "slices", true);
             var loops = this.reader.getInteger(tempTorusElems[0], "loops", true);
+			this.primitives[id] = new MyTorus(this.scene, outer, inner, slices, loops);
         }
     }
 }

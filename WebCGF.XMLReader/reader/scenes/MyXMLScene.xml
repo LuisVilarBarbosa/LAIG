@@ -625,7 +625,9 @@
 	
 	<component id="donut">
       <transformation>
-		<translate x="0.4" y="0" z="0" />
+		<scale x="0.15" y="0.15" z="0.15" />
+		<rotate axis="x" angle="90" />
+		<translate x="0.4" y="1.18" z="0.25" />
       </transformation>
 
       <materials>
