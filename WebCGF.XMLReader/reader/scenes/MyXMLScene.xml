@@ -198,7 +198,7 @@
     </primitive>
 
     <primitive id="sphere">
-      <sphere radius="1" slices="100" stacks="100" />
+      <sphere radius="0.5" slices="100" stacks="100" />
     </primitive>
 
     <primitive id="torus">
@@ -609,7 +609,8 @@
 
     <component id="ball">
       <transformation>
-        <translate x="0.2" y="0.1" z="-0.4" />
+        <translate x="0.7" y="1.25" z="0.7" />
+        <scale x="0.3" y="0.3" z="0.3" />
       </transformation>
 
       <materials>
