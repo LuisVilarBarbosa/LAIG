@@ -118,16 +118,16 @@
       <specular r="0" g="0.9" b="0" a="1" />
       <shininess value="15" />
     </material>
-	
-	<material id="orange_material" >
+
+    <material id="orange_material" >
       <emission r="0" g="0" b="0" a="1" />
       <ambient r="1" g="0.65" b="0" a="1" />
       <diffuse r="1" g="0.65" b="0" a="1" />
       <specular r="1" g="0.65" b="0" a="1" />
       <shininess value="15" />
     </material>
-	
-	<material id="donut_material" >
+
+    <material id="donut_material" >
       <emission r="0" g="0" b="0" a="1" />
       <ambient r="0.89" g="0.65" b="0.4" a="1" />
       <diffuse r="0.89" g="0.65" b="0.4" a="1" />
@@ -163,9 +163,9 @@
     <transformation id="translate_rotate_and_scale">
       <!-- instrucoes a usar sem limite nem ordem -->
       <!-- deve existir pelo menos uma transformacao -->
-      <translate x="0" y="5" z="0" />
-      <rotate axis="y" angle="90" />
       <scale x="2" y="2" z="2" />
+      <rotate axis="y" angle="90" />
+      <translate x="0" y="5" z="0" />
     </transformation>
 
     <transformation id="identity">
@@ -252,7 +252,7 @@
         <!-- "primitiveref", identificando outros -->
         <!-- componentes ou primitivas -->
         <componentref id="table" />
-		<componentref id="pyramid" />
+        <componentref id="pyramid" />
         <componentref id="ball" />
         <componentref id="donut" />
 
@@ -281,7 +281,7 @@
 
     <component id="table_top">
       <transformation>
-		<scale x="1" y="0.1" z="1" />
+        <scale x="1" y="0.1" z="1" />
         <translate x="0.5" y="1.05" z="0.5" />
       </transformation>
 
@@ -295,8 +295,8 @@
         <componentref id="cube" />
       </children>
     </component>
-	
-	<component id="cube">
+
+    <component id="cube">
       <transformation>
       </transformation>
 
@@ -308,51 +308,17 @@
 
       <children>
         <componentref id="cube_side_1" />
-		 <componentref id="cube_side_2" />
-		<componentref id="cube_side_3" />
-		<componentref id="cube_side_4" />
-		<componentref id="cube_side_5" />
-		<componentref id="cube_side_6" />
+        <componentref id="cube_side_2" />
+        <componentref id="cube_side_3" />
+        <componentref id="cube_side_4" />
+        <componentref id="cube_side_5" />
+        <componentref id="cube_side_6" />
       </children>
     </component>
-	
-	<component id="cube_side_1">
+
+    <component id="cube_side_1">
       <transformation>
-		<translate x="0" y="0" z="0.5" />
-      </transformation>
-
-      <materials>
-        <material id="blue_material" />
-      </materials>
-
-      <texture id="none" />
-
-      <children>
-        <primitiveref id="rectangle" />
-      </children>
-    </component>
-	
-	<component id="cube_side_2">
-      <transformation>
-		<rotate axis="x" angle="180" />
-		<translate x="0" y="0" z="-0.5" />
-      </transformation>
-
-      <materials>
-        <material id="blue_material" />
-      </materials>
-
-      <texture id="none" />
-
-      <children>
-        <primitiveref id="rectangle" />
-      </children>
-    </component>
-	
-	<component id="cube_side_3">
-      <transformation>
-		<rotate axis="x" angle="90" />
-		<translate x="0" y="-0.5" z="0" />
+        <translate x="0" y="0" z="0.5" />
       </transformation>
 
       <materials>
@@ -366,10 +332,10 @@
       </children>
     </component>
 
-	<component id="cube_side_4">
+    <component id="cube_side_2">
       <transformation>
-		<rotate axis="x" angle="-90" />
-		<translate x="0" y="0.5" z="0" />
+        <translate x="0" y="0" z="-0.5" />
+        <rotate axis="x" angle="180" />
       </transformation>
 
       <materials>
@@ -382,11 +348,11 @@
         <primitiveref id="rectangle" />
       </children>
     </component>
-	
-	<component id="cube_side_5">
+
+    <component id="cube_side_3">
       <transformation>
-		<rotate axis="y" angle="90" />
-		<translate x="0.5" y="0" z="0" />
+        <translate x="0" y="-0.5" z="0" />
+        <rotate axis="x" angle="90" />
       </transformation>
 
       <materials>
@@ -399,11 +365,11 @@
         <primitiveref id="rectangle" />
       </children>
     </component>
-	
-	<component id="cube_side_6">
+
+    <component id="cube_side_4">
       <transformation>
-		<rotate axis="y" angle="-90" />
-		<translate x="-0.5" y="0" z="0" />
+        <translate x="0" y="0.5" z="0" />
+        <rotate axis="x" angle="-90" />
       </transformation>
 
       <materials>
@@ -416,12 +382,46 @@
         <primitiveref id="rectangle" />
       </children>
     </component>
-	
+
+    <component id="cube_side_5">
+      <transformation>
+        <translate x="0.5" y="0" z="0" />
+        <rotate axis="y" angle="90" />
+      </transformation>
+
+      <materials>
+        <material id="blue_material" />
+      </materials>
+
+      <texture id="none" />
+
+      <children>
+        <primitiveref id="rectangle" />
+      </children>
+    </component>
+
+    <component id="cube_side_6">
+      <transformation>
+        <translate x="-0.5" y="0" z="0" />
+        <rotate axis="y" angle="-90" />
+      </transformation>
+
+      <materials>
+        <material id="blue_material" />
+      </materials>
+
+      <texture id="none" />
+
+      <children>
+        <primitiveref id="rectangle" />
+      </children>
+    </component>
+
     <component id="leg">
       <transformation>
-        <scale x="0.1" y="0.1" z="1" />
-        <rotate axis="x" angle="-90" />
         <translate x="0" y="0.5" z="0" />
+        <rotate axis="x" angle="-90" />
+        <scale x="0.1" y="0.1" z="1" />
       </transformation>
 
       <materials>
@@ -498,11 +498,11 @@
         <componentref id="leg" />
       </children>
     </component>
-	
-	<component id="pyramid">
+
+    <component id="pyramid">
       <transformation>
-		<scale x="0.3" y="0.3" z="0.3" />
         <translate x="0.3" y="1.1" z="0.7" />
+        <scale x="0.3" y="0.3" z="0.3" />
       </transformation>
 
       <materials>
@@ -512,17 +512,17 @@
       <texture id="none" />
 
       <children>
-		<componentref id="triangle_1" />
-		<componentref id="triangle_2" />
-		<componentref id="triangle_3" />
-		<componentref id="triangle_4" />
-		<componentref id="pyramid_base" /> 
+        <componentref id="triangle_1" />
+        <componentref id="triangle_2" />
+        <componentref id="triangle_3" />
+        <componentref id="triangle_4" />
+        <componentref id="pyramid_base" />
       </children>
     </component>
-	
-	<component id="pyramid_base">
+
+    <component id="pyramid_base">
       <transformation>
-		<rotate axis="x" angle="90" />
+        <rotate axis="x" angle="90" />
       </transformation>
 
       <materials>
@@ -535,11 +535,11 @@
         <primitiveref id="rectangle" />
       </children>
     </component>
-	
-	<component id="triangle_1">
+
+    <component id="triangle_1">
       <transformation>
-		<rotate axis="x" angle="-30" />
-		<translate x="0" y="0" z="0.5" />
+        <translate x="0" y="0" z="0.5" />
+        <rotate axis="x" angle="-30" />
       </transformation>
 
       <materials>
@@ -552,12 +552,12 @@
         <primitiveref id="triangle" />
       </children>
     </component>
-	
-	<component id="triangle_2">
+
+    <component id="triangle_2">
       <transformation>
-		<rotate axis="x" angle="-30" />
-		<rotate axis="y" angle="90" />
-		<translate x="0.5" y="0" z="0" />
+        <translate x="0.5" y="0" z="0" />
+        <rotate axis="y" angle="90" />
+        <rotate axis="x" angle="-30" />
       </transformation>
 
       <materials>
@@ -570,12 +570,12 @@
         <primitiveref id="triangle" />
       </children>
     </component>
-	
-	<component id="triangle_3">
+
+    <component id="triangle_3">
       <transformation>
-		<rotate axis="x" angle="-30" />
-		<rotate axis="y" angle="180" />
-		<translate x="0" y="0" z="-0.5" />
+        <translate x="0" y="0" z="-0.5" />
+        <rotate axis="y" angle="180" />
+        <rotate axis="x" angle="-30" />
       </transformation>
 
       <materials>
@@ -588,12 +588,12 @@
         <primitiveref id="triangle" />
       </children>
     </component>
-	
-	<component id="triangle_4">
+
+    <component id="triangle_4">
       <transformation>
-		<rotate axis="x" angle="-30" />
-		<rotate axis="y" angle="270" />
-		<translate x="-0.5" y="0" z="0" />
+        <translate x="-0.5" y="0" z="0" />
+        <rotate axis="y" angle="270" />
+        <rotate axis="x" angle="-30" />
       </transformation>
 
       <materials>
@@ -606,10 +606,10 @@
         <primitiveref id="triangle" />
       </children>
     </component>
-	
-	<component id="ball">
+
+    <component id="ball">
       <transformation>
-		<translate x="0.2" y="0.1" z="-0.4" />	
+        <translate x="0.2" y="0.1" z="-0.4" />
       </transformation>
 
       <materials>
@@ -622,12 +622,12 @@
         <primitiveref id="sphere" />
       </children>
     </component>
-	
-	<component id="donut">
+
+    <component id="donut">
       <transformation>
-		<scale x="0.15" y="0.15" z="0.15" />
-		<rotate axis="x" angle="90" />
-		<translate x="0.4" y="1.18" z="0.25" />
+        <translate x="0.4" y="1.18" z="0.25" />
+        <rotate axis="x" angle="90" />
+        <scale x="0.15" y="0.15" z="0.15" />
       </transformation>
 
       <materials>

@@ -276,16 +276,16 @@ MySceneGraph.prototype.parseMaterialTags = function (elems) {
 
 MySceneGraph.prototype.parseTransformationTag = function (elem, matrix) {
     var operation = elem.children;
-    for (var j = operation.length - 1; j >= 0; j--) {
-        if (operation[j].tagName == "translate") {
-            var translate_x = this.reader.getFloat(operation[j], "x", true);
-            var translate_y = this.reader.getFloat(operation[j], "y", true);
-            var translate_z = this.reader.getFloat(operation[j], "z", true);
+    for (var i = 0, length = operation.length; i < length; i++) {
+        if (operation[i].tagName == "translate") {
+            var translate_x = this.reader.getFloat(operation[i], "x", true);
+            var translate_y = this.reader.getFloat(operation[i], "y", true);
+            var translate_z = this.reader.getFloat(operation[i], "z", true);
             mat4.translate(matrix, matrix, [translate_x, translate_y, translate_z]);
         }
-        else if (operation[j].tagName == "rotate") {
-            var rotate_axis = this.reader.getString(operation[j], "axis", true);
-            var rotate_angle = this.reader.getFloat(operation[j], "angle", true) * this.degToRad;
+        else if (operation[i].tagName == "rotate") {
+            var rotate_axis = this.reader.getString(operation[i], "axis", true);
+            var rotate_angle = this.reader.getFloat(operation[i], "angle", true) * this.degToRad;
             if (rotate_axis == "x" || rotate_axis == "X")
                 mat4.rotate(matrix, matrix, rotate_angle, [1, 0, 0]);
             else if (rotate_axis == "y" || rotate_axis == "Y")
@@ -295,14 +295,14 @@ MySceneGraph.prototype.parseTransformationTag = function (elem, matrix) {
             else
                 return "Invalid rotation axis: " + rotate_axis;
         }
-        else if (operation[j].tagName == "scale") {
-            var scale_x = this.reader.getFloat(operation[j], "x", true);
-            var scale_y = this.reader.getFloat(operation[j], "y", true);
-            var scale_z = this.reader.getFloat(operation[j], "z", true);
+        else if (operation[i].tagName == "scale") {
+            var scale_x = this.reader.getFloat(operation[i], "x", true);
+            var scale_y = this.reader.getFloat(operation[i], "y", true);
+            var scale_z = this.reader.getFloat(operation[i], "z", true);
             mat4.scale(matrix, matrix, [scale_x, scale_y, scale_z]);
         }
         else
-            console.log("Invalid matricial operation: " + operation[j].tagName);
+            console.log("Invalid matricial operation: " + operation[i].tagName);
     }
 }
 
