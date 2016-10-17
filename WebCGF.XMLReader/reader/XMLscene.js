@@ -20,7 +20,9 @@ XMLscene.prototype.init = function (application) {
     this.gl.enable(this.gl.CULL_FACE);
     this.gl.depthFunc(this.gl.LEQUAL);
 
+    this.enableTextures(true);
     this.axis = new CGFaxis(this);
+    this.lightsIds = [];
 };
 
 XMLscene.prototype.initLights = function () {
@@ -74,7 +76,8 @@ XMLscene.prototype.display = function () {
     // only get executed after the graph has loaded correctly.
     // This is one possible way to do it
     if (this.graph.loadedOk) {
-        this.lights[0].update();
+        for (var i = 0, length = this.lights.length; i < length; i++)
+            this.lights[i].update();
         this.processGraph(this.graph.rootNode);
     };
 };
@@ -85,6 +88,12 @@ XMLscene.prototype.processGraph = function (nodeName) {
         var node = this.graph[nodeName];
         if (node.material != null)
             material = node.material;
+        if (node.texture == "none")
+            this.setDefaultAppearance();
+        else if (node.texture != "inherit") {
+            if (material != null)
+                material.setTexture(this.graph.textures[node.texture]);
+        }
         if (material != null)
             material.apply();
 
@@ -93,7 +102,8 @@ XMLscene.prototype.processGraph = function (nodeName) {
             node.primitive.display();
         for (var i = 0; i < node.children.length; i++) {
             this.pushMatrix();
-            material.apply();
+            if (material != null)
+                material.apply();
             this.processGraph(node.children[i]);
             this.popMatrix();
         }

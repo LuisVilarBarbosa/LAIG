@@ -61,7 +61,6 @@ MySceneGraph.prototype.verifyDSXFileStructure = function (rootElement) {
     if ((name = rootElement.children[6].nodeName) != 'transformations') return "expected 'transformations' tag instead of " + name;
     if ((name = rootElement.children[7].nodeName) != 'primitives') return "expected 'primitives' tag instead of " + name;
     if ((name = rootElement.children[8].nodeName) != 'components') return "expected 'components' tag instead of " + name;
-    // verify subsequent tags
 }
 
 MySceneGraph.prototype.getAllDSXFileIds = function (elem, ids) {
@@ -163,7 +162,7 @@ MySceneGraph.prototype.parseLightsRelativeTags = function (elems, lightType, lig
 
     var lightsArrayIndex = lightsArrayStartIndex;
     for (var i = 0, nnodes = elems.length; i < nnodes; i++, lightsArrayIndex++) {
-        var id = this.reader.getString(elems[i], "id", true);    // not in use
+        var id = this.reader.getString(elems[i], "id", true);
         var enabled = this.reader.getBoolean(elems[i], "enabled", true);
 
         var locationElem = this.findOneChild(elems[i], "location");
@@ -207,6 +206,7 @@ MySceneGraph.prototype.parseLightsRelativeTags = function (elems, lightType, lig
             this.scene.lights[lightsArrayIndex].setSpotExponent(exponent);
         }
 
+        this.scene.lightsIds[lightsArrayIndex] = id;
         if (enabled)
             this.scene.lights[lightsArrayIndex].enable();
         else
@@ -227,9 +227,7 @@ MySceneGraph.prototype.parseTextureTags = function (elems) {
         var length_s = this.reader.getFloat(elems[i], "length_s", true);
         var length_t = this.reader.getFloat(elems[i], "length_t", true);
 
-        this.textures[id] = new CGFappearance(this.scene);
-        this.textures[id].loadTexture(file);
-        this.textures[id].setTextureWrap(length_s, length_t);
+        this.textures[id] = new CGFtexture(this.scene, file, length_s, length_t);
     }
 }
 
@@ -324,7 +322,7 @@ MySceneGraph.prototype.parsePrimitiveTags = function (elems) {
             var y1 = this.reader.getFloat(tempRectangleElems[0], "y1", true);
             var x2 = this.reader.getFloat(tempRectangleElems[0], "x2", true);
             var y2 = this.reader.getFloat(tempRectangleElems[0], "y2", true);
-            this.primitives[id] = new Rectangle(this.scene, x1, y1, x2, y2);
+            this.primitives[id] = new MyRectangle(this.scene, x1, y1, x2, y2);
         }
         var tempTriangleElems = elems[i].getElementsByTagName("triangle");
         if (tempTriangleElems != null && tempTriangleElems.length == 1) {
@@ -337,7 +335,7 @@ MySceneGraph.prototype.parsePrimitiveTags = function (elems) {
             var x3 = this.reader.getFloat(tempTriangleElems[0], "x3", true);
             var y3 = this.reader.getFloat(tempTriangleElems[0], "y3", true);
             var z3 = this.reader.getFloat(tempTriangleElems[0], "z3", true);
-            this.primitives[id] = new Triangle(this.scene, x1, y1, z1, x2, y2, z2, x3, y3, z3);
+            this.primitives[id] = new MyTriangle(this.scene, x1, y1, z1, x2, y2, z2, x3, y3, z3);
         }
         var tempCylinderElems = elems[i].getElementsByTagName("cylinder");
         if (tempCylinderElems != null && tempCylinderElems.length == 1) {
@@ -353,6 +351,7 @@ MySceneGraph.prototype.parsePrimitiveTags = function (elems) {
             var radius = this.reader.getFloat(tempSphereElems[0], "radius", true);
             var slices = this.reader.getInteger(tempSphereElems[0], "slices", true);
             var stacks = this.reader.getInteger(tempSphereElems[0], "stacks", true);
+            this.primitives[id] = new MySphere(this.scene, radius, slices, stacks);
         }
         var tempTorusElems = elems[i].getElementsByTagName("torus");
         if (tempTorusElems != null && tempTorusElems.length == 1) {
@@ -360,7 +359,6 @@ MySceneGraph.prototype.parsePrimitiveTags = function (elems) {
             var outer = this.reader.getFloat(tempTorusElems[0], "outer", true);
             var slices = this.reader.getInteger(tempTorusElems[0], "slices", true);
             var loops = this.reader.getInteger(tempTorusElems[0], "loops", true);
-			//this.primitives[id] = new MyTorus(this.scene, outer, inner, slices, loops);
         }
     }
 }
@@ -397,7 +395,7 @@ MySceneGraph.prototype.parseComponentTags = function (elems) {
         /* 'texture' tags loading */
         var tempTextureElem = this.findOneChild(elems[i], "texture");
         var texture = this.reader.getString(tempTextureElem, "id", true);
-        this.scene.graph[id].setTexture(this.textures[texture]);    // doesn't consider "none" nor "inherit"
+        this.scene.graph[id].setTexture(texture);
 
         /* 'children' tags loading */
         var tempChildrenElem = this.findOneChild(elems[i], "children");
@@ -463,8 +461,8 @@ MySceneGraph.prototype.parseDSXFile = function (rootElement) {
     if ((tempOmniElems == null || tempOmniElems.length == 0) &&
         (tempSpotElems == null || tempSpotElems.length == 0))
         return "'omni' or 'spot' element is missing.";
-    var lastUsedIndex = this.parseLightsRelativeTags(tempOmniElems, "omni", 0);
-    this.parseLightsRelativeTags(tempSpotElems, "spot", lastUsedIndex + 1);
+    var nextIndexToUse = this.parseLightsRelativeTags(tempOmniElems, "omni", 0);
+    this.parseLightsRelativeTags(tempSpotElems, "spot", nextIndexToUse);
 
     /* 'textures' tags loading */
     var tempTexturesElems = rootElement.getElementsByTagName("textures")
