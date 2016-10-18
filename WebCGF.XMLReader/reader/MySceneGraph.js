@@ -108,10 +108,27 @@ MySceneGraph.prototype.findChildren = function (elem, tagNameToFind) {  /* calls
     return elems;
 }
 
+MySceneGraph.prototype.getFloatsXYZ = function (elem) {
+    var array = [];
+    array.push(this.reader.getFloat(elem, "x", true));
+    array.push(this.reader.getFloat(elem, "y", true));
+    array.push(this.reader.getFloat(elem, "z", true));
+    return array;
+}
+
+MySceneGraph.prototype.getFloatsRGBA = function (elem) {
+    var array = [];
+    array.push(this.reader.getFloat(elem, "r", true));
+    array.push(this.reader.getFloat(elem, "g", true));
+    array.push(this.reader.getFloat(elem, "b", true));
+    array.push(this.reader.getFloat(elem, "a", true));
+    return array;
+}
+
 MySceneGraph.prototype.parseSceneTag = function (elem) {
     this.rootNode = this.reader.getString(elem, "root", true);
     var axis_length = this.reader.getFloat(elem, "axis_length", true);
-    this.scene.axis = new CGFaxis(this.scene, axis_length);
+    this.scene.setAxis(new CGFaxis(this.scene, axis_length));
 }
 
 MySceneGraph.prototype.parsePerspectiveTags = function (elems) {
@@ -123,17 +140,13 @@ MySceneGraph.prototype.parsePerspectiveTags = function (elems) {
         var angle = this.reader.getFloat(e, "angle", true) * this.degToRad;
 
         var fromElem = this.findOneChild(e, "from");
-        var from_x = this.reader.getFloat(fromElem, "x", true);
-        var from_y = this.reader.getFloat(fromElem, "y", true);
-        var from_z = this.reader.getFloat(fromElem, "z", true);
+        var from = this.getFloatsXYZ(fromElem);
 
         var toElem = this.findOneChild(e, "to");
-        var to_x = this.reader.getFloat(toElem, "x", true);
-        var to_y = this.reader.getFloat(toElem, "y", true);
-        var to_z = this.reader.getFloat(toElem, "z", true);
+        var to = this.getFloatsXYZ(toElem);
 
-        var from = vec3.fromValues(from_x, from_y, from_z);
-        var to = vec3.fromValues(to_x, to_y, to_z);
+        var from = vec3.fromValues(from[0], from[1], from[2]);
+        var to = vec3.fromValues(to[0], to[1], to[2]);
 
         this.perspectives[id] = new CGFcamera(angle, near, far, from, to);
         this.perspectivesIds.push(id);
@@ -143,29 +156,22 @@ MySceneGraph.prototype.parsePerspectiveTags = function (elems) {
 MySceneGraph.prototype.parseIlluminationTag = function (elem) {
     var doublesided = this.reader.getBoolean(elem, "doublesided", true);
     var local = this.reader.getBoolean(elem, "local", true);
+    // apply values
 
     var ambientElem = this.findOneChild(elem, "ambient");
-    var ambient_r = this.reader.getFloat(ambientElem, "r", true);
-    var ambient_g = this.reader.getFloat(ambientElem, "g", true);
-    var ambient_b = this.reader.getFloat(ambientElem, "b", true);
-    var ambient_a = this.reader.getFloat(ambientElem, "a", true);
-    this.scene.setAmbient(ambient_r, ambient_g, ambient_b, ambient_a);
+    var ambient = this.getFloatsRGBA(ambientElem);
+    this.scene.setAmbient(ambient[0], ambient[1], ambient[2], ambient[3]);
 
     var backgroundElem = this.findOneChild(elem, "background");
-    var background_r = this.reader.getFloat(backgroundElem, "r", true);
-    var background_g = this.reader.getFloat(backgroundElem, "g", true);
-    var background_b = this.reader.getFloat(backgroundElem, "b", true);
-    var background_a = this.reader.getFloat(backgroundElem, "a", true);
-    this.background = [background_r, background_g, background_b, background_a];
+    var background = this.getFloatsRGBA(backgroundElem);
+    this.background = [background[0], background[1], background[2], background[3]];
 }
 
 MySceneGraph.prototype.parseLightsRelativeTags = function (elems, lightType, lightsArrayStartIndex) {
     if (lightType != "omni" && lightType != "spot")
         console.log("the light type '" + lightType + "' will be considered 'omni'")
-
     var lightsArrayIndex = lightsArrayStartIndex;
     var nnodes = elems.length;
-
     if ((lightsArrayStartIndex - 1 + nnodes) >= 8) {
         console.log("WebGL only accepts 8 lights. The first 8 lights will be loaded, the others not.");
         nnodes = 8 - lightsArrayStartIndex;
@@ -176,43 +182,31 @@ MySceneGraph.prototype.parseLightsRelativeTags = function (elems, lightType, lig
         var enabled = this.reader.getBoolean(elems[i], "enabled", true);
 
         var locationElem = this.findOneChild(elems[i], "location");
-        var location_x = this.reader.getFloat(locationElem, "x", true);
-        var location_y = this.reader.getFloat(locationElem, "y", true);
-        var location_z = this.reader.getFloat(locationElem, "z", true);
+        var location = this.getFloatsXYZ(locationElem);
 
         var ambientElem = this.findOneChild(elems[i], "ambient");
-        var ambient_r = this.reader.getFloat(ambientElem, "r", true);
-        var ambient_g = this.reader.getFloat(ambientElem, "g", true);
-        var ambient_b = this.reader.getFloat(ambientElem, "b", true);
-        var ambient_a = this.reader.getFloat(ambientElem, "a", true);
+        var ambient = this.getFloatsRGBA(ambientElem);
 
         var diffuseElem = this.findOneChild(elems[i], "diffuse");
-        var diffuse_r = this.reader.getFloat(diffuseElem, "r", true);
-        var diffuse_g = this.reader.getFloat(diffuseElem, "g", true);
-        var diffuse_b = this.reader.getFloat(diffuseElem, "b", true);
-        var diffuse_a = this.reader.getFloat(diffuseElem, "a", true);
+        var diffuse = this.getFloatsRGBA(diffuseElem);
 
         var specularElem = this.findOneChild(elems[i], "specular");
-        var specular_r = this.reader.getFloat(specularElem, "r", true);
-        var specular_g = this.reader.getFloat(specularElem, "g", true);
-        var specular_b = this.reader.getFloat(specularElem, "b", true);
-        var specular_a = this.reader.getFloat(specularElem, "a", true);
+        var specular = this.getFloatsRGBA(specularElem);
 
         if (lightType == "spot") {
             var angle = this.reader.getFloat(elems[i], "angle", true) * this.degToRad;
             var exponent = this.reader.getFloat(elems[i], "exponent", true);
 
             var targetElem = this.findOneChild(elems[i], "target");
-            var target_x = this.reader.getFloat(targetElem, "x", true);
-            var target_y = this.reader.getFloat(targetElem, "y", true);
-            var target_z = this.reader.getFloat(targetElem, "z", true);
+            var target = this.getFloatsXYZ(targetElem);
 
-            var direction_x = target_x - location_x;
-            var direction_y = target_y - location_y;
-            var direction_z = target_z - location_z;
+            var direction = [];
+            direction[0] = target[0] - location[0];
+            direction[1] = target[1] - location[1];
+            direction[2] = target[2] - location[2];
 
             this.scene.lights[lightsArrayIndex].setSpotCutOff(angle);
-            this.scene.lights[lightsArrayIndex].setSpotDirection(direction_x, direction_y, direction_z);
+            this.scene.lights[lightsArrayIndex].setSpotDirection(direction[0], direction[1], direction[2]);
             this.scene.lights[lightsArrayIndex].setSpotExponent(exponent);
         }
 
@@ -221,10 +215,10 @@ MySceneGraph.prototype.parseLightsRelativeTags = function (elems, lightType, lig
             this.scene.lights[lightsArrayIndex].enable();
         else
             this.scene.lights[lightsArrayIndex].disable();
-        this.scene.lights[lightsArrayIndex].setPosition(location_x, location_y, location_z);
-        this.scene.lights[lightsArrayIndex].setAmbient(ambient_r, ambient_g, ambient_b, ambient_a);
-        this.scene.lights[lightsArrayIndex].setDiffuse(diffuse_r, diffuse_g, diffuse_b, diffuse_a);
-        this.scene.lights[lightsArrayIndex].setSpecular(specular_r, specular_g, specular_b, specular_a);
+        this.scene.lights[lightsArrayIndex].setPosition(location[0], location[1], location[2]);
+        this.scene.lights[lightsArrayIndex].setAmbient(ambient[0], ambient[1], ambient[2], ambient[3]);
+        this.scene.lights[lightsArrayIndex].setDiffuse(diffuse[0], diffuse[1], diffuse[2], diffuse[3]);
+        this.scene.lights[lightsArrayIndex].setSpecular(specular[0], specular[1], specular[2], specular[3]);
         this.scene.myInterface.addLight(this.scene.lights[lightsArrayIndex], id);
     }
 
@@ -247,37 +241,25 @@ MySceneGraph.prototype.parseMaterialTags = function (elems) {
         var id = this.reader.getString(elems[i], "id", true);
 
         var emissionElem = this.findOneChild(elems[i], "emission");
-        var emission_r = this.reader.getFloat(emissionElem, "r", true);
-        var emission_g = this.reader.getFloat(emissionElem, "g", true);
-        var emission_b = this.reader.getFloat(emissionElem, "b", true);
-        var emission_a = this.reader.getFloat(emissionElem, "a", true);
+        var emission = this.getFloatsRGBA(emissionElem);
 
         var ambientElem = this.findOneChild(elems[i], "ambient");
-        var ambient_r = this.reader.getFloat(ambientElem, "r", true);
-        var ambient_g = this.reader.getFloat(ambientElem, "g", true);
-        var ambient_b = this.reader.getFloat(ambientElem, "b", true);
-        var ambient_a = this.reader.getFloat(ambientElem, "a", true);
+        var ambient = this.getFloatsRGBA(ambientElem);
 
         var diffuseElem = this.findOneChild(elems[i], "diffuse");
-        var diffuse_r = this.reader.getFloat(diffuseElem, "r", true);
-        var diffuse_g = this.reader.getFloat(diffuseElem, "g", true);
-        var diffuse_b = this.reader.getFloat(diffuseElem, "b", true);
-        var diffuse_a = this.reader.getFloat(diffuseElem, "a", true);
+        var diffuse = this.getFloatsRGBA(diffuseElem);
 
         var specularElem = this.findOneChild(elems[i], "specular");
-        var specular_r = this.reader.getFloat(specularElem, "r", true);
-        var specular_g = this.reader.getFloat(specularElem, "g", true);
-        var specular_b = this.reader.getFloat(specularElem, "b", true);
-        var specular_a = this.reader.getFloat(specularElem, "a", true);
+        var specular = this.getFloatsRGBA(specularElem);
 
         var shininessElem = this.findOneChild(elems[i], "shininess");
         var shininess_value = this.reader.getFloat(shininessElem, "value", true);
 
         this.materials[id] = new CGFappearance(this.scene);
-        this.materials[id].setEmission(emission_r, emission_g, emission_b, emission_a);
-        this.materials[id].setAmbient(ambient_r, ambient_g, ambient_b, ambient_a);
-        this.materials[id].setDiffuse(diffuse_r, diffuse_g, diffuse_b, diffuse_a);
-        this.materials[id].setSpecular(specular_r, specular_g, specular_b, specular_a);
+        this.materials[id].setEmission(emission[0], emission[1], emission[2], emission[3]);
+        this.materials[id].setAmbient(ambient[0], ambient[1], ambient[2], ambient[3]);
+        this.materials[id].setDiffuse(diffuse[0], diffuse[1], diffuse[2], diffuse[3]);
+        this.materials[id].setSpecular(specular[0], specular[1], specular[2], specular[3]);
         if (shininess_value > 0)
             this.materials[id].setShininess(shininess_value);
     }
@@ -287,10 +269,8 @@ MySceneGraph.prototype.parseTransformationTag = function (elem, matrix) {
     var operation = elem.children;
     for (var i = 0, length = operation.length; i < length; i++) {
         if (operation[i].tagName == "translate") {
-            var translate_x = this.reader.getFloat(operation[i], "x", true);
-            var translate_y = this.reader.getFloat(operation[i], "y", true);
-            var translate_z = this.reader.getFloat(operation[i], "z", true);
-            mat4.translate(matrix, matrix, [translate_x, translate_y, translate_z]);
+            var translate = this.getFloatsXYZ(operation[i]);
+            mat4.translate(matrix, matrix, translate);
         }
         else if (operation[i].tagName == "rotate") {
             var rotate_axis = this.reader.getString(operation[i], "axis", true);
@@ -305,10 +285,8 @@ MySceneGraph.prototype.parseTransformationTag = function (elem, matrix) {
                 return "Invalid rotation axis: " + rotate_axis;
         }
         else if (operation[i].tagName == "scale") {
-            var scale_x = this.reader.getFloat(operation[i], "x", true);
-            var scale_y = this.reader.getFloat(operation[i], "y", true);
-            var scale_z = this.reader.getFloat(operation[i], "z", true);
-            mat4.scale(matrix, matrix, [scale_x, scale_y, scale_z]);
+            var scale = this.getFloatsXYZ(operation[i]);
+            mat4.scale(matrix, matrix, scale);
         }
         else
             console.log("Invalid matricial operation: " + operation[i].tagName);

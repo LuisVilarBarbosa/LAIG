@@ -83,6 +83,10 @@ XMLscene.prototype.display = function () {
     };
 };
 
+XMLscene.prototype.setAxis = function (axis) {
+    this.axis = axis;
+}
+
 XMLscene.prototype.processGraph = function (nodeName) {
     var material = null;
     if (nodeName != null) {
