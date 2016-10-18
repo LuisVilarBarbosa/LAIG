@@ -23,14 +23,30 @@ MyTriangle.prototype.constructor = MyTriangle;
 
 MyTriangle.prototype.initBuffers = function () {
     this.vertices = [
-        this.x1, this.y1, this.z3,
-        this.x2, this.y2, this.z3,
+        this.x1, this.y1, this.z1,
+        this.x2, this.y2, this.z2,
         this.x3, this.y3, this.z3,
     ];
 
     this.indices = [
         0, 1, 2,
     ];
+
+    this.normals = [];
+
+    for (var i = 0, length = this.vertices.length; i < length; i += 3) {
+        var currentX = this.vertices[i];
+        var currentY = this.vertices[i + 1];
+        var currentZ = this.vertices[i + 2];
+        var nextX = this.vertices[((i + 3) % length)];
+        var nextY = this.vertices[((i + 3) % length) + 1];
+        var nextZ = this.vertices[((i + 3) % length) + 2];
+        var nx = (currentY - nextY) * (currentZ + nextZ);
+        var ny = (currentZ - nextZ) * (currentX + nextX);
+        var nz = (currentX - nextX) * (currentY + nextY);
+        this.normals.push(nx, ny, nz);
+    }
+
 
     var a = Math.sqrt(
         (this.x1 - this.x3) * (this.x1 - this.x3) +
