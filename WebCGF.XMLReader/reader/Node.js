@@ -1,6 +1,6 @@
 function Node() {
-    this.material = null;
     this.materials = [];
+    this.materialIndex = 0;
     this.texture = null;
     this.mat = null;    // transformation matrix
     this.children = [];
@@ -8,15 +8,15 @@ function Node() {
 };
 
 Node.prototype.addMaterial = function (m) {
-    if (this.material == null)
-        this.material = m;
     this.materials.push(m);
 }
 
 Node.prototype.nextMaterial = function () {
-    for (var i = 0; i < this.materials.length; i++)
-        if (this.material == this.materials[i])
-            this.material = this.materials[(i + 1) % this.materials.length];
+    this.materialIndex = (this.materialIndex + 1) % this.materials.length;
+}
+
+Node.prototype.getMaterial = function () {
+    return this.materials[this.materialIndex];
 }
 
 Node.prototype.setTexture = function (t) {

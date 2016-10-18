@@ -87,8 +87,8 @@ XMLscene.prototype.processGraph = function (nodeName) {
     var material = null;
     if (nodeName != null) {
         var node = this.graph[nodeName];
-        if (node.material != null)
-            material = node.material;
+        if (node.getMaterial() != "inherit" && this.graph.materials[node.getMaterial()] !== undefined)
+            material = this.graph.materials[node.getMaterial()];
         if (node.texture == "none")
             this.setDefaultAppearance();
         else if (node.texture != "inherit") {

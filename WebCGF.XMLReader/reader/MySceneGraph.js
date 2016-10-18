@@ -397,8 +397,7 @@ MySceneGraph.prototype.parseComponentTags = function (elems) {
         var tempMaterialElems = this.findChildren(elems[i], "material");
         for (var j = 0, nnodes2 = tempMaterialElems.length; j < nnodes2; j++) {
             var material = this.reader.getString(tempMaterialElems[j], "id", true);
-            if (material != "inherit")   // it is considered that if "inherit" is declared, no more materials exist
-                this.scene.graph[id].addMaterial(this.materials[material]);
+            this.scene.graph[id].addMaterial(material);
         }
 
         /* 'texture' tags loading */
