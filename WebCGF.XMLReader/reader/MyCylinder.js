@@ -28,20 +28,27 @@ MyCylinder.prototype.initBuffers = function () {
     this.texCoords = [];
 
     var beta = 2 * Math.PI / this.slices;
-    var factor = (this.top - this.base) / 2.0 /* <- rays difference */ / this.stacks;
+    var incRadius = (this.top - this.base) / 2.0 /* <- rays difference */ / this.stacks;
+    var incHeight = this.height / this.stacks;
     var incS = 1 / this.slices;
     var incT = 1 / this.stacks;
-    for (var j = 0, radius = this.base / 2.0, t = 0; j <= this.stacks; j++, radius += factor, t += incT)
+    for (var j = 0, radius = this.base / 2.0, height = 0, t = 0; j <= this.stacks; j++, radius += incRadius, height += incHeight, t += incT)
         for (var i = 0, alfa = 0, s = 0; i <= this.slices; i++, alfa += beta, s += incS) {
-            this.vertices.push(radius * Math.cos(alfa), radius * Math.sin(alfa), this.height * j / this.stacks);
-            this.normals.push(Math.cos(alfa), Math.sin(alfa), 0);
+            var cos = Math.cos(alfa);
+            var sin = Math.sin(alfa);
+            this.vertices.push(radius * cos, radius * sin, height);
+            this.normals.push(cos, sin, 0);
             this.texCoords.push(s, t);
         }
 
     for (var j = 0; j < this.stacks; j++) {
         for (var i = 0; i < this.slices; i++) {
-            this.indices.push(j * this.slices + j + i, j * this.slices + j + 1 + i, (j + 1) * this.slices + j + 1 + i + 1);
-            this.indices.push((j + 1) * this.slices + j + 1 + i + 1, (j + 1) * this.slices + j + 1 + i, j * this.slices + j + i);
+            var a = j * this.slices + j + i;
+            var b = j * this.slices + j + 1 + i;
+            var c = (j + 1) * this.slices + j + 1 + i + 1;
+            var d = (j + 1) * this.slices + j + 1 + i;
+            this.indices.push(a, b, c);
+            this.indices.push(c, d, a);
         }
     }
 

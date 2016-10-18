@@ -41,8 +41,12 @@ MySphere.prototype.initBuffers = function () {
 
     for (var j = 0; j <= this.stacks; j++) {
         for (var i = 0; i < this.slices; i++) {
-            this.indices.push(j * this.slices + i, (j + 1) * this.slices + i, (j + 1) * this.slices + i + 1);
-            this.indices.push(j * this.slices + i, (j + 1) * this.slices + i + 1, j * this.slices + i + 1);
+            var a = j * this.slices + i;
+            var b = (j + 1) * this.slices + i;
+            var c = (j + 1) * this.slices + i + 1;
+            var d = j * this.slices + i + 1;
+            this.indices.push(a, b, c);
+            this.indices.push(a, c, d);
         }
     }
 
