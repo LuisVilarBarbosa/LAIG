@@ -345,7 +345,7 @@ MySceneGraph.prototype.parsePrimitiveTags = function (elems) {
             var height = this.reader.getFloat(tempCylinderElems[0], "height", true);
             var slices = this.reader.getInteger(tempCylinderElems[0], "slices", true);
             var stacks = this.reader.getInteger(tempCylinderElems[0], "stacks", true);
-            this.primitives[id] = new MyCylinderWithTops(this.scene, slices, stacks);
+            this.primitives[id] = new MyCylinderWithTops(this.scene, base, top, height, slices, stacks);
         }
         var tempSphereElems = elems[i].getElementsByTagName("sphere");
         if (tempSphereElems != null && tempSphereElems.length == 1) {
