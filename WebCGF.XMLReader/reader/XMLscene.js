@@ -115,7 +115,8 @@ XMLscene.prototype.processGraph = function (nodeName) {
 }
 
 XMLscene.prototype.nextView = function () {
-    // change perspective
+    this.graph.actualPerspectivesIdsIndex = (this.graph.actualPerspectivesIdsIndex + 1) % this.graph.perspectivesIds.length;
+    this.camera = this.graph.perspectives[this.graph.perspectivesIds[this.graph.actualPerspectivesIdsIndex]];
 }
 
 XMLscene.prototype.nextMaterial = function (nodeName) {

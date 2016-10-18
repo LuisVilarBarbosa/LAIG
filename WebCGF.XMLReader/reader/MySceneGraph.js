@@ -20,6 +20,8 @@ function MySceneGraph(filename, scene) {
     this.degToRad = Math.PI / 180;
     this.rootNode = null;
     this.perspectives = [];
+    this.perspectivesIds = [];
+    this.actualPerspectivesIdsIndex = 0;
     this.textures = [];
     this.materials = [];
     this.transformations = [];
@@ -134,6 +136,7 @@ MySceneGraph.prototype.parsePerspectiveTags = function (elems) {
         var to = vec3.fromValues(to_x, to_y, to_z);
 
         this.perspectives[id] = new CGFcamera(angle, near, far, from, to);
+        this.perspectivesIds.push(id);
     };
 }
 
@@ -445,6 +448,9 @@ MySceneGraph.prototype.parseDSXFile = function (rootElement) {
         return "'views' tag misbehavior.";
     }
     var default_view = this.reader.getString(tempViewsElems[0], "default", true);
+    for (var i = 0; i < this.perspectivesIds.length; i++)
+        if (this.perspectivesIds[i] == default_view)
+            this.actualPerspectivesIdsIndex = i;
 
     /* 'perspective' tags loading */
     var tempPerspectiveElems = rootElement.getElementsByTagName("perspective");
@@ -452,7 +458,7 @@ MySceneGraph.prototype.parseDSXFile = function (rootElement) {
         return "'perspective' element is missing.";
     }
     this.parsePerspectiveTags(tempPerspectiveElems);
-    this.scene.camera = this.perspectives[default_view];
+    this.scene.camera = this.perspectives[this.perspectivesIds[this.actualPerspectivesIdsIndex]];
 
     /* 'illumination' tags loading */
     var tempIlluminationElems = rootElement.getElementsByTagName("illumination");
