@@ -161,7 +161,14 @@ MySceneGraph.prototype.parseLightsRelativeTags = function (elems, lightType, lig
         console.log("the light type '" + lightType + "' will be considered 'omni'")
 
     var lightsArrayIndex = lightsArrayStartIndex;
-    for (var i = 0, nnodes = elems.length; i < nnodes; i++, lightsArrayIndex++) {
+    var nnodes = elems.length;
+
+    if ((lightsArrayStartIndex - 1 + nnodes) >= 8) {
+        console.log("WebGL only accepts 8 lights. The first 8 lights will be loaded, the others not.");
+        nnodes = 8 - lightsArrayStartIndex;
+    }
+
+    for (var i = 0; i < nnodes; i++, lightsArrayIndex++) {
         var id = this.reader.getString(elems[i], "id", true);
         var enabled = this.reader.getBoolean(elems[i], "enabled", true);
 
