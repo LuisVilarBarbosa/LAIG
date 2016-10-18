@@ -423,6 +423,9 @@ MySceneGraph.prototype.parseComponentTags = function (elems) {
                 this.scene.graph[id].pushPrimitive(this.reader.getString(tempPrimitiverefElems[j], "id", true));
         }
     }
+
+    if (this.scene.graph[this.rootNode] === undefined)
+        console.log("There is no 'component' with the root node id: " + this.rootNode);
 }
 
 MySceneGraph.prototype.parseDSXFile = function (rootElement) {
