@@ -29,7 +29,7 @@ MyCylinder.prototype.initBuffers = function () {
     var incT = 1 / this.stacks;
     for (var j = 0, t = 0; j <= this.stacks; j++, t += incT)  // attention to the equal
         for (var i = 0, alfa = 0, s = 0; i <= this.slices; i++, alfa += beta, s += incS) {  // attention to the equal
-            this.vertices.push(0.5 * Math.cos(alfa), 0.5 * Math.sin(alfa), 0.5 - j / this.stacks);
+            this.vertices.push(0.5 * Math.cos(alfa), 0.5 * Math.sin(alfa), 1 - j / this.stacks);
             this.normals.push(Math.cos(alfa), Math.sin(alfa), 0);
             this.texCoords.push(s, t);
         }

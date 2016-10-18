@@ -415,7 +415,6 @@
 
     <component id="leg">
       <transformation>
-        <translate x="0" y="0.5" z="0" />
         <rotate axis="x" angle="-90" />
         <scale x="0.1" y="0.1" z="1" />
       </transformation>

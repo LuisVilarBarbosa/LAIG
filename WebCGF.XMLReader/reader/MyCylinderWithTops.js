@@ -19,13 +19,12 @@ MyCylinderWithTops.prototype.display = function () {
         this.cylinder.display();
 
         this.scene.pushMatrix();
-            this.scene.translate(0.0, 0.0, -0.5);
             this.scene.rotate(Math.PI, 0.0, 1.0, 0.0);
             this.top.display();
         this.scene.popMatrix();
 
         this.scene.pushMatrix();
-            this.scene.translate(0.0, 0.0, 0.5);
+            this.scene.translate(0.0, 0.0, 1.0);
             this.top.display();
         this.scene.popMatrix();
 
