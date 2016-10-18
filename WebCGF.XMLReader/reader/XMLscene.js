@@ -1,6 +1,7 @@
 
-function XMLscene() {
+function XMLscene(myInterface) {
     CGFscene.call(this);
+    this.myInterface = myInterface;
 }
 
 XMLscene.prototype = Object.create(CGFscene.prototype);
@@ -98,8 +99,11 @@ XMLscene.prototype.processGraph = function (nodeName) {
             material.apply();
 
         this.multMatrix(node.mat);
-        if (node.primitive != null)
-            node.primitive.display();
+        for (var i = 0; i < node.primitives.length; i++)
+            if (this.graph.primitives[node.primitives[i]] === undefined)
+                console.log("'" + node.primitives[i] + "' is not a primitive"); // cyclic verification
+            else
+                this.graph.primitives[node.primitives[i]].display();
         for (var i = 0; i < node.children.length; i++) {
             this.pushMatrix();
             if (material != null)

@@ -27,11 +27,13 @@ MyInterface.prototype.init = function (application) {
 
     this.lights = this.gui.addFolder("Lights");
     this.lights.open();
-    for (var i = 0; i < this.scene.lightsIds.length; i++)
-        this.lights.add(this.scene.lights[i], 'enabled').name(this.scene.lightsIds[i]);
 
     return true;
 };
+
+MyInterface.prototype.addLight = function (light, id) {
+    this.lights.add(light, 'enabled').name(id);
+}
 
 /**
  * processKeyboard

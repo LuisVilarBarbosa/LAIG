@@ -4,7 +4,7 @@ function Node() {
     this.texture = null;
     this.mat = null;    // transformation matrix
     this.children = [];
-    this.primitive = null;
+    this.primitives = [];
 };
 
 Node.prototype.addMaterial = function (m) {
@@ -28,8 +28,12 @@ Node.prototype.setMatrix = function (m) {
     console.log(this.mat);
 }
 
-Node.prototype.push = function (nodeName) {
+Node.prototype.pushChild = function (nodeName) {
     this.children.push(nodeName);
+}
+
+Node.prototype.pushPrimitive = function (nodeName) {
+    this.primitives.push(nodeName);
 }
 
 Node.prototype.getSize = function () {

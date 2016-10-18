@@ -51,7 +51,7 @@ MySceneGraph.prototype.onXMLReady = function () {
 
 MySceneGraph.prototype.verifyDSXFileStructure = function (rootElement) {
     var name;
-    if (rootElement.children.length != 9) return "invalid number of 'dsx' children tags detected";
+    if (rootElement.children.length != 9) return "invalid number of 'dsx' children tags detected (verify if all the elements begin with <tag> and end </tag>)";
     if ((name = rootElement.children[0].nodeName) != 'scene') return "expected 'scene' tag instead of " + name;
     if ((name = rootElement.children[1].nodeName) != 'views') return "expected 'views' tag instead of " + name;
     if ((name = rootElement.children[2].nodeName) != 'illumination') return "expected 'illumination' tag instead of " + name;
@@ -215,6 +215,7 @@ MySceneGraph.prototype.parseLightsRelativeTags = function (elems, lightType, lig
         this.scene.lights[lightsArrayIndex].setAmbient(ambient_r, ambient_g, ambient_b, ambient_a);
         this.scene.lights[lightsArrayIndex].setDiffuse(diffuse_r, diffuse_g, diffuse_b, diffuse_a);
         this.scene.lights[lightsArrayIndex].setSpecular(specular_r, specular_g, specular_b, specular_a);
+        this.scene.myInterface.addLight(this.scene.lights[lightsArrayIndex], id);
     }
 
     return lightsArrayIndex;
@@ -408,11 +409,11 @@ MySceneGraph.prototype.parseComponentTags = function (elems) {
             return "'componentref' or 'primitiveref' element is missing";
         else {
             for (var j = 0, nnodes2 = tempComponentrefElems.length; j < nnodes2; j++)
-                this.scene.graph[id].push(this.reader.getString(tempComponentrefElems[j], "id", true));
+                this.scene.graph[id].pushChild(this.reader.getString(tempComponentrefElems[j], "id", true));
 
             // more than one primitive must be allowed and verify if it is stored the name or the primitive itself
             for (var j = 0, nnodes2 = tempPrimitiverefElems.length; j < nnodes2; j++)
-                this.scene.graph[id].primitive = this.primitives[this.reader.getString(tempPrimitiverefElems[j], "id", true)];
+                this.scene.graph[id].pushPrimitive(this.reader.getString(tempPrimitiverefElems[j], "id", true));
         }
     }
 }
