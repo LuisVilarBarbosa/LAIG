@@ -114,3 +114,17 @@ XMLscene.prototype.processGraph = function (nodeName) {
     }
 }
 
+XMLscene.prototype.nextView = function () {
+    // change perspective
+}
+
+XMLscene.prototype.nextMaterial = function (nodeName) {
+    if (nodeName === undefined)
+        this.nextMaterial(this.graph.rootNode);
+    else {
+        var node = this.graph[nodeName];
+        node.nextMaterial();
+        for (var i = 0, length = node.children.length; i < length; i++)
+            this.nextMaterial(node.children[i]);
+    }
+}

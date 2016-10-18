@@ -421,6 +421,7 @@
 
       <materials>
         <material id="blue_material" />
+        <material id="green_material" />
       </materials>
 
       <texture id="metal" />
@@ -502,6 +503,7 @@
 
       <materials>
         <material id="green_material" />
+        <material id="blue_material" />
       </materials>
 
       <texture id="cork" />

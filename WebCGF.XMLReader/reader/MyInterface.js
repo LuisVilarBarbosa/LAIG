@@ -2,8 +2,6 @@
  * MyInterface
  * @constructor
  */
-
-
 function MyInterface() {
     //call CGFinterface constructor 
     CGFinterface.call(this);
@@ -47,6 +45,8 @@ MyInterface.prototype.processKeyboard = function (event) {
     // or use String.fromCharCode(event.keyCode) to compare chars
 
     // for better cross-browser support, you may also check suggestions on using event.which in http://www.w3schools.com/jsref/event_key_keycode.asp
-    if (event.keyCode == 118 || event.keyCode == 86); // 'v' || 'V'
-    else if (event.keyCode == 109 || event.keyCode == 77); // 'm' || 'M'
+    if (event.keyCode == 118 || event.keyCode == 86) // 'v' || 'V'
+        this.scene.nextView();
+    else if (event.keyCode == 109 || event.keyCode == 77) // 'm' || 'M'
+        this.scene.nextMaterial();
 };
