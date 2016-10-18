@@ -360,6 +360,7 @@ MySceneGraph.prototype.parsePrimitiveTags = function (elems) {
             var outer = this.reader.getFloat(tempTorusElems[0], "outer", true);
             var slices = this.reader.getInteger(tempTorusElems[0], "slices", true);
             var loops = this.reader.getInteger(tempTorusElems[0], "loops", true);
+            this.primitives[id] = new MyTorus(this.scene, inner, outer, slices, loops);
         }
     }
 }
@@ -411,7 +412,6 @@ MySceneGraph.prototype.parseComponentTags = function (elems) {
             for (var j = 0, nnodes2 = tempComponentrefElems.length; j < nnodes2; j++)
                 this.scene.graph[id].pushChild(this.reader.getString(tempComponentrefElems[j], "id", true));
 
-            // more than one primitive must be allowed and verify if it is stored the name or the primitive itself
             for (var j = 0, nnodes2 = tempPrimitiverefElems.length; j < nnodes2; j++)
                 this.scene.graph[id].pushPrimitive(this.reader.getString(tempPrimitiverefElems[j], "id", true));
         }

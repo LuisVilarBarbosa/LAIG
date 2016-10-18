@@ -26,25 +26,23 @@ MySphere.prototype.initBuffers = function () {
     this.texCoords = [];
 
     var widthAngle = 2 * Math.PI / this.slices;     // xOy
-    var heightAngle = Math.PI / (this.stacks - 1);    // xOz
+    var heightAngle = Math.PI / this.stacks;    // xOz
     var incS = 1 / this.slices;
     var incT = 1 / this.stacks;
 
     // spherical surface
-    for (var j = 0, beta = 0, t = 0; j <= this.stacks; j++, beta += heightAngle, t += incT) {  // attention to the equal; beta = j * heightAngle --> xOz
-        for (var i = 0, alfa = 0, s = 0; i <= this.slices; i++, alfa += widthAngle, s += incS) {  // attention to the equal; alfa = i * widthAngle --> xOy
+    for (var j = 0, beta = 0, t = 0; j <= this.stacks; j++, beta += heightAngle, t += incT) {  // beta = j * heightAngle --> xOz
+        for (var i = 0, alfa = 0, s = 0; i <= this.slices; i++, alfa += widthAngle, s += incS) {  // alfa = i * widthAngle --> xOy
             this.vertices.push(this.radius * Math.sin(beta) * Math.cos(alfa), this.radius * Math.sin(beta) * Math.sin(alfa), this.radius * Math.cos(beta));
-            this.normals.push(this.radius * Math.sin(beta) * Math.cos(alfa), this.radius * Math.sin(beta) * Math.sin(alfa), this.radius * Math.cos(beta));
+            this.normals.push(Math.sin(beta) * Math.cos(alfa), Math.sin(beta) * Math.sin(alfa), Math.cos(beta));
             this.texCoords.push(s, t);
         }
     }
 
-    for (var j = 0; j < this.stacks; j++) {
+    for (var j = 0; j <= this.stacks; j++) {
         for (var i = 0; i < this.slices; i++) {
-            if (!(j == this.stacks - 1 && i == this.slices - 1)) {
-                this.indices.push(j * this.slices + i, (j + 1) * this.slices + i, (j + 1) * this.slices + i + 1);
-                this.indices.push(j * this.slices + i, (j + 1) * this.slices + i + 1, j * this.slices + i + 1);
-            }
+            this.indices.push(j * this.slices + i, (j + 1) * this.slices + i, (j + 1) * this.slices + i + 1);
+            this.indices.push(j * this.slices + i, (j + 1) * this.slices + i + 1, j * this.slices + i + 1);
         }
     }
 
