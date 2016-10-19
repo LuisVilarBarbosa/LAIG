@@ -378,13 +378,13 @@ MySceneGraph.prototype.parseComponentTags = function (elems) {
         var tempMaterialElems = this.findChildren(elems[i], "material");
         for (var j = 0, nnodes2 = tempMaterialElems.length; j < nnodes2; j++) {
             var material = this.reader.getString(tempMaterialElems[j], "id", true);
-            this.scene.graph[id].addMaterial(material);
+            this.scene.graph[id].addMaterialId(material);
         }
 
         /* 'texture' tags loading */
         var tempTextureElem = this.findOneChild(elems[i], "texture");
         var texture = this.reader.getString(tempTextureElem, "id", true);
-        this.scene.graph[id].setTexture(texture);
+        this.scene.graph[id].setTextureId(texture);
 
         /* 'children' tags loading */
         var tempChildrenElem = this.findOneChild(elems[i], "children");

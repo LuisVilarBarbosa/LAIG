@@ -1,3 +1,7 @@
+/**
+ * Node
+ * @constructor
+ */
 function Node() {
     this.materials = [];
     this.materialIndex = 0;
@@ -7,19 +11,19 @@ function Node() {
     this.primitives = [];
 };
 
-Node.prototype.addMaterial = function (m) {
+Node.prototype.addMaterialId = function (m) {
     this.materials.push(m);
 }
 
-Node.prototype.nextMaterial = function () {
+Node.prototype.nextMaterialId = function () {
     this.materialIndex = (this.materialIndex + 1) % this.materials.length;
 }
 
-Node.prototype.getMaterial = function () {
+Node.prototype.getMaterialId = function () {
     return this.materials[this.materialIndex];
 }
 
-Node.prototype.setTexture = function (t) {
+Node.prototype.setTextureId = function (t) {
     this.texture = t;
 }
 

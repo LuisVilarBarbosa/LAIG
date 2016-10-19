@@ -103,7 +103,7 @@
       <emission r="0.5" g="0.5" b="0.5" a="1" />
       <ambient r="0.1" g="0.1" b="0.9" a="1" />
       <diffuse r="0.1" g="0.1" b="0.9" a="1" />
-      <specular r="0.1" g="0.1" b="0.1" a="0.5" />
+      <specular r="0.1" g="0.1" b="0.1" a="1" />
       <shininess value="5" />
     </material>
 
@@ -503,7 +503,7 @@
 
       <materials>
         <material id="green_material" />
-        <material id="blue_material" />
+        <material id="orange_material" />
       </materials>
 
       <texture id="cork" />

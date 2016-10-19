@@ -24,6 +24,15 @@ XMLscene.prototype.init = function (application) {
     this.enableTextures(true);
     this.axis = new CGFaxis(this);
     this.lightsIds = [];
+
+    this.defaultAppearance = new CGFappearance(this);
+    this.defaultAppearance.setAmbient(0.2, 0.4, 0.8, 1.0);
+    this.defaultAppearance.setDiffuse(0.2, 0.4, 0.8, 1.0);
+    this.defaultAppearance.setSpecular(0.2, 0.4, 0.8, 1.0);
+    this.defaultAppearance.setShininess(10.0);
+
+    this.materialsStack = new Stack(this.defaultAppearance);
+    this.texturesStack = new Stack(null);
 };
 
 XMLscene.prototype.initLights = function () {
@@ -38,10 +47,7 @@ XMLscene.prototype.initCameras = function () {
 };
 
 XMLscene.prototype.setDefaultAppearance = function () {
-    this.setAmbient(0.2, 0.4, 0.8, 1.0);
-    this.setDiffuse(0.2, 0.4, 0.8, 1.0);
-    this.setSpecular(0.2, 0.4, 0.8, 1.0);
-    this.setShininess(10.0);
+    this.defaultAppearance.apply();
 };
 
 // Handler called when the graph is finally loaded. 
@@ -89,18 +95,25 @@ XMLscene.prototype.setAxis = function (axis) {
 
 XMLscene.prototype.processGraph = function (nodeName) {
     var material = null;
+    var texture = null;
     if (nodeName != null) {
         var node = this.graph[nodeName];
-        if (node.getMaterial() != "inherit" && this.graph.materials[node.getMaterial()] !== undefined)
-            material = this.graph.materials[node.getMaterial()];
+        var nodeMaterialId = node.getMaterialId();
+        if (nodeMaterialId == "inherit")
+            material = this.materialsStack.top();
+        else
+            material = this.graph.materials[nodeMaterialId];
+        if (material === undefined)
+            console.log("'material' is undefined");
         if (node.texture == "none")
-            this.setDefaultAppearance();
-        else if (node.texture != "inherit") {
-            if (material != null)
-                material.setTexture(this.graph.textures[node.texture]);
-        }
-        if (material != null)
-            material.apply();
+           texture = null;
+        else if (node.texture == "inherit")
+            texture = this.texturesStack.top();
+        else
+            texture = this.graph.textures[node.texture];
+
+        material.setTexture(texture);
+        material.apply();
 
         this.multMatrix(node.mat);
         for (var i = 0; i < node.primitives.length; i++)
@@ -110,9 +123,11 @@ XMLscene.prototype.processGraph = function (nodeName) {
                 this.graph.primitives[node.primitives[i]].display();
         for (var i = 0; i < node.children.length; i++) {
             this.pushMatrix();
-            if (material != null)
-                material.apply();
+            this.materialsStack.push(material);
+            this.texturesStack.push(texture);
             this.processGraph(node.children[i]);
+            this.texturesStack.pop();
+            this.materialsStack.pop();
             this.popMatrix();
         }
     }
@@ -128,7 +143,7 @@ XMLscene.prototype.nextMaterial = function (nodeName) {
         this.nextMaterial(this.graph.rootNode);
     else {
         var node = this.graph[nodeName];
-        node.nextMaterial();
+        node.nextMaterialId();
         for (var i = 0, length = node.children.length; i < length; i++)
             this.nextMaterial(node.children[i]);
     }
