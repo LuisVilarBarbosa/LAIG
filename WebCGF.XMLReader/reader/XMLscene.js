@@ -31,6 +31,7 @@ XMLscene.prototype.init = function (application) {
     this.defaultAppearance.setSpecular(0.2, 0.4, 0.8, 1.0);
     this.defaultAppearance.setShininess(10.0);
 
+<<<<<<< HEAD
     this.rootNodeName = null;
     this.perspectives = [];
     this.perspectivesIds = [];
@@ -41,6 +42,8 @@ XMLscene.prototype.init = function (application) {
     this.primitives = [];
     this.sceneGraph = [];
 
+=======
+>>>>>>> 92728f7c4057eb491733f22f47cd02a9e7455636
     this.materialsStack = new Stack(this.defaultAppearance);
     this.texturesStack = new Stack(null);
 };
@@ -149,11 +152,16 @@ XMLscene.prototype.processGraph = function (nodeName) {
     var material = null;
     var texture = null;
     if (nodeName != null) {
+<<<<<<< HEAD
         var node = this.sceneGraph[nodeName];
+=======
+        var node = this.graph[nodeName];
+>>>>>>> 92728f7c4057eb491733f22f47cd02a9e7455636
         var nodeMaterialId = node.getMaterialId();
         if (nodeMaterialId == "inherit")
             material = this.materialsStack.top();
         else
+<<<<<<< HEAD
             material = this.materials[nodeMaterialId];
         if (material === undefined)
             console.log("'material' is undefined");
@@ -163,6 +171,17 @@ XMLscene.prototype.processGraph = function (nodeName) {
             texture = this.texturesStack.top();
         else
             texture = this.textures[node.texture];
+=======
+            material = this.graph.materials[nodeMaterialId];
+        if (material === undefined)
+            console.log("'material' is undefined");
+        if (node.texture == "none")
+           texture = null;
+        else if (node.texture == "inherit")
+            texture = this.texturesStack.top();
+        else
+            texture = this.graph.textures[node.texture];
+>>>>>>> 92728f7c4057eb491733f22f47cd02a9e7455636
 
         material.setTexture(texture);
         material.apply();
@@ -194,7 +213,11 @@ XMLscene.prototype.nextMaterial = function (nodeName) {
     if (nodeName === undefined)
         this.nextMaterial(this.rootNodeName);
     else {
+<<<<<<< HEAD
         var node = this.sceneGraph[nodeName];
+=======
+        var node = this.graph[nodeName];
+>>>>>>> 92728f7c4057eb491733f22f47cd02a9e7455636
         node.nextMaterialId();
         for (var i = 0, length = node.children.length; i < length; i++)
             this.nextMaterial(node.children[i]);
