@@ -24,6 +24,25 @@ XMLscene.prototype.init = function (application) {
     this.enableTextures(true);
     this.axis = new CGFaxis(this);
     this.lightsIds = [];
+
+    this.defaultAppearance = new CGFappearance(this);
+    this.defaultAppearance.setAmbient(0.2, 0.4, 0.8, 1.0);
+    this.defaultAppearance.setDiffuse(0.2, 0.4, 0.8, 1.0);
+    this.defaultAppearance.setSpecular(0.2, 0.4, 0.8, 1.0);
+    this.defaultAppearance.setShininess(10.0);
+
+    this.rootNodeName = null;
+    this.perspectives = [];
+    this.perspectivesIds = [];
+    this.actualPerspectivesIdsIndex = 0;
+    this.textures = [];
+    this.materials = [];
+    this.transformations = [];
+    this.primitives = [];
+    this.sceneGraph = [];
+
+    this.materialsStack = new Stack(this.defaultAppearance);
+    this.texturesStack = new Stack(null);
 };
 
 XMLscene.prototype.initLights = function () {
@@ -38,10 +57,7 @@ XMLscene.prototype.initCameras = function () {
 };
 
 XMLscene.prototype.setDefaultAppearance = function () {
-    this.setAmbient(0.2, 0.4, 0.8, 1.0);
-    this.setDiffuse(0.2, 0.4, 0.8, 1.0);
-    this.setSpecular(0.2, 0.4, 0.8, 1.0);
-    this.setShininess(10.0);
+    this.defaultAppearance.apply();
 };
 
 // Handler called when the graph is finally loaded. 
@@ -79,56 +95,107 @@ XMLscene.prototype.display = function () {
     if (this.graph.loadedOk) {
         for (var i = 0, length = this.lights.length; i < length; i++)
             this.lights[i].update();
-        this.processGraph(this.graph.rootNode);
+        this.processGraph(this.rootNodeName);
     };
 };
+
+XMLscene.prototype.setRootNodeName = function (nodeName) {
+    this.rootNodeName = nodeName;
+}
 
 XMLscene.prototype.setAxis = function (axis) {
     this.axis = axis;
 }
 
+XMLscene.prototype.addPerspective = function (id, camera) {
+    this.perspectives[id] = camera;
+    this.perspectivesIds.push(id);
+}
+
+XMLscene.prototype.setDefaultPerspective = function (id) {
+    this.actualPerspectivesIdsIndex = -1;
+    for (var i = 0; i < this.perspectivesIds.length; i++) {
+        if (this.perspectivesIds[i] == id) {
+            this.actualPerspectivesIdsIndex = i;
+            break;
+        }
+    }
+
+    if (this.actualPerspectivesIdsIndex == -1) {
+        console.log("perspective not found when defining the default perspective: " + id);
+        this.actualPerspectivesIdsIndex = 0;
+    }
+    else
+        this.camera = this.perspectives[this.perspectivesIds[this.actualPerspectivesIdsIndex]];
+}
+
+XMLscene.prototype.addTexture = function (id, texture) {
+    this.textures[id] = texture;
+}
+
+XMLscene.prototype.addMaterial = function (id, material) {
+    this.materials[id] = material;
+}
+
+XMLscene.prototype.addTransformation = function (id, transformation) {
+    this.transformations[id] = transformation;
+}
+
+XMLscene.prototype.addPrimitive = function (id, primitive) {
+    this.primitives[id] = primitive;
+}
+
 XMLscene.prototype.processGraph = function (nodeName) {
     var material = null;
+    var texture = null;
     if (nodeName != null) {
-        var node = this.graph[nodeName];
-        if (node.getMaterial() != "inherit" && this.graph.materials[node.getMaterial()] !== undefined)
-            material = this.graph.materials[node.getMaterial()];
+        var node = this.sceneGraph[nodeName];
+        var nodeMaterialId = node.getMaterialId();
+        if (nodeMaterialId == "inherit")
+            material = this.materialsStack.top();
+        else
+            material = this.materials[nodeMaterialId];
+        if (material === undefined)
+            console.log("'material' is undefined");
         if (node.texture == "none")
-            this.setDefaultAppearance();
-        else if (node.texture != "inherit") {
-            if (material != null)
-                material.setTexture(this.graph.textures[node.texture]);
-        }
-        if (material != null)
-            material.apply();
+            texture = null;
+        else if (node.texture == "inherit")
+            texture = this.texturesStack.top();
+        else
+            texture = this.textures[node.texture];
+
+        material.setTexture(texture);
+        material.apply();
 
         this.multMatrix(node.mat);
         for (var i = 0; i < node.primitives.length; i++)
-            if (this.graph.primitives[node.primitives[i]] === undefined)
-                console.log("'" + node.primitives[i] + "' is not a primitive"); // cyclic verification
+            if (this.primitives[node.primitives[i]] === undefined)
+                console.log("'" + node.primitives[i] + "' is not a primitive");
             else
-                this.graph.primitives[node.primitives[i]].display();
+                this.primitives[node.primitives[i]].display();
         for (var i = 0; i < node.children.length; i++) {
             this.pushMatrix();
-            if (material != null)
-                material.apply();
+            this.materialsStack.push(material);
+            this.texturesStack.push(texture);
             this.processGraph(node.children[i]);
+            this.texturesStack.pop();
+            this.materialsStack.pop();
             this.popMatrix();
         }
     }
 }
 
 XMLscene.prototype.nextView = function () {
-    this.graph.actualPerspectivesIdsIndex = (this.graph.actualPerspectivesIdsIndex + 1) % this.graph.perspectivesIds.length;
-    this.camera = this.graph.perspectives[this.graph.perspectivesIds[this.graph.actualPerspectivesIdsIndex]];
+    this.actualPerspectivesIdsIndex = (this.actualPerspectivesIdsIndex + 1) % this.perspectivesIds.length;
+    this.camera = this.perspectives[this.perspectivesIds[this.actualPerspectivesIdsIndex]];
 }
 
 XMLscene.prototype.nextMaterial = function (nodeName) {
     if (nodeName === undefined)
-        this.nextMaterial(this.graph.rootNode);
+        this.nextMaterial(this.rootNodeName);
     else {
-        var node = this.graph[nodeName];
-        node.nextMaterial();
+        var node = this.sceneGraph[nodeName];
+        node.nextMaterialId();
         for (var i = 0, length = node.children.length; i < length; i++)
             this.nextMaterial(node.children[i]);
     }
