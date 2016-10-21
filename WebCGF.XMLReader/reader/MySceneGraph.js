@@ -143,9 +143,9 @@ MySceneGraph.prototype.parsePerspectiveTags = function (elems) {
 }
 
 MySceneGraph.prototype.parseIlluminationTag = function (elem) {
-    var doublesided = this.reader.getBoolean(elem, "doublesided", true);
-    var local = this.reader.getBoolean(elem, "local", true);
-    // apply values
+    // The next two booleans are not loaded by indication of the professor.
+    //var doublesided = this.reader.getBoolean(elem, "doublesided", true);
+    //var local = this.reader.getBoolean(elem, "local", true);
 
     var ambientElem = this.findOneChild(elem, "ambient");
     var ambient = this.getFloatsRGBA(ambientElem);
@@ -408,9 +408,9 @@ MySceneGraph.prototype.parseDSXFile = function (rootElement) {
 
         var viewsElem = this.findOneChild(rootElement, "views");
         var default_view = this.reader.getString(viewsElem, "default", true);
-        this.scene.setDefaultPerspective(default_view);
 
         this.parsePerspectiveTags(this.findChildren(viewsElem, "perspective"));
+        this.scene.setDefaultPerspective(default_view); // must be done after loading the perspectives
 
         this.parseIlluminationTag(this.findOneChild(rootElement, "illumination"));
 
