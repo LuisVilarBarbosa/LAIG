@@ -384,7 +384,7 @@ MySceneGraph.prototype.parseComponentTags = function (elems) {
         var componentrefElems = childrenElem.getElementsByTagName("componentref");
         var primitiverefElems = childrenElem.getElementsByTagName("primitiveref");
         if ((componentrefElems == null || componentrefElems.length == 0) &&
-            (primitiverefElems == null || primitiverefElems.length == 0))
+            (primitiverefElems == null || primitiverefElems.length == 0))   // this will force a node to have, at least, one descendant (component or primitive)
             throw "'componentref' or 'primitiveref' element is missing.";
         else {
             for (var j = 0, nnodes2 = componentrefElems.length; j < nnodes2; j++)
