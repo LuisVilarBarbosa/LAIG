@@ -45,16 +45,16 @@ MySceneGraph.prototype.onXMLReady = function () {
 
 MySceneGraph.prototype.verifyDSXFileStructure = function (rootElement) {
     var name;
-    if (rootElement.children.length != 9) throw "invalid number of 'dsx' children tags detected (verify if all the elements begin with <tag> and end </tag>)";
-    if ((name = rootElement.children[0].nodeName) != "scene") throw "expected 'scene' tag instead of " + name;
-    if ((name = rootElement.children[1].nodeName) != "views") throw "expected 'views' tag instead of " + name;
-    if ((name = rootElement.children[2].nodeName) != "illumination") throw "expected 'illumination' tag instead of " + name;
-    if ((name = rootElement.children[3].nodeName) != "lights") throw "expected 'lights' tag instead of " + name;
-    if ((name = rootElement.children[4].nodeName) != "textures") throw "expected 'textures' tag instead of " + name;
-    if ((name = rootElement.children[5].nodeName) != "materials") throw "expected 'materials' tag instead of " + name;
-    if ((name = rootElement.children[6].nodeName) != "transformations") throw "expected 'transformations' tag instead of " + name;
-    if ((name = rootElement.children[7].nodeName) != "primitives") throw "expected 'primitives' tag instead of " + name;
-    if ((name = rootElement.children[8].nodeName) != "components") throw "expected 'components' tag instead of " + name;
+    if (rootElement.children.length != 9) throw "Invalid number of 'dsx' children tags detected (verify if all the elements begin with <tag> and end </tag>).";
+    if ((name = rootElement.children[0].nodeName) != "scene") throw "Expected 'scene' tag instead of '" + name + "'.";
+    if ((name = rootElement.children[1].nodeName) != "views") throw "Expected 'views' tag instead of '" + name + "'.";
+    if ((name = rootElement.children[2].nodeName) != "illumination") throw "Expected 'illumination' tag instead of '" + name + "'.";
+    if ((name = rootElement.children[3].nodeName) != "lights") throw "Expected 'lights' tag instead of '" + name + "'.";
+    if ((name = rootElement.children[4].nodeName) != "textures") throw "Expected 'textures' tag instead of '" + name + "'.";
+    if ((name = rootElement.children[5].nodeName) != "materials") throw "Expected 'materials' tag instead of '" + name + "'.";
+    if ((name = rootElement.children[6].nodeName) != "transformations") throw "Expected 'transformations' tag instead of '" + name + "'.";
+    if ((name = rootElement.children[7].nodeName) != "primitives") throw "Expected 'primitives' tag instead of '" + name + "'.";
+    if ((name = rootElement.children[8].nodeName) != "components") throw "Expected 'components' tag instead of '" + name + "'.";
 }
 
 MySceneGraph.prototype.getAllDSXFileIds = function (elem, ids) {
@@ -78,21 +78,21 @@ MySceneGraph.prototype.verifyDSXFileIds = function (rootElement) {
 
         for (var i = 1, length = ids.length; i < length; i++)
             if (ids[i - 1] == ids[i])
-                throw "'" + ids[i] + "' is not an unique id";
+                throw "'" + ids[i] + "' is not an unique id.";
     }
 }
 
 MySceneGraph.prototype.findOneChild = function (elem, tagNameToFind) {
     var elems = elem.getElementsByTagName(tagNameToFind);
     if (elems == null || elems.length != 1)
-        throw "either zero or more than one '" + tagNameToFind + "' element found";
+        throw "Either zero or more than one '" + tagNameToFind + "' elements found.";
     return elems[0];
 }
 
 MySceneGraph.prototype.findChildren = function (elem, tagNameToFind) {
     var elems = elem.getElementsByTagName(tagNameToFind);
     if (elems == null || elems.length == 0)
-        throw "zero '" + tagNameToFind + "' element found";
+        throw "Zero '" + tagNameToFind + "' elements found.";
     return elems;
 }
 
@@ -272,14 +272,14 @@ MySceneGraph.prototype.parseTransformationTag = function (elem, matrix) {
             else if (rotate_axis == "z" || rotate_axis == "Z")
                 mat4.rotate(matrix, matrix, rotate_angle, [0, 0, 1]);
             else
-                throw "Invalid rotation axis: " + rotate_axis;
+                throw "Invalid rotation axis: '" + rotate_axis + "'.";
         }
         else if (operation[i].tagName == "scale") {
             var scale = this.getFloatsXYZ(operation[i]);
             mat4.scale(matrix, matrix, scale);
         }
         else
-            throw "Invalid matricial operation: " + operation[i].tagName;
+            throw "Invalid matricial operation: '" + operation[i].tagName + "'.";
     }
 }
 
@@ -296,7 +296,7 @@ MySceneGraph.prototype.parsePrimitiveTags = function (elems) {
     for (var i = 0, nnodes = elems.length; i < nnodes; i++) {
         var id = this.reader.getString(elems[i], "id", true);
         if (elems[i].children.length != 1)
-            throw "either zero or more than one primitive element found in the definition of '" + id + "'";
+            throw "Either zero or more than one primitive elements found in the definition of '" + id + "'";
 
         var primitive = elems[i].children[0];
         if (primitive.tagName == "rectangle") {
@@ -340,7 +340,7 @@ MySceneGraph.prototype.parsePrimitiveTags = function (elems) {
             this.scene.addPrimitive(id, new MyTorus(this.scene, inner, outer, slices, loops));
         }
         else
-            throw "invalid primitive element found: " + primitive.tagName;
+            throw "Invalid primitive element found: '" + primitive.tagName + "'.";
     }
 }
 
@@ -385,7 +385,7 @@ MySceneGraph.prototype.parseComponentTags = function (elems) {
         var tempPrimitiverefElems = tempChildrenElem.getElementsByTagName("primitiveref");
         if ((tempComponentrefElems == null || tempComponentrefElems.length == 0) &&
             (tempPrimitiverefElems == null || tempPrimitiverefElems.length == 0))
-            throw "'componentref' or 'primitiveref' element is missing";
+            throw "'componentref' or 'primitiveref' element is missing.";
         else {
             for (var j = 0, nnodes2 = tempComponentrefElems.length; j < nnodes2; j++)
                 this.scene.sceneGraph[id].pushChild(this.reader.getString(tempComponentrefElems[j], "id", true));
@@ -396,7 +396,7 @@ MySceneGraph.prototype.parseComponentTags = function (elems) {
     }
 
     if (this.scene.sceneGraph[this.scene.rootNodeId] === undefined)
-        throw "There is no 'component' with the root node id: " + this.scene.rootNodeId;
+        throw "There is no 'component' with the root node id: '" + this.scene.rootNodeId + "'.";
 }
 
 MySceneGraph.prototype.parseDSXFile = function (rootElement) {
