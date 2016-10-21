@@ -33,7 +33,7 @@ XMLscene.prototype.init = function (application) {
     this.defaultAppearance.setSpecular(0.2, 0.4, 0.8, 1.0);
     this.defaultAppearance.setShininess(10.0);
 
-    this.rootNodeId = null;
+    this.rootNodeName = null;
     this.perspectives = [];
     this.perspectivesIds = [];
     this.actualPerspectivesIdsIndex = 0;
@@ -68,6 +68,8 @@ XMLscene.prototype.onGraphLoaded = function () {
     this.gl.clearColor(this.graph.background[0], this.graph.background[1], this.graph.background[2], this.graph.background[3]);
     this.lights[0].setVisible(true);
     this.lights[0].enable();
+	console.log(this.lights);
+	console.log(this.graph);
 };
 
 XMLscene.prototype.display = function () {
@@ -97,12 +99,13 @@ XMLscene.prototype.display = function () {
     if (this.graph.loadedOk) {
         for (var i = 0, length = this.lights.length; i < length; i++)
             this.lights[i].update();
-        this.processGraph(this.rootNodeId);
+		
+        this.processGraph(this.rootNodeName);
     };
 };
 
-XMLscene.prototype.setRootNodeId = function (nodeId) {
-    this.rootNodeId = nodeId;
+XMLscene.prototype.setRootNodeName = function (nodeName) {
+    this.rootNodeName = nodeName;
 }
 
 XMLscene.prototype.setAxis = function (axis) {
@@ -147,15 +150,11 @@ XMLscene.prototype.addPrimitive = function (id, primitive) {
     this.primitives[id] = primitive;
 }
 
-XMLscene.prototype.addNode = function (id, node) {
-    this.sceneGraph[id] = node;
-}
-
-XMLscene.prototype.processGraph = function (nodeId) {
+XMLscene.prototype.processGraph = function (nodeName) {
     var material = null;
     var texture = null;
-    if (nodeId != null) {
-        var node = this.sceneGraph[nodeId];
+    if (nodeName != null) {
+        var node = this.sceneGraph[nodeName];
         var nodeMaterialId = node.getMaterialId();
         if (nodeMaterialId == "inherit")
             material = this.materialsStack.top();
@@ -196,11 +195,11 @@ XMLscene.prototype.nextView = function () {
     this.camera = this.perspectives[this.perspectivesIds[this.actualPerspectivesIdsIndex]];
 }
 
-XMLscene.prototype.nextMaterial = function (nodeId) {
-    if (nodeId === undefined)
-        this.nextMaterial(this.rootNodeId);
+XMLscene.prototype.nextMaterial = function (nodeName) {
+    if (nodeName === undefined)
+        this.nextMaterial(this.rootNodeName);
     else {
-        var node = this.sceneGraph[nodeId];
+        var node = this.sceneGraph[nodeName];
         node.nextMaterialId();
         for (var i = 0, length = node.children.length; i < length; i++)
             this.nextMaterial(node.children[i]);
