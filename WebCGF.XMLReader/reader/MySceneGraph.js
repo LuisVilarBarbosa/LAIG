@@ -116,7 +116,7 @@ MySceneGraph.prototype.getFloatsRGBA = function (elem) {
 }
 
 MySceneGraph.prototype.parseSceneTag = function (elem) {
-    this.scene.setRootNodeName(this.reader.getString(elem, "root", true));
+    this.scene.setRootNodeId(this.reader.getString(elem, "root", true));
     var axis_length = this.reader.getFloat(elem, "axis_length", true);
     this.scene.setAxis(new CGFaxis(this.scene, axis_length));
 }
@@ -395,8 +395,8 @@ MySceneGraph.prototype.parseComponentTags = function (elems) {
         }
     }
 
-    if (this.scene.sceneGraph[this.scene.rootNodeName] === undefined)
-        throw "There is no 'component' with the root node id: " + this.scene.rootNodeName;
+    if (this.scene.sceneGraph[this.scene.rootNodeId] === undefined)
+        throw "There is no 'component' with the root node id: " + this.scene.rootNodeId;
 }
 
 MySceneGraph.prototype.parseDSXFile = function (rootElement) {

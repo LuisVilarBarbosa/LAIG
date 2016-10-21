@@ -31,7 +31,7 @@ XMLscene.prototype.init = function (application) {
     this.defaultAppearance.setSpecular(0.2, 0.4, 0.8, 1.0);
     this.defaultAppearance.setShininess(10.0);
 
-    this.rootNodeName = null;
+    this.rootNodeId = null;
     this.perspectives = [];
     this.perspectivesIds = [];
     this.actualPerspectivesIdsIndex = 0;
@@ -95,12 +95,12 @@ XMLscene.prototype.display = function () {
     if (this.graph.loadedOk) {
         for (var i = 0, length = this.lights.length; i < length; i++)
             this.lights[i].update();
-        this.processGraph(this.rootNodeName);
+        this.processGraph(this.rootNodeId);
     };
 };
 
-XMLscene.prototype.setRootNodeName = function (nodeName) {
-    this.rootNodeName = nodeName;
+XMLscene.prototype.setRootNodeId = function (nodeId) {
+    this.rootNodeId = nodeId;
 }
 
 XMLscene.prototype.setAxis = function (axis) {
@@ -145,11 +145,11 @@ XMLscene.prototype.addPrimitive = function (id, primitive) {
     this.primitives[id] = primitive;
 }
 
-XMLscene.prototype.processGraph = function (nodeName) {
+XMLscene.prototype.processGraph = function (nodeId) {
     var material = null;
     var texture = null;
-    if (nodeName != null) {
-        var node = this.sceneGraph[nodeName];
+    if (nodeId != null) {
+        var node = this.sceneGraph[nodeId];
         var nodeMaterialId = node.getMaterialId();
         if (nodeMaterialId == "inherit")
             material = this.materialsStack.top();
@@ -190,11 +190,11 @@ XMLscene.prototype.nextView = function () {
     this.camera = this.perspectives[this.perspectivesIds[this.actualPerspectivesIdsIndex]];
 }
 
-XMLscene.prototype.nextMaterial = function (nodeName) {
-    if (nodeName === undefined)
-        this.nextMaterial(this.rootNodeName);
+XMLscene.prototype.nextMaterial = function (nodeId) {
+    if (nodeId === undefined)
+        this.nextMaterial(this.rootNodeId);
     else {
-        var node = this.sceneGraph[nodeName];
+        var node = this.sceneGraph[nodeId];
         node.nextMaterialId();
         for (var i = 0, length = node.children.length; i < length; i++)
             this.nextMaterial(node.children[i]);
