@@ -23,14 +23,21 @@ MyInterface.prototype.init = function (application) {
 
     this.gui = new dat.GUI();
 
-    this.lights = this.gui.addFolder("Lights");
-    this.lights.open();
+    this.omniLights = this.gui.addFolder("Omnidirectional lights");
+    this.omniLights.open();
+    this.spotLights = this.gui.addFolder("Spot lights");
+    this.spotLights.open();
 
     return true;
 };
 
-MyInterface.prototype.addLight = function (light, id) {
-    this.lights.add(light, 'enabled').name(id);
+MyInterface.prototype.addLight = function (id, light, lightType) {
+    if (lightType == "omni")
+        this.omniLights.add(light, 'enabled').name(id);
+    else if (lightType == "spot")
+        this.spotLights.add(light, 'enabled').name(id);
+    else
+        console.log("Unable to add to the interface the light '" + id + "' - unrecognized light type.");
 }
 
 /**

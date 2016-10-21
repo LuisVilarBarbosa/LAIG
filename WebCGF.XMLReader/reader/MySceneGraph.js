@@ -208,7 +208,7 @@ MySceneGraph.prototype.parseLightsRelativeTags = function (elems, lightType, lig
         this.scene.lights[lightsArrayIndex].setAmbient(ambient[0], ambient[1], ambient[2], ambient[3]);
         this.scene.lights[lightsArrayIndex].setDiffuse(diffuse[0], diffuse[1], diffuse[2], diffuse[3]);
         this.scene.lights[lightsArrayIndex].setSpecular(specular[0], specular[1], specular[2], specular[3]);
-        this.scene.myInterface.addLight(this.scene.lights[lightsArrayIndex], id);
+        this.scene.myInterface.addLight(id, this.scene.lights[lightsArrayIndex], lightType);
     }
 
     return lightsArrayIndex;
