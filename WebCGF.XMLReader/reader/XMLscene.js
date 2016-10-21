@@ -66,6 +66,8 @@ XMLscene.prototype.onGraphLoaded = function () {
     this.gl.clearColor(this.graph.background[0], this.graph.background[1], this.graph.background[2], this.graph.background[3]);
     this.lights[0].setVisible(true);
     this.lights[0].enable();
+	console.log(this.lights);
+	console.log(this.graph);
 };
 
 XMLscene.prototype.display = function () {
@@ -95,6 +97,7 @@ XMLscene.prototype.display = function () {
     if (this.graph.loadedOk) {
         for (var i = 0, length = this.lights.length; i < length; i++)
             this.lights[i].update();
+		
         this.processGraph(this.rootNodeName);
     };
 };
