@@ -16,10 +16,12 @@ XMLscene.prototype.init = function (application) {
 
     this.gl.clearColor(0.0, 0.0, 0.0, 1.0);
 
+    this.gl.frontFace(this.gl.CCW);
     this.gl.clearDepth(100.0);
     this.gl.enable(this.gl.DEPTH_TEST);
     this.gl.enable(this.gl.CULL_FACE);
     this.gl.depthFunc(this.gl.LEQUAL);
+    this.gl.cullFace(this.gl.BACK);
 
     this.enableTextures(true);
     this.axis = new CGFaxis(this);
