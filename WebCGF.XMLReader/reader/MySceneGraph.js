@@ -295,52 +295,52 @@ MySceneGraph.prototype.parseTransformationTags = function (elems) {
 MySceneGraph.prototype.parsePrimitiveTags = function (elems) {
     for (var i = 0, nnodes = elems.length; i < nnodes; i++) {
         var id = this.reader.getString(elems[i], "id", true);
+        if (elems[i].children.length != 1)
+            throw "either zero or more than one primitive element found in the definition of '" + id + "'";
 
-        var tempRectangleElems = elems[i].getElementsByTagName("rectangle");
-        if (tempRectangleElems != null && tempRectangleElems.length == 1) {
-            var x1 = this.reader.getFloat(tempRectangleElems[0], "x1", true);
-            var y1 = this.reader.getFloat(tempRectangleElems[0], "y1", true);
-            var x2 = this.reader.getFloat(tempRectangleElems[0], "x2", true);
-            var y2 = this.reader.getFloat(tempRectangleElems[0], "y2", true);
+        var primitive = elems[i].children[0];
+        if (primitive.tagName == "rectangle") {
+            var x1 = this.reader.getFloat(primitive, "x1", true);
+            var y1 = this.reader.getFloat(primitive, "y1", true);
+            var x2 = this.reader.getFloat(primitive, "x2", true);
+            var y2 = this.reader.getFloat(primitive, "y2", true);
             this.scene.addPrimitive(id, new MyRectangle(this.scene, x1, y1, x2, y2));
         }
-        var tempTriangleElems = elems[i].getElementsByTagName("triangle");
-        if (tempTriangleElems != null && tempTriangleElems.length == 1) {
-            var x1 = this.reader.getFloat(tempTriangleElems[0], "x1", true);
-            var y1 = this.reader.getFloat(tempTriangleElems[0], "y1", true);
-            var z1 = this.reader.getFloat(tempTriangleElems[0], "z1", true);
-            var x2 = this.reader.getFloat(tempTriangleElems[0], "x2", true);
-            var y2 = this.reader.getFloat(tempTriangleElems[0], "y2", true);
-            var z2 = this.reader.getFloat(tempTriangleElems[0], "z2", true);
-            var x3 = this.reader.getFloat(tempTriangleElems[0], "x3", true);
-            var y3 = this.reader.getFloat(tempTriangleElems[0], "y3", true);
-            var z3 = this.reader.getFloat(tempTriangleElems[0], "z3", true);
+        else if (primitive.tagName == "triangle") {
+            var x1 = this.reader.getFloat(primitive, "x1", true);
+            var y1 = this.reader.getFloat(primitive, "y1", true);
+            var z1 = this.reader.getFloat(primitive, "z1", true);
+            var x2 = this.reader.getFloat(primitive, "x2", true);
+            var y2 = this.reader.getFloat(primitive, "y2", true);
+            var z2 = this.reader.getFloat(primitive, "z2", true);
+            var x3 = this.reader.getFloat(primitive, "x3", true);
+            var y3 = this.reader.getFloat(primitive, "y3", true);
+            var z3 = this.reader.getFloat(primitive, "z3", true);
             this.scene.addPrimitive(id, new MyTriangle(this.scene, x1, y1, z1, x2, y2, z2, x3, y3, z3));
         }
-        var tempCylinderElems = elems[i].getElementsByTagName("cylinder");
-        if (tempCylinderElems != null && tempCylinderElems.length == 1) {
-            var base = this.reader.getFloat(tempCylinderElems[0], "base", true);
-            var top = this.reader.getFloat(tempCylinderElems[0], "top", true);
-            var height = this.reader.getFloat(tempCylinderElems[0], "height", true);
-            var slices = this.reader.getInteger(tempCylinderElems[0], "slices", true);
-            var stacks = this.reader.getInteger(tempCylinderElems[0], "stacks", true);
+        else if (primitive.tagName == "cylinder") {
+            var base = this.reader.getFloat(primitive, "base", true);
+            var top = this.reader.getFloat(primitive, "top", true);
+            var height = this.reader.getFloat(primitive, "height", true);
+            var slices = this.reader.getInteger(primitive, "slices", true);
+            var stacks = this.reader.getInteger(primitive, "stacks", true);
             this.scene.addPrimitive(id, new MyCylinderWithTops(this.scene, base, top, height, slices, stacks));
         }
-        var tempSphereElems = elems[i].getElementsByTagName("sphere");
-        if (tempSphereElems != null && tempSphereElems.length == 1) {
-            var radius = this.reader.getFloat(tempSphereElems[0], "radius", true);
-            var slices = this.reader.getInteger(tempSphereElems[0], "slices", true);
-            var stacks = this.reader.getInteger(tempSphereElems[0], "stacks", true);
+        else if (primitive.tagName == "sphere") {
+            var radius = this.reader.getFloat(primitive, "radius", true);
+            var slices = this.reader.getInteger(primitive, "slices", true);
+            var stacks = this.reader.getInteger(primitive, "stacks", true);
             this.scene.addPrimitive(id, new MySphere(this.scene, radius, slices, stacks));
         }
-        var tempTorusElems = elems[i].getElementsByTagName("torus");
-        if (tempTorusElems != null && tempTorusElems.length == 1) {
-            var inner = this.reader.getFloat(tempTorusElems[0], "inner", true);
-            var outer = this.reader.getFloat(tempTorusElems[0], "outer", true);
-            var slices = this.reader.getInteger(tempTorusElems[0], "slices", true);
-            var loops = this.reader.getInteger(tempTorusElems[0], "loops", true);
+        else if (primitive.tagName == "torus") {
+            var inner = this.reader.getFloat(primitive, "inner", true);
+            var outer = this.reader.getFloat(primitive, "outer", true);
+            var slices = this.reader.getInteger(primitive, "slices", true);
+            var loops = this.reader.getInteger(primitive, "loops", true);
             this.scene.addPrimitive(id, new MyTorus(this.scene, inner, outer, slices, loops));
         }
+        else
+            throw "invalid primitive element found: " + primitive.tagName;
     }
 }
 
