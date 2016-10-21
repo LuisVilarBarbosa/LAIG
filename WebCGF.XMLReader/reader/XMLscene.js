@@ -145,6 +145,10 @@ XMLscene.prototype.addPrimitive = function (id, primitive) {
     this.primitives[id] = primitive;
 }
 
+XMLscene.prototype.addNode = function (id, node) {
+    this.sceneGraph[id] = node;
+}
+
 XMLscene.prototype.processGraph = function (nodeId) {
     var material = null;
     var texture = null;

@@ -346,53 +346,55 @@ MySceneGraph.prototype.parsePrimitiveTags = function (elems) {
 
 MySceneGraph.prototype.parseComponentTags = function (elems) {
     for (var i = 0, nnodes = elems.length; i < nnodes; i++) {
+        var node = new Node();
         var id = this.reader.getString(elems[i], "id", true);
-        this.scene.sceneGraph[id] = new Node();
 
         /* 'transformation' tags loading */
-        var tempTransformationElem = this.findOneChild(elems[i], "transformation");
-        var tempTransformationrefElems = tempTransformationElem.getElementsByTagName("transformationref");
-        if (tempTransformationrefElems != null && tempTransformationrefElems.length == 1) {
-            var transformation = this.reader.getString(tempTransformationrefElems[0], "id", true);
-            this.scene.sceneGraph[id].setMatrix(this.scene.transformations[transformation]);
+        var transformationElem = this.findOneChild(elems[i], "transformation");
+        var transformationrefElems = transformationElem.getElementsByTagName("transformationref");
+        if (transformationrefElems != null && transformationrefElems.length == 1) {
+            var transformation = this.reader.getString(transformationrefElems[0], "id", true);
+            node.setMatrix(this.scene.transformations[transformation]);
         }
         else {
             var transformation = mat4.create();
-            this.parseTransformationTag(tempTransformationElem, transformation);
-            this.scene.sceneGraph[id].setMatrix(transformation);
+            this.parseTransformationTag(transformationElem, transformation);
+            node.setMatrix(transformation);
         }
 
         /* 'materials' tags loading */
         this.findOneChild(elems[i], "materials");
 
         /* 'material' tags loading */
-        var tempMaterialElems = this.findChildren(elems[i], "material");
-        for (var j = 0, nnodes2 = tempMaterialElems.length; j < nnodes2; j++) {
-            var material = this.reader.getString(tempMaterialElems[j], "id", true);
-            this.scene.sceneGraph[id].addMaterialId(material);
+        var materialElems = this.findChildren(elems[i], "material");
+        for (var j = 0, nnodes2 = materialElems.length; j < nnodes2; j++) {
+            var material = this.reader.getString(materialElems[j], "id", true);
+            node.addMaterialId(material);
         }
 
         /* 'texture' tags loading */
-        var tempTextureElem = this.findOneChild(elems[i], "texture");
-        var texture = this.reader.getString(tempTextureElem, "id", true);
-        this.scene.sceneGraph[id].setTextureId(texture);
+        var textureElem = this.findOneChild(elems[i], "texture");
+        var texture = this.reader.getString(textureElem, "id", true);
+        node.setTextureId(texture);
 
         /* 'children' tags loading */
-        var tempChildrenElem = this.findOneChild(elems[i], "children");
+        var childrenElem = this.findOneChild(elems[i], "children");
 
         /* 'componentref' and 'primitiveref' tags loading */
-        var tempComponentrefElems = tempChildrenElem.getElementsByTagName("componentref");
-        var tempPrimitiverefElems = tempChildrenElem.getElementsByTagName("primitiveref");
-        if ((tempComponentrefElems == null || tempComponentrefElems.length == 0) &&
-            (tempPrimitiverefElems == null || tempPrimitiverefElems.length == 0))
+        var componentrefElems = childrenElem.getElementsByTagName("componentref");
+        var primitiverefElems = childrenElem.getElementsByTagName("primitiveref");
+        if ((componentrefElems == null || componentrefElems.length == 0) &&
+            (primitiverefElems == null || primitiverefElems.length == 0))
             throw "'componentref' or 'primitiveref' element is missing.";
         else {
-            for (var j = 0, nnodes2 = tempComponentrefElems.length; j < nnodes2; j++)
-                this.scene.sceneGraph[id].pushChild(this.reader.getString(tempComponentrefElems[j], "id", true));
+            for (var j = 0, nnodes2 = componentrefElems.length; j < nnodes2; j++)
+                node.pushChild(this.reader.getString(componentrefElems[j], "id", true));
 
-            for (var j = 0, nnodes2 = tempPrimitiverefElems.length; j < nnodes2; j++)
-                this.scene.sceneGraph[id].pushPrimitive(this.reader.getString(tempPrimitiverefElems[j], "id", true));
+            for (var j = 0, nnodes2 = primitiverefElems.length; j < nnodes2; j++)
+                node.pushPrimitive(this.reader.getString(primitiverefElems[j], "id", true));
         }
+
+        this.scene.addNode(id, node);
     }
 
     if (this.scene.sceneGraph[this.scene.rootNodeId] === undefined)
