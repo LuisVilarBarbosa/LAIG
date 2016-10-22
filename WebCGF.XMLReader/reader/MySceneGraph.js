@@ -57,28 +57,27 @@ MySceneGraph.prototype.verifyDSXFileStructure = function (rootElement) {
     if ((name = rootElement.children[8].nodeName) != "components") throw "Expected 'components' tag instead of '" + name + "'.";
 }
 
-MySceneGraph.prototype.getAllDSXFileIds = function (elem, ids) {
-    if (elem != null && elem.nodeName != "components") {
-        var id = this.reader.getString(elem, "id", false);  // 'false' because not all nodes have ids
-        if (id != null)
-            ids.push(id);
+MySceneGraph.prototype.getElemChildrenIds = function (elem, ids) {
+    if (elem != null) {
+        var children = elem.children;
+        var length = children.length;
+        if (length == 0)
+            throw "Expected at least one child in '" + elem.tagName + "'.";
 
-        if (elem.children != null) {
-            for (var i = 0, length = elem.children.length; i < length; i++)
-                this.getAllDSXFileIds(elem.children[i], ids);
-        }
+        for (var i = 0; i < length; i++)
+            ids.push(this.reader.getString(children[i], "id", true));
     }
 }
 
-MySceneGraph.prototype.verifyDSXFileIds = function (rootElement) {
-    if (rootElement != null) {
+MySceneGraph.prototype.verifyElemChildrenIds = function (elem) {
+    if (elem != null) {
         var ids = [];
-        this.getAllDSXFileIds(rootElement, ids);
+        this.getElemChildrenIds(elem, ids);
         ids.sort();
 
         for (var i = 1, length = ids.length; i < length; i++)
             if (ids[i - 1] == ids[i])
-                throw "'" + ids[i] + "' is not an unique id.";
+                throw "'" + ids[i] + "' is not an unique id inside '" + elem.tagName + "'.";
     }
 }
 
@@ -404,7 +403,6 @@ MySceneGraph.prototype.parseComponentTags = function (elems) {
 MySceneGraph.prototype.parseDSXFile = function (rootElement) {
     try {
         this.verifyDSXFileStructure(rootElement);
-        this.verifyDSXFileIds(rootElement);
 
         this.parseSceneTag(this.findOneChild(rootElement, "scene"));
 
@@ -417,6 +415,7 @@ MySceneGraph.prototype.parseDSXFile = function (rootElement) {
         this.parseIlluminationTag(this.findOneChild(rootElement, "illumination"));
 
         var lightsElem = this.findOneChild(rootElement, "lights");
+        this.verifyElemChildrenIds(lightsElem);
 
         /* 'omni' and 'spot' tags loading */
         var omniElems = lightsElem.getElementsByTagName("omni");
@@ -428,27 +427,31 @@ MySceneGraph.prototype.parseDSXFile = function (rootElement) {
         this.parseLightsRelativeTags(spotElems, "spot", nextIndexToUse);
 
         var texturesElem = this.findOneChild(rootElement, "textures");
+        this.verifyElemChildrenIds(texturesElem);
 
         this.parseTextureTags(this.findChildren(texturesElem, "texture"));
 
         /* only one 'materials' child should be found, but, because there are more
         'materials' tags in 'components', 'getElementsByTagName' finds more than one */
         var materialsElems = this.findChildren(rootElement, "materials");
+        this.verifyElemChildrenIds(materialsElems[0]);
 
         var materialElems = this.findChildren(materialsElems[0], "material");
         this.parseMaterialTags(materialElems);
 
-        var transformationsElem = this.findOneChild(rootElement, "transformations")
+        var transformationsElem = this.findOneChild(rootElement, "transformations");
+        this.verifyElemChildrenIds(transformationsElem);
 
         var transformationElems = this.findChildren(transformationsElem, "transformation");
         this.parseTransformationTags(transformationElems);
 
-        var primitivesElem = this.findOneChild(rootElement, "primitives")
+        var primitivesElem = this.findOneChild(rootElement, "primitives");
+        this.verifyElemChildrenIds(primitivesElem);
 
         var primitiveElems = this.findChildren(primitivesElem, "primitive");
         this.parsePrimitiveTags(primitiveElems);
 
-        var componentsElems = this.findOneChild(rootElement, "components")
+        var componentsElems = this.findOneChild(rootElement, "components");
 
         var componentElems = this.findChildren(componentsElems, "component");
         this.parseComponentTags(componentElems);
