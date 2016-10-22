@@ -97,7 +97,7 @@ XMLscene.prototype.display = function () {
     if (this.graph.loadedOk) {
         for (var i = 0, length = this.lights.length; i < length; i++)
             this.lights[i].update();
-		
+
         this.processGraph(this.rootNodeId);
     };
 };
@@ -180,7 +180,8 @@ XMLscene.prototype.processGraph = function (nodeId) {
             if (primitive === undefined)
                 console.log("'" + node.primitives[i] + "' is not a primitive.");
             else {
-                primitive.setTextureCoordinates(0, texture.length_s, 0, texture.length_t);
+                if (texture != null)
+                    primitive.setTextureCoordinates(0, texture.length_s, 0, texture.length_t);
                 primitive.display();
             }
         }
