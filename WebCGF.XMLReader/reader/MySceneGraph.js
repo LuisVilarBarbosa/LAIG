@@ -287,6 +287,8 @@ MySceneGraph.prototype.parseTransformationTag = function (elem, matrix) {
 MySceneGraph.prototype.parseTransformationTags = function (elems) {
     for (var i = 0, nnodes = elems.length; i < nnodes; i++) {
         var id = this.reader.getString(elems[i], "id", true);
+        if (elems[i].children.length == 0)
+            throw "Expected, at least, one transformation instruction in '" + id + "'.";
         var transformation = mat4.create();
         this.parseTransformationTag(elems[i], transformation);
         this.scene.addTransformation(id, transformation);
