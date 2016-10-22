@@ -91,14 +91,14 @@
     <texture id="fabric" file="./images/fabric.jpg" length_s="1" length_t="1" />
     <texture id="wood" file="./images/wood.jpg" length_s="1" length_t="1" />
     <texture id="metal" file="./images/metal.jpg" length_s="1" length_t="1" />
-	<texture id="floor_wood" file="./images/floor_wood.jpg" length_s="1" length_t="1" />
+	<texture id="floor_wood" file="./images/floor_wood.jpg" length_s="4" length_t="4" />
 	<texture id="white_wall" file="./images/white_wall.jpg" length_s="1" length_t="1" />
-	<texture id="football" file="./images/football.jpg" length_s="1" length_t="1" />
 	<texture id="sprinkles" file="./images/sprinkles.png" length_s="1" length_t="1" />
 	<texture id="lampshade" file="./images/lampshade.jpg" length_s="1" length_t="1" />
 	<texture id="rubiks_texture" file="./images/rubiks_cube.png" length_s="1" length_t="1" />
 	<texture id="galaxy" file="./images/galaxy.jpg" length_s="1" length_t="1" />
 	<texture id="aluminium" file="./images/aluminium.jpg" length_s="1" length_t="1" />
+	<texture id="soccer_ball" file="./images/soccer_ball.png" length_s="0.73" length_t="0.81" />
   </textures>
 
 
@@ -657,7 +657,7 @@
         <material id="primer_material" />
       </materials>
 
-      <texture id="football" />
+      <texture id="soccer_ball" />
 
       <children>
         <primitiveref id="sphere" />
