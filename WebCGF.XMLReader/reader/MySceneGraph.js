@@ -217,9 +217,10 @@ MySceneGraph.prototype.parseTextureTags = function (elems) {
     for (var i = 0, nnodes = elems.length; i < nnodes; i++) {
         var id = this.reader.getString(elems[i], "id", true);
         var file = this.reader.getString(elems[i], "file", true);
-        var length_s = this.reader.getFloat(elems[i], "length_s", true);
-        var length_t = this.reader.getFloat(elems[i], "length_t", true);
-        this.scene.addTexture(id, new CGFtexture(this.scene, file, length_s, length_t));
+        var texture = new CGFtexture(this.scene, file);
+        texture.length_s = this.reader.getFloat(elems[i], "length_s", true);
+        texture.length_t = this.reader.getFloat(elems[i], "length_t", true);
+        this.scene.addTexture(id, texture);
     }
 }
 
@@ -249,6 +250,7 @@ MySceneGraph.prototype.parseMaterialTags = function (elems) {
         material.setSpecular(specular[0], specular[1], specular[2], specular[3]);
         if (shininess_value > 0)
             material.setShininess(shininess_value);
+        material.setTextureWrap("REPEAT", "REPEAT");
 
         this.scene.addMaterial(id, material);
     }

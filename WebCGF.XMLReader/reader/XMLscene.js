@@ -175,11 +175,15 @@ XMLscene.prototype.processGraph = function (nodeId) {
         material.apply();
 
         this.multMatrix(node.mat);
-        for (var i = 0; i < node.primitives.length; i++)
-            if (this.primitives[node.primitives[i]] === undefined)
+        for (var i = 0; i < node.primitives.length; i++) {
+            var primitive = this.primitives[node.primitives[i]];
+            if (primitive === undefined)
                 console.log("'" + node.primitives[i] + "' is not a primitive.");
-            else
-                this.primitives[node.primitives[i]].display();
+            else {
+                primitive.setTextureCoordinates(0, texture.length_s, 0, texture.length_t);
+                primitive.display();
+            }
+        }
         for (var i = 0; i < node.children.length; i++) {
             this.pushMatrix();
             this.materialsStack.push(material);

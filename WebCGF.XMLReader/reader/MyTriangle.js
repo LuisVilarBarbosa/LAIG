@@ -2,7 +2,7 @@
  * MyTriangle
  * @constructor
  */
-function MyTriangle(scene, x1, y1, z1, x2, y2, z2, x3, y3, z3) {
+function MyTriangle(scene, x1, y1, z1, x2, y2, z2, x3, y3, z3, minS, maxS, minT, maxT) {
     CGFobject.call(this, scene);
 
     this.x1 = x1;
@@ -14,6 +14,10 @@ function MyTriangle(scene, x1, y1, z1, x2, y2, z2, x3, y3, z3) {
     this.z1 = z1;
     this.z2 = z2;
     this.z3 = z3;
+    this.minS = minS || 0;
+    this.maxS = maxS || 1;
+    this.minT = minT || 0;
+    this.maxT = maxT || 1;
 
     this.initBuffers();
 };
@@ -48,30 +52,40 @@ MyTriangle.prototype.initBuffers = function () {
     }
 
 
-    var a = Math.sqrt(
+    this.a = Math.sqrt(
         (this.x1 - this.x3) * (this.x1 - this.x3) +
         (this.y1 - this.y3) * (this.y1 - this.y3) +
         (this.z1 - this.z3) * (this.z1 - this.z3));
 
-    var b = Math.sqrt(
+    this.b = Math.sqrt(
         (this.x2 - this.x1) * (this.x2 - this.x1) +
         (this.y2 - this.y1) * (this.y2 - this.y1) +
         (this.z2 - this.z1) * (this.z2 - this.z1));
 
-    var c = Math.sqrt(
+    this.c = Math.sqrt(
        (this.x3 - this.x2) * (this.x3 - this.x2) +
        (this.y3 - this.y2) * (this.y3 - this.y2) +
        (this.z3 - this.z2) * (this.z3 - this.z2));
 
-    var cosbeta = (a * a - b * b + c * c) / (2 * a * c);
-    var beta = Math.acos(cosbeta);
+    this.cosbeta = (this.a * this.a - this.b * this.b + this.c * this.c) / (2 * this.a * this.c);
+    this.beta = Math.acos(this.cosbeta);
 
-    this.texCoords = [
-        0, 0,
-        1, 0,
-        c - a * cosbeta, a * Math.sin(beta)
-    ];
+    this.setTextureCoordinates(this.minS, this.maxS, this.minT, this.maxT);
 
     this.primitiveType = this.scene.gl.TRIANGLES;
     this.initGLBuffers();
 };
+
+MyTriangle.prototype.setTextureCoordinates = function (minS, maxS, minT, maxT) {
+    this.minS = minS || 0;
+    this.maxS = maxS || 1;
+    this.minT = minT || 0;
+    this.maxT = maxT || 1;
+
+    this.texCoords = [
+        this.minS, this.minT,
+        this.maxS, this.minT,
+        this.c - this.a * this.cosbeta, this.a * Math.sin(this.beta)
+    ];
+    this.updateTexCoordsGLBuffers();
+}
