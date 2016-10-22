@@ -9,7 +9,7 @@ function MyCylinderWithTops(scene, base, top, height, slices, stacks, minS, maxS
     this.topRadius = top;
     this.height = height;
     this.cylinder = new MyCylinder(this.scene, this.baseRadius, this.topRadius, this.height, slices, stacks, minS, maxS, minT, maxT);
-    this.top = new MyCircle(this.scene, slices, minS, maxS, minT, maxT);
+    this.top = new MyCircle(this.scene, slices);
 };
 
 MyCylinderWithTops.prototype = Object.create(CGFobject.prototype);
