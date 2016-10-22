@@ -32,7 +32,7 @@
       <to x="0" y="0" z="0" />
     </perspective>
     <perspective id="perspective_2" near="0" far="15" angle="22.9">
-      <from x="15" y="0" z="15" />
+      <from x="19" y="0" z="15" />
       <to x="0" y="3" z="0" />
     </perspective>
     <perspective id="perspective_3" near="0.1" far="500" angle="22.9">
@@ -137,6 +137,22 @@
       <ambient r="1" g="0.71" b="0.75" a="1" />
       <diffuse r="1" g="0.71" b="0.75" a="1" />
       <specular r="1" g="0.71" b="0.75" a="1" />
+      <shininess value="15" />
+    </material>
+	
+	<material id="marron_material" >
+      <emission r="0" g="0" b="0" a="1" />
+      <ambient r="0.545" g="0.27" b="0.074" a="1" />
+      <diffuse r="0.545" g="0.27" b="0.074" a="1" />
+      <specular r="0.545" g="0.27" b="0.074" a="1" />
+      <shininess value="15" />
+    </material>
+	
+	<material id="green_material" >
+      <emission r="0" g="0" b="0" a="1" />
+      <ambient r="0.73" g="0.89" b="0.039" a="1" />
+      <diffuse r="0.73" g="0.89" b="0.039" a="1" />
+      <specular r="0.73" g="0.89" b="0.039" a="1" />
       <shininess value="15" />
     </material>
 
@@ -264,16 +280,16 @@
         <!-- deve existir uma ou mais tags "componentref" e/ou -->
         <!-- "primitiveref", identificando outros -->
         <!-- componentes ou primitivas -->
-        <componentref id="table" />
-        <componentref id="pyramid" />
-        <componentref id="ball" />
-        <componentref id="donut" />
 		<componentref id="floor" />
 		<componentref id="wall_1" />
 		<componentref id="wall_2" />
+        <componentref id="table" />
+        <componentref id="donut" />
+		<componentref id="pyramid" />
+		<componentref id="ball" />
 		<componentref id="lamp" />
-		<componentref id="rubiks" />
 		<componentref id="poster" />
+		<componentref id="rubiks" />
       </children>
 
     </component>
@@ -291,11 +307,12 @@
       <texture id="none" />
 
       <children>
-        <componentref id="table_top" />
+        
         <componentref id="leg_1" />
         <componentref id="leg_2" />
         <componentref id="leg_3" />
         <componentref id="leg_4" />
+		<componentref id="table_top" />
       </children>
     </component>
 
@@ -446,8 +463,7 @@
       </transformation>
 
       <materials>
-        <material id="blue_material" />
-        <material id="green_material" />
+        <material id="primer_material" />
       </materials>
 
       <texture id="metal" />
@@ -463,7 +479,7 @@
       </transformation>
 
       <materials>
-        <material id="blue_material" />
+        <material id="inherit" />
       </materials>
 
       <texture id="none" />
@@ -479,7 +495,7 @@
       </transformation>
 
       <materials>
-        <material id="blue_material" />
+		<material id="inherit" />
       </materials>
 
       <texture id="none" />
@@ -495,7 +511,7 @@
       </transformation>
 
       <materials>
-        <material id="blue_material" />
+        <material id="inherit" />
       </materials>
 
       <texture id="none" />
@@ -511,7 +527,7 @@
       </transformation>
 
       <materials>
-        <material id="blue_material" />
+        <material id="inherit" />
       </materials>
 
       <texture id="none" />
@@ -658,6 +674,9 @@
 
       <materials>
         <material id="donut_material" />
+        <material id="blue_material" />
+		<material id="green_material" />
+		
       </materials>
 
       <texture id="sprinkles" />
@@ -678,6 +697,7 @@
 
       <materials>
         <material id="wood_material" />
+        <material id="marron_material" />
       </materials>
 
       <texture id="floor_wood" />
@@ -697,6 +717,8 @@
 
       <materials>
         <material id="primer_material" />
+        <material id="donut_material" />
+        <material id="green_material" />
       </materials>
 
       <texture id="white_wall" />
@@ -755,8 +777,8 @@
       <texture id="inherit" />
 
       <children>
-        <componentref id="lamp_base" />
 		<componentref id="lamp_shaft" />
+        <componentref id="lamp_base" />
 		<componentref id="lamp_lampshade" />
       </children>
     </component>
@@ -769,6 +791,7 @@
 
       <materials>
         <material id="inherit" />
+		<material id="blue_material" />
       </materials>
 
       <texture id="metal" />
@@ -828,8 +851,9 @@
       <texture id="rubiks_texture" />
 
       <children>
-		<componentref id="rubiks_cube" />
+		
 		<componentref id="rubiks_holder" />
+		<componentref id="rubiks_cube" />
       </children>
 	  
     </component>
