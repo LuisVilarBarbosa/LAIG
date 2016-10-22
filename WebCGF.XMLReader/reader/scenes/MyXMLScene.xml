@@ -207,7 +207,7 @@
     </primitive>
 
     <primitive id="torus">
-      <torus inner="0.5" outer="1" slices="100" loops="100" />
+      <torus inner="0.333" outer="1" slices="100" loops="100" />
     </primitive>
 	
 	<primitive id="conical_frustum">
@@ -278,6 +278,7 @@
 
     </component>
 
+	<!-- TABLE -->
     <component id="table">
       <transformation>
 		<translate x="0.5" y="0" z="0.5" />
@@ -315,6 +316,7 @@
       </children>
     </component>
 
+	<!-- CUBE -->
     <component id="cube">
       <transformation>
       </transformation>
@@ -436,10 +438,11 @@
       </children>
     </component>
 
+	<!-- TABLE_LEGS -->
     <component id="leg">
       <transformation>
         <rotate axis="x" angle="-90" />
-        <scale x="0.1" y="0.1" z="1" />
+        <scale x="0.06" y="0.06" z="1" />
       </transformation>
 
       <materials>
@@ -518,6 +521,7 @@
       </children>
     </component>
 
+	<!-- PYRAMID -->
     <component id="pyramid">
       <transformation>
         <translate x="0.8" y="1.1" z="1.2" />
@@ -626,6 +630,7 @@
       </children>
     </component>
 
+	<!-- BALL -->
     <component id="ball">
       <transformation>
         <translate x="1.2" y="1.25" z="1.2" />
@@ -642,12 +647,13 @@
         <primitiveref id="sphere" />
       </children>
     </component>
-
+	
+	<!-- DONUT -->
     <component id="donut">
       <transformation>
-        <translate x="0.9" y="1.18" z="0.75" />
+        <translate x="0.9" y="1.165" z="0.75" />
         <rotate axis="x" angle="90" />
-        <scale x="0.15" y="0.15" z="0.15" />
+        <scale x="0.2" y="0.2" z="0.2" />
       </transformation>
 
       <materials>
@@ -739,6 +745,7 @@
 	<component id="lamp">
       <transformation>
 		<translate x="1" y ="0" z="3" />
+		<scale x="0.5" y ="1" z="0.5" />
       </transformation>
 
       <materials>
@@ -849,6 +856,7 @@
 	<component id="rubiks_holder">
       <transformation>
 		<rotate axis="x" angle="-90" />
+		<scale x="0.5" y ="0.5" z="1" />
       </transformation>
 
       <materials>
