@@ -27,12 +27,12 @@ MySphere.prototype.initBuffers = function () {
 
     var widthAngle = 2 * Math.PI / this.slices;     // xOy
     var heightAngle = Math.PI / this.stacks;    // xOz
-    var incS = 1 / this.slices;
-    var incT = 1 / this.stacks;
+    var decS = 1 / this.slices;
+    var decT = 1 / this.stacks;
 
     // spherical surface
-    for (var j = 0, beta = 0, t = 0; j <= this.stacks; j++, beta += heightAngle, t += incT) {  // beta = j * heightAngle --> xOz
-        for (var i = 0, alfa = 0, s = 0; i <= this.slices; i++, alfa += widthAngle, s += incS) {  // alfa = i * widthAngle --> xOy
+    for (var j = 0, beta = 0, t = 1; j <= this.stacks; j++, beta += heightAngle, t -= decT) {  // beta = j * heightAngle --> xOz
+        for (var i = 0, alfa = 0, s = 1; i <= this.slices; i++, alfa += widthAngle, s -= decS) {  // alfa = i * widthAngle --> xOy
             this.vertices.push(this.radius * Math.sin(beta) * Math.cos(alfa), this.radius * Math.sin(beta) * Math.sin(alfa), this.radius * Math.cos(beta));
             this.normals.push(Math.sin(beta) * Math.cos(alfa), Math.sin(beta) * Math.sin(alfa), Math.cos(beta));
             this.texCoords.push(s, t);

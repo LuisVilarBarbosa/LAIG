@@ -28,12 +28,12 @@ MyCylinder.prototype.initBuffers = function () {
     this.texCoords = [];
 
     var beta = 2 * Math.PI / this.slices;
-    var incRadius = (this.top - this.base) / 2.0 /* <- rays difference */ / this.stacks;
+    var incRadius = (this.top - this.base) /* <- rays difference */ / this.stacks;
     var incHeight = this.height / this.stacks;
-    var incS = 1 / this.slices;
-    var incT = 1 / this.stacks;
-    for (var j = 0, radius = this.base / 2.0, height = 0, t = 0; j <= this.stacks; j++, radius += incRadius, height += incHeight, t += incT)
-        for (var i = 0, alfa = 0, s = 0; i <= this.slices; i++, alfa += beta, s += incS) {
+    var decS = 1 / this.slices;
+    var decT = 1 / this.stacks;
+    for (var j = 0, radius = this.base, height = 0, t = 1; j <= this.stacks; j++, radius += incRadius, height += incHeight, t -= decT)
+        for (var i = 0, alfa = 0, s = 1; i <= this.slices; i++, alfa += beta, s -= decS) {
             var cos = Math.cos(alfa);
             var sin = Math.sin(alfa);
             this.vertices.push(radius * cos, radius * sin, height);

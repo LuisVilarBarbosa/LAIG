@@ -28,11 +28,11 @@ MyTorus.prototype.initBuffers = function () {
 
     var incU = 2 * Math.PI / this.slices;     // xOz
     var incV = 2 * Math.PI / this.loops;    // xOy
-    var incS = 1 / this.slices;
-    var incT = 1 / this.loops;
+    var decS = 1 / this.slices;
+    var decT = 1 / this.loops;
 
-    for (var j = 0, v = 0, t = 0; j <= this.loops; j++, v += incV, t += incT) {  // v = j * incV --> xOy
-        for (var i = 0, u = 0, s = 0; i <= this.slices; i++, u += incU, s += incS) {  // u = i * incU --> xOz
+    for (var j = 0, v = 0, t = 1; j <= this.loops; j++, v += incV, t -= decT) {  // v = j * incV --> xOy
+        for (var i = 0, u = 0, s = 1; i <= this.slices; i++, u += incU, s -= decS) {  // u = i * incU --> xOz
             this.vertices.push(
                 (this.R + this.r * Math.cos(v)) * Math.cos(u),
                 (this.R + this.r * Math.cos(v)) * Math.sin(u),
