@@ -79,7 +79,7 @@ MyTorus.prototype.setTextureCoordinates = function (minS, maxS, minT, maxT) {
     this.texCoords = [];
 
     var decS = (this.maxS - this.minS) / this.slices;
-    var decT = (this.maxT - this.minT) / this.stacks;
+    var decT = (this.maxT - this.minT) / this.loops;
 
     for (var j = 0, t = this.maxT; j <= this.loops; j++, t -= decT)
         for (var i = 0, s = this.maxS; i <= this.slices; i++, s -= decS)
