@@ -5,8 +5,8 @@
 function MyTorus(scene, inner, outer, slices, loops) {
     CGFobject.call(this, scene);
 
-    this.inner = inner;
-    this.outer = outer;
+    this.r = (outer - inner) / 2;
+    this.R = inner + this.r;
     this.slices = slices;
     this.loops = loops;
 
@@ -34,9 +34,9 @@ MyTorus.prototype.initBuffers = function () {
     for (var j = 0, v = 0, t = 0; j <= this.loops; j++, v += incV, t += incT) {  // v = j * incV --> xOy
         for (var i = 0, u = 0, s = 0; i <= this.slices; i++, u += incU, s += incS) {  // u = i * incU --> xOz
             this.vertices.push(
-                (this.outer + this.inner * Math.cos(v)) * Math.cos(u),
-                (this.outer + this.inner * Math.cos(v)) * Math.sin(u),
-                this.inner * Math.sin(v));
+                (this.R + this.r * Math.cos(v)) * Math.cos(u),
+                (this.R + this.r * Math.cos(v)) * Math.sin(u),
+                this.r * Math.sin(v));
 
             /* tangent vector of the big circle */
             var tbcx = -Math.sin(u);
