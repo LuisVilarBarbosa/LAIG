@@ -96,7 +96,7 @@ XMLscene.prototype.display = function () {
     // This is one possible way to do it
     if (this.graph.loadedOk) {
         for (var i = 0, length = this.lights.length; i < length; i++)
-            this.lights[i].update();
+            this.lights[i].update();    // lights are being enabled and disabled directly by the interface
 
         this.processGraph(this.rootNodeId);
     };
@@ -130,6 +130,32 @@ XMLscene.prototype.setDefaultPerspective = function (id) {
     }
     else
         this.camera = this.perspectives[this.perspectivesIds[this.actualPerspectivesIdsIndex]];
+}
+
+/* 'angle', 'exponent' and 'target' will be undefined when 'lightType' equal to 'omni' */
+XMLscene.prototype.setLight = function (lightType, lightsArrayIndex, id, enabled, location, ambient, diffuse, specular, angle, exponent, target) {
+    this.lightsIds[lightsArrayIndex] = id;
+    if (enabled)
+        this.lights[lightsArrayIndex].enable();
+    else
+        this.lights[lightsArrayIndex].disable();
+    this.lights[lightsArrayIndex].setPosition(location[0], location[1], location[2]);
+    this.lights[lightsArrayIndex].setAmbient(ambient[0], ambient[1], ambient[2], ambient[3]);
+    this.lights[lightsArrayIndex].setDiffuse(diffuse[0], diffuse[1], diffuse[2], diffuse[3]);
+    this.lights[lightsArrayIndex].setSpecular(specular[0], specular[1], specular[2], specular[3]);
+    this.lights[lightsArrayIndex].setVisible(true);
+    this.myInterface.addLight(id, this.lights[lightsArrayIndex], lightType);
+
+    if (lightType == "spot") {
+        var direction = [];
+        direction[0] = target[0] - location[0];
+        direction[1] = target[1] - location[1];
+        direction[2] = target[2] - location[2];
+
+        this.lights[lightsArrayIndex].setSpotCutOff(angle);
+        this.lights[lightsArrayIndex].setSpotDirection(direction[0], direction[1], direction[2]);
+        this.lights[lightsArrayIndex].setSpotExponent(exponent);
+    }
 }
 
 XMLscene.prototype.addTexture = function (id, texture) {

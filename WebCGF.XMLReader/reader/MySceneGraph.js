@@ -198,26 +198,10 @@ MySceneGraph.prototype.parseLightsRelativeTags = function (elems, lightType, lig
             var targetElem = this.findOneChild(elems[i], "target");
             var target = this.getFloatsXYZ(targetElem);
 
-            var direction = [];
-            direction[0] = target[0] - location[0];
-            direction[1] = target[1] - location[1];
-            direction[2] = target[2] - location[2];
-
-            this.scene.lights[lightsArrayIndex].setSpotCutOff(angle);
-            this.scene.lights[lightsArrayIndex].setSpotDirection(direction[0], direction[1], direction[2]);
-            this.scene.lights[lightsArrayIndex].setSpotExponent(exponent);
+            this.scene.setLight(lightType, lightsArrayIndex, id, enabled, location, ambient, diffuse, specular, angle, exponent, target);
         }
-
-        this.scene.lightsIds[lightsArrayIndex] = id;
-        if (enabled)
-            this.scene.lights[lightsArrayIndex].enable();
         else
-            this.scene.lights[lightsArrayIndex].disable();
-        this.scene.lights[lightsArrayIndex].setPosition(location[0], location[1], location[2]);
-        this.scene.lights[lightsArrayIndex].setAmbient(ambient[0], ambient[1], ambient[2], ambient[3]);
-        this.scene.lights[lightsArrayIndex].setDiffuse(diffuse[0], diffuse[1], diffuse[2], diffuse[3]);
-        this.scene.lights[lightsArrayIndex].setSpecular(specular[0], specular[1], specular[2], specular[3]);
-        this.scene.myInterface.addLight(id, this.scene.lights[lightsArrayIndex], lightType);
+            this.scene.setLight(lightType, lightsArrayIndex, id, enabled, location, ambient, diffuse, specular);
     }
 
     return lightsArrayIndex;
