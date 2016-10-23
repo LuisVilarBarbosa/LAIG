@@ -231,7 +231,11 @@ MySceneGraph.prototype.parseLightsRelativeTags = function (elems, lightType, lig
         var enabled = this.reader.getBoolean(elems[i], "enabled", true);
 
         var locationElem = this.findOneChild(elems[i], "location");
-        var location = this.getFloatsXYZW(locationElem);
+        var location = null;
+        if (lightType != "spot")
+            location = this.getFloatsXYZW(locationElem);
+        else
+            location = this.getFloatsXYZ(locationElem);
 
         var ambientElem = this.findOneChild(elems[i], "ambient");
         var ambient = this.getFloatsRGBA(ambientElem);
@@ -253,7 +257,7 @@ MySceneGraph.prototype.parseLightsRelativeTags = function (elems, lightType, lig
         }
         else
             this.scene.setLight(lightType, lightsArrayIndex, id, enabled, location, ambient, diffuse, specular);
-		
+
     }
 
     return lightsArrayIndex;
