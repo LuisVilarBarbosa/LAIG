@@ -139,13 +139,13 @@ XMLscene.prototype.setLight = function (lightType, lightsArrayIndex, id, enabled
         this.lights[lightsArrayIndex].enable();
     else
         this.lights[lightsArrayIndex].disable();
-    this.lights[lightsArrayIndex].setPosition(location[0], location[1], location[2]);
+    this.lights[lightsArrayIndex].setPosition(location[0], location[1], location[2], location[3]);
     this.lights[lightsArrayIndex].setAmbient(ambient[0], ambient[1], ambient[2], ambient[3]);
     this.lights[lightsArrayIndex].setDiffuse(diffuse[0], diffuse[1], diffuse[2], diffuse[3]);
     this.lights[lightsArrayIndex].setSpecular(specular[0], specular[1], specular[2], specular[3]);
     this.lights[lightsArrayIndex].setVisible(true);
     this.myInterface.addLight(id, this.lights[lightsArrayIndex], lightType);
-
+	
     if (lightType == "spot") {
         var direction = [];
         direction[0] = target[0] - location[0];
