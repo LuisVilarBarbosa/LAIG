@@ -140,7 +140,11 @@ XMLscene.prototype.setLight = function (lightType, lightsArrayIndex, id, enabled
     else
         this.lights[lightsArrayIndex].disable();
     
-    this.lights[lightsArrayIndex].setPosition(location[0], location[1], location[2], location[3]);
+    if(lightType != "spot")
+        this.lights[lightsArrayIndex].setPosition(location[0], location[1], location[2], location[3]);
+    else
+        this.lights[lightsArrayIndex].setPosition(location[0], location[1], location[2], null);
+	
     this.lights[lightsArrayIndex].setAmbient(ambient[0], ambient[1], ambient[2], ambient[3]);
     this.lights[lightsArrayIndex].setDiffuse(diffuse[0], diffuse[1], diffuse[2], diffuse[3]);
     this.lights[lightsArrayIndex].setSpecular(specular[0], specular[1], specular[2], specular[3]);
