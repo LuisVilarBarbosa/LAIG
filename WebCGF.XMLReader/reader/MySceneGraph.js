@@ -366,10 +366,10 @@ MySceneGraph.prototype.parseComponentTags = function (elems) {
         }
 
         /* 'materials' tags loading */
-        this.findOneChild(elems[i], "materials");
+        var materialsElem = this.findOneChild(elems[i], "materials");
 
         /* 'material' tags loading */
-        var materialElems = this.findChildren(elems[i], "material");
+        var materialElems = this.findChildren(materialsElem, "material");
         for (var j = 0, nnodes2 = materialElems.length; j < nnodes2; j++) {
             var material = this.reader.getString(materialElems[j], "id", true);
             node.addMaterialId(material);

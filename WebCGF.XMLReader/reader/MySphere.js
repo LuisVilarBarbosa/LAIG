@@ -39,14 +39,14 @@ MySphere.prototype.initBuffers = function () {
 
     this.setTextureCoordinates(this.minS, this.maxS, this.minT, this.maxT);
 
-    for (var j = 0; j <= this.stacks; j++) {
+    for (var j = 0; j < this.stacks; j++) {
         for (var i = 0; i < this.slices; i++) {
-            var a = j * this.slices + i;
-            var b = (j + 1) * this.slices + i;
-            var c = (j + 1) * this.slices + i + 1;
-            var d = j * this.slices + i + 1;
+            var a = j * this.slices + j + i;
+            var b = (j + 1) * this.slices + j + 1 + i + 1;
+            var c = (j + 1) * this.slices + j + 1 + i;
+            var d = j * this.slices + j + i + 1;
             this.indices.push(a, b, c);
-            this.indices.push(a, c, d);
+            this.indices.push(a, d, b);
         }
     }
 
