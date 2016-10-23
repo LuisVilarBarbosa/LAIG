@@ -157,11 +157,11 @@ MySceneGraph.prototype.parseIlluminationTag = function (elem) {
 
 MySceneGraph.prototype.parseLightsRelativeTags = function (elems, lightType, lightsArrayStartIndex) {
     if (lightType != "omni" && lightType != "spot")
-        console.log("the light type '" + lightType + "' will be considered 'omni'")
+        console.warn("the light type '" + lightType + "' will be considered 'omni'")
     var lightsArrayIndex = lightsArrayStartIndex;
     var nnodes = elems.length;
     if ((lightsArrayStartIndex - 1 + nnodes) >= 8) {
-        console.log("WebGL only accepts 8 lights. The first 8 lights will be loaded, the others not.");
+        console.warn("WebGL only accepts 8 lights. The first 8 lights will be loaded, the others not.");
         nnodes = 8 - lightsArrayStartIndex;
     }
 

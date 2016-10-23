@@ -125,7 +125,7 @@ XMLscene.prototype.setDefaultPerspective = function (id) {
     }
 
     if (this.actualPerspectivesIdsIndex == -1) {
-        console.log("Perspective not found when defining the default perspective: '" + id + "'.");
+        console.warn("Perspective not found when defining the default perspective: '" + id + "'.");
         this.actualPerspectivesIdsIndex = 0;
     }
     else
@@ -163,7 +163,7 @@ XMLscene.prototype.processGraph = function (nodeId) {
         else
             material = this.materials[nodeMaterialId];
         if (material === undefined)
-            console.log("'material' is undefined.");
+            console.warn("'material' is undefined.");
         if (node.texture == "none")
             texture = null;
         else if (node.texture == "inherit")
@@ -178,7 +178,7 @@ XMLscene.prototype.processGraph = function (nodeId) {
         for (var i = 0; i < node.primitives.length; i++) {
             var primitive = this.primitives[node.primitives[i]];
             if (primitive === undefined)
-                console.log("'" + node.primitives[i] + "' is not a primitive.");
+                console.warn("'" + node.primitives[i] + "' is not a primitive.");
             else {
                 if (texture != null)
                     primitive.setTextureCoordinates(0, texture.length_s, 0, texture.length_t);
