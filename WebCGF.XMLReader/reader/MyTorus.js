@@ -2,17 +2,15 @@
  * MyTorus
  * @constructor
  */
-function MyTorus(scene, inner, outer, slices, loops, minS, maxS, minT, maxT) {
+function MyTorus(scene, inner, outer, slices, loops, lengthS, lengthT) {
     CGFobject.call(this, scene);
 
     this.r = (outer - inner) / 2;
     this.R = inner + this.r;
     this.slices = slices;
     this.loops = loops;
-    this.minS = minS || 0;
-    this.maxS = maxS || 1;
-    this.minT = minT || 0;
-    this.maxT = maxT || 1;
+    this.lengthS = lengthS || 1;
+    this.lengthT = lengthT || 1;
 
     this.initBuffers();
 };
@@ -53,7 +51,7 @@ MyTorus.prototype.initBuffers = function () {
         }
     }
 
-    this.setTextureCoordinates(this.minS, this.maxS, this.minT, this.maxT);
+    this.setTextureCoordinates(this.lengthS, this.lengthT);
 
     for (var j = 0; j < this.loops; j++) {
         for (var i = 0; i < this.slices; i++) {
@@ -70,19 +68,17 @@ MyTorus.prototype.initBuffers = function () {
     this.initGLBuffers();
 };
 
-MyTorus.prototype.setTextureCoordinates = function (minS, maxS, minT, maxT) {
-    this.minS = minS || 0;
-    this.maxS = maxS || 1;
-    this.minT = minT || 0;
-    this.maxT = maxT || 1;
+MyTorus.prototype.setTextureCoordinates = function (lengthS, lengthT) {
+    this.lengthS = lengthS || 1;
+    this.lengthT = lengthT || 1;
 
     this.texCoords = [];
 
-    var decS = (this.maxS - this.minS) / this.slices;
-    var decT = (this.maxT - this.minT) / this.loops;
+    var decS = this.lengthS / this.slices;
+    var decT = this.lengthT / this.loops;
 
-    for (var j = 0, t = this.maxT; j <= this.loops; j++, t -= decT)
-        for (var i = 0, s = this.maxS; i <= this.slices; i++, s -= decS)
+    for (var j = 0, t = this.lengthT; j <= this.loops; j++, t -= decT)
+        for (var i = 0, s = this.lengthS; i <= this.slices; i++, s -= decS)
             this.texCoords.push(s, t);
 
     this.updateTexCoordsGLBuffers();

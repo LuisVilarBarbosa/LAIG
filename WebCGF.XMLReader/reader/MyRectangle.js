@@ -2,17 +2,15 @@
  * MyRectangle
  * @constructor
  */
-function MyRectangle(scene, x1, y1, x2, y2, minS, maxS, minT, maxT) {
+function MyRectangle(scene, x1, y1, x2, y2, lengthS, lengthT) {
     CGFobject.call(this, scene);
 
     this.x1 = x1;
     this.y1 = y1;
     this.x2 = x2;
     this.y2 = y2;
-    this.minS = minS || 0;
-    this.maxS = maxS || 1;
-    this.minT = minT || 0;
-    this.maxT = maxT || 1;
+    this.lengthS = lengthS || 1;
+    this.lengthT = lengthT || 1;
 
     this.initBuffers();
 };
@@ -40,22 +38,20 @@ MyRectangle.prototype.initBuffers = function () {
         0, 0, 1
     ];
 
-    this.setTextureCoordinates(this.minS, this.maxS, this.minT, this.maxT);
+    this.setTextureCoordinates(this.lengthS, this.lengthT);
 
     this.initGLBuffers();
 };
 
-MyRectangle.prototype.setTextureCoordinates = function (minS, maxS, minT, maxT) {
-    this.minS = minS || 0;
-    this.maxS = maxS || 1;
-    this.minT = minT || 0;
-    this.maxT = maxT || 1;
+MyRectangle.prototype.setTextureCoordinates = function (lengthS, lengthT) {
+    this.lengthS = lengthS || 1;
+    this.lengthT = lengthT || 1;
 
     this.texCoords = [
-        this.minS, this.maxT,
-        this.maxS, this.maxT,
-        this.maxS, this.minT,
-        this.minS, this.minT
+        0, 1,
+        1 / this.lengthS, 1,
+        1 / this.lengthS, 1 - (this.y2 - this.y1) / this.lengthT,
+        0, 1 - (this.y2 - this.y1) / this.lengthT
     ];
     this.updateTexCoordsGLBuffers();
 }

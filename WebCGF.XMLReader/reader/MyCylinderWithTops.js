@@ -2,13 +2,13 @@
  * MyCylinderWithTops
  * @constructor
  */
-function MyCylinderWithTops(scene, base, top, height, slices, stacks, minS, maxS, minT, maxT) {
+function MyCylinderWithTops(scene, base, top, height, slices, stacks, lengthS, lengthT) {
     CGFobject.call(this, scene);
 
     this.baseRadius = base;
     this.topRadius = top;
     this.height = height;
-    this.cylinder = new MyCylinder(this.scene, this.baseRadius, this.topRadius, this.height, slices, stacks, minS, maxS, minT, maxT);
+    this.cylinder = new MyCylinder(this.scene, this.baseRadius, this.topRadius, this.height, slices, stacks, lengthS, lengthT);
     this.top = new MyCircle(this.scene, slices);
 };
 
@@ -36,7 +36,7 @@ MyCylinderWithTops.prototype.display = function () {
     this.scene.popMatrix();
 };
 
-MyCylinderWithTops.prototype.setTextureCoordinates = function (minS, maxS, minT, maxT) {
-    this.cylinder.setTextureCoordinates(minS, maxS, minT, maxT);
-    this.top.setTextureCoordinates(minS, maxS, minT, maxT);
+MyCylinderWithTops.prototype.setTextureCoordinates = function (lengthS, lengthT) {
+    this.cylinder.setTextureCoordinates(lengthS, lengthT);
+    this.top.setTextureCoordinates(lengthS, lengthT);
 }

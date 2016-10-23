@@ -2,7 +2,7 @@
  * MyTriangle
  * @constructor
  */
-function MyTriangle(scene, x1, y1, z1, x2, y2, z2, x3, y3, z3, minS, maxS, minT, maxT) {
+function MyTriangle(scene, x1, y1, z1, x2, y2, z2, x3, y3, z3, lengthS, lengthT) {
     CGFobject.call(this, scene);
 
     this.x1 = x1;
@@ -14,10 +14,8 @@ function MyTriangle(scene, x1, y1, z1, x2, y2, z2, x3, y3, z3, minS, maxS, minT,
     this.z1 = z1;
     this.z2 = z2;
     this.z3 = z3;
-    this.minS = minS || 0;
-    this.maxS = maxS || 1;
-    this.minT = minT || 0;
-    this.maxT = maxT || 1;
+    this.lengthS = lengthS || 1;
+    this.lengthT = lengthT || 1;
 
     this.initBuffers();
 };
@@ -70,22 +68,20 @@ MyTriangle.prototype.initBuffers = function () {
     this.cosbeta = (this.a * this.a - this.b * this.b + this.c * this.c) / (2 * this.a * this.c);
     this.beta = Math.acos(this.cosbeta);
 
-    this.setTextureCoordinates(this.minS, this.maxS, this.minT, this.maxT);
+    this.setTextureCoordinates(this.lengthS, this.lengthT);
 
     this.primitiveType = this.scene.gl.TRIANGLES;
     this.initGLBuffers();
 };
 
-MyTriangle.prototype.setTextureCoordinates = function (minS, maxS, minT, maxT) {
-    this.minS = minS || 0;
-    this.maxS = maxS || 1;
-    this.minT = minT || 0;
-    this.maxT = maxT || 1;
+MyTriangle.prototype.setTextureCoordinates = function (lengthS, lengthT) {
+    this.lengthS = lengthS || 1;
+    this.lengthT = lengthT || 1;
 
     this.texCoords = [
-        this.minS, this.minT,
-        this.maxS, this.minT,
-        this.c - this.a * this.cosbeta, this.a * Math.sin(this.beta)
+        0, 1,
+        1 / this.lengthS, 1,
+        (this.c - this.a * this.cosbeta) / this.lengthS, 1 - this.a * Math.sin(this.beta) / this.lengthT
     ];
     this.updateTexCoordsGLBuffers();
 }

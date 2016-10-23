@@ -2,7 +2,7 @@
  * MyCylinder
  * @constructor
  */
-function MyCylinder(scene, base, top, height, slices, stacks, minS, maxS, minT, maxT) {
+function MyCylinder(scene, base, top, height, slices, stacks, lengthS, lengthT) {
     CGFobject.call(this, scene);
 
     this.base = base;
@@ -10,10 +10,8 @@ function MyCylinder(scene, base, top, height, slices, stacks, minS, maxS, minT, 
     this.height = height;
     this.slices = slices;
     this.stacks = stacks;
-    this.minS = minS || 0;
-    this.maxS = maxS || 1;
-    this.minT = minT || 0;
-    this.maxT = maxT || 1;
+    this.lengthS = lengthS || 1;
+    this.lengthT = lengthT || 1;
 
     this.initBuffers();
 };
@@ -40,7 +38,7 @@ MyCylinder.prototype.initBuffers = function () {
             this.normals.push(cos, sin, 0);
         }
 
-    this.setTextureCoordinates(this.minS, this.maxS, this.minT, this.maxT);
+    this.setTextureCoordinates(this.lengthS, this.lengthT);
 
     for (var j = 0; j < this.stacks; j++) {
         for (var i = 0; i < this.slices; i++) {
@@ -57,19 +55,17 @@ MyCylinder.prototype.initBuffers = function () {
     this.initGLBuffers();
 };
 
-MyCylinder.prototype.setTextureCoordinates = function (minS, maxS, minT, maxT) {
-    this.minS = minS || 0;
-    this.maxS = maxS || 1;
-    this.minT = minT || 0;
-    this.maxT = maxT || 1;
+MyCylinder.prototype.setTextureCoordinates = function (lengthS, lengthT) {
+    this.lengthS = lengthS || 1;
+    this.lengthT = lengthT || 1;
 
     this.texCoords = [];
 
-    var decS = (this.maxS - this.minS) / this.slices;
-    var decT = (this.maxT - this.minT) / this.stacks;
+    var decS = this.lengthS / this.slices;
+    var decT = this.lengthT / this.stacks;
 
-    for (var j = 0, t = this.maxT; j <= this.stacks; j++, t -= decT)
-        for (var i = 0, s = this.maxS; i <= this.slices; i++, s -= decS)
+    for (var j = 0, t = this.lengthT; j <= this.stacks; j++, t -= decT)
+        for (var i = 0, s = this.lengthS; i <= this.slices; i++, s -= decS)
             this.texCoords.push(s, t);
 
     this.updateTexCoordsGLBuffers();

@@ -202,7 +202,7 @@ XMLscene.prototype.processGraph = function (nodeId) {
         for (var i = 0; i < node.primitives.length; i++) {
             var primitive = this.primitives[node.primitives[i]];
             if (texture != null)
-                primitive.setTextureCoordinates(0, texture.length_s, 0, texture.length_t);
+                primitive.setTextureCoordinates(texture.length_s, texture.length_t);
             primitive.display();
         }
         for (var i = 0; i < node.children.length; i++) {

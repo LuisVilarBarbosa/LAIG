@@ -42,4 +42,4 @@ MyCircle.prototype.initBuffers = function () {
     this.initGLBuffers();
 };
 
-MyCircle.prototype.setTextureCoordinates = function (minS, maxS, minT, maxT) { }
+MyCircle.prototype.setTextureCoordinates = function (lengthS, lengthT) { }
