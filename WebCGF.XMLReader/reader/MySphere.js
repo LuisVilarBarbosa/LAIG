@@ -55,7 +55,7 @@ MySphere.prototype.initBuffers = function () {
     this.initGLBuffers();
 };
 
-/* Calculation of texture coordinates based on https://www.mvps.org/directx/articles/spheremap.htm */
+/* Calculation of texture coordinates based on "https://www.mvps.org/directx/articles/spheremap.htm" */
 MySphere.prototype.setTextureCoordinates = function (lengthS, lengthT) {
     this.lengthS = lengthS || 1;
     this.lengthT = lengthT || 1;

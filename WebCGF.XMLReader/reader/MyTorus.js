@@ -18,7 +18,7 @@ function MyTorus(scene, inner, outer, slices, loops, lengthS, lengthT) {
 MyTorus.prototype = Object.create(CGFobject.prototype);
 MyTorus.prototype.constructor = MyTorus;
 
-/* Calculation of normals based on http://web.cs.ucdavis.edu/~amenta/s12/findnorm.pdf */
+/* Calculation of normals based on "http://web.cs.ucdavis.edu/~amenta/s12/findnorm.pdf" */
 MyTorus.prototype.initBuffers = function () {
 
     this.vertices = [];
