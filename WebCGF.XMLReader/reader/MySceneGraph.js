@@ -268,6 +268,7 @@ MySceneGraph.prototype.parseTextureTags = function (elems) {
         var id = this.reader.getString(elems[i], "id", true);
         var file = this.reader.getString(elems[i], "file", true);
         var texture = new CGFtexture(this.scene, file);
+        // create variables in 'texture'
         texture.length_s = this.reader.getFloat(elems[i], "length_s", true);
         texture.length_t = this.reader.getFloat(elems[i], "length_t", true);
         this.scene.addTexture(id, texture);
