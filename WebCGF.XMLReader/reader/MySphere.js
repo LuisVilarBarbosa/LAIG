@@ -30,8 +30,11 @@ MySphere.prototype.initBuffers = function () {
 
     for (var j = 0, beta = 0; j <= this.stacks; j++, beta += this.heightAngle) {  // beta = j * heightAngle --> xOz
         for (var i = 0, alfa = 0; i <= this.slices; i++, alfa += this.widthAngle) {  // alfa = i * widthAngle --> xOy
-            this.vertices.push(this.radius * Math.sin(beta) * Math.cos(alfa), this.radius * Math.sin(beta) * Math.sin(alfa), this.radius * Math.cos(beta));
-            this.normals.push(Math.sin(beta) * Math.cos(alfa), Math.sin(beta) * Math.sin(alfa), Math.cos(beta));
+            var sin_beta_x_cos_alfa = Math.sin(beta) * Math.cos(alfa);
+            var sin_beta_x_sin_alfa = Math.sin(beta) * Math.sin(alfa);
+            var cos_beta = Math.cos(beta);
+            this.vertices.push(this.radius * sin_beta_x_cos_alfa, this.radius * sin_beta_x_sin_alfa, this.radius * cos_beta);
+            this.normals.push(sin_beta_x_cos_alfa, sin_beta_x_sin_alfa, cos_beta);
         }
     }
 
@@ -61,7 +64,6 @@ MySphere.prototype.setTextureCoordinates = function (lengthS, lengthT) {
     for (var j = 0, beta = 0; j <= this.stacks; j++, beta += this.heightAngle)
         for (var i = 0, alfa = 0; i <= this.slices; i++, alfa += this.widthAngle)
             this.texCoords.push(1 - (alfa / Math.PI + 0.5) / this.lengthS, 1 - (beta / Math.PI + 0.5) / this.lengthT);
-
 
     this.updateTexCoordsGLBuffers();
 }

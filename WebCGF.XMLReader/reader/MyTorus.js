@@ -31,10 +31,8 @@ MyTorus.prototype.initBuffers = function () {
 
     for (var j = 0, v = 0; j <= this.loops; j++, v += incV) {  // v = j * incV --> xOy
         for (var i = 0, u = 0; i <= this.slices; i++, u += incU) {  // u = i * incU --> xOz
-            this.vertices.push(
-                (this.R + this.r * Math.cos(v)) * Math.cos(u),
-                (this.R + this.r * Math.cos(v)) * Math.sin(u),
-                this.r * Math.sin(v));
+            var pos_xOy = this.R + this.r * Math.cos(v);
+            this.vertices.push(pos_xOy * Math.cos(u), pos_xOy * Math.sin(u), this.r * Math.sin(v));
 
             /* tangent vector of the big circle */
             var tbcx = -Math.sin(u);
