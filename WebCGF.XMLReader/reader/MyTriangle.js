@@ -68,6 +68,9 @@ MyTriangle.prototype.initBuffers = function () {
     this.cosbeta = (this.a * this.a - this.b * this.b + this.c * this.c) / (2 * this.a * this.c);
     this.beta = Math.acos(this.cosbeta);
 
+    this.intermediatePointX = this.c - this.a * this.cosbeta;
+    this.intermediatePointY = this.a * Math.sin(this.beta);
+
     this.setTextureCoordinates(this.lengthS, this.lengthT);
 
     this.primitiveType = this.scene.gl.TRIANGLES;
@@ -81,7 +84,7 @@ MyTriangle.prototype.setTextureCoordinates = function (lengthS, lengthT) {
     this.texCoords = [
         0, 1,
         1 / this.lengthS, 1,
-        (this.c - this.a * this.cosbeta) / this.lengthS, 1 - this.a * Math.sin(this.beta) / this.lengthT
+        this.intermediatePointX / this.lengthS, 1 - this.intermediatePointY / this.lengthT
     ];
     this.updateTexCoordsGLBuffers();
 }

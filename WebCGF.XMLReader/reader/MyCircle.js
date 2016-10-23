@@ -25,9 +25,11 @@ MyCircle.prototype.initBuffers = function () {
 
     this.beta = 2 * Math.PI / this.slices;
     for (var i = 0, alfa = 0; i < this.slices; i++, alfa += this.beta) {
-        this.vertices.push(0.5 * Math.cos(alfa), 0.5 * Math.sin(alfa), 0.0);
+        var half_cos = 0.5 * Math.cos(alfa);
+        var half_sin = 0.5 * Math.sin(alfa);
+        this.vertices.push(half_cos, half_sin, 0.0);
         this.normals.push(0, 0, 1);
-        this.texCoords.push(Math.cos(alfa) * 0.5 + 0.5, Math.sin(-alfa) * 0.5 + 0.5);
+        this.texCoords.push(half_cos + 0.5, -half_sin + 0.5);   // -half_sin = 0.5 * Math.sin(-alfa)
     }
 
     this.vertices.push(0, 0, 0);
