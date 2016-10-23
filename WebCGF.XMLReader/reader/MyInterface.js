@@ -37,7 +37,7 @@ MyInterface.prototype.addLight = function (id, light, lightType) {
     else if (lightType == "spot")
         this.spotLights.add(light, 'enabled').name(id);
     else
-        console.log("Unable to add to the interface the light '" + id + "' - unrecognized light type.");
+        console.warn("Unable to add to the interface the light '" + id + "' - unrecognized light type.");
 }
 
 /**
