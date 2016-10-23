@@ -81,6 +81,16 @@ MySceneGraph.prototype.verifyElemChildrenIds = function (elem) {
     }
 }
 
+MySceneGraph.prototype.verifyLightsTypes = function (lightsElem) {
+    if (lightsElem != null) {
+        for (var i = 0, length = lightsElem.children.length; i < length; i++) {
+            var tagName = lightsElem.children[i].tagName;
+            if (tagName != "omni" && tagName != "spot")
+                console.warn("'" + tagName + "' is not a valid type of light, it will be ignored.");
+        }
+    }
+}
+
 MySceneGraph.prototype.findOneChild = function (elem, tagNameToFind) {
     var elems = elem.getElementsByTagName(tagNameToFind);
     if (elems == null || elems.length != 1)
@@ -157,7 +167,7 @@ MySceneGraph.prototype.parseIlluminationTag = function (elem) {
 
 MySceneGraph.prototype.parseLightsRelativeTags = function (elems, lightType, lightsArrayStartIndex) {
     if (lightType != "omni" && lightType != "spot")
-        console.warn("the light type '" + lightType + "' will be considered 'omni'")
+        console.warn("The light type '" + lightType + "' will be considered 'omni'")
     var lightsArrayIndex = lightsArrayStartIndex;
     var nnodes = elems.length;
     if ((lightsArrayStartIndex - 1 + nnodes) >= 8) {
@@ -419,6 +429,7 @@ MySceneGraph.prototype.parseDSXFile = function (rootElement) {
         this.parseIlluminationTag(this.findOneChild(rootElement, "illumination"));
 
         var lightsElem = this.findOneChild(rootElement, "lights");
+        this.verifyLightsTypes(lightsElem);
         this.verifyElemChildrenIds(lightsElem);
 
         /* 'omni' and 'spot' tags loading */
