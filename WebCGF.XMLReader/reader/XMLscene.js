@@ -188,8 +188,6 @@ XMLscene.prototype.processGraph = function (nodeId) {
             material = this.materialsStack.top();
         else
             material = this.materials[nodeMaterialId];
-        if (material === undefined)
-            console.warn("'material' is undefined.");
         if (node.texture == "none")
             texture = null;
         else if (node.texture == "inherit")
@@ -203,13 +201,9 @@ XMLscene.prototype.processGraph = function (nodeId) {
         this.multMatrix(node.mat);
         for (var i = 0; i < node.primitives.length; i++) {
             var primitive = this.primitives[node.primitives[i]];
-            if (primitive === undefined)
-                console.warn("'" + node.primitives[i] + "' is not a primitive.");
-            else {
-                if (texture != null)
-                    primitive.setTextureCoordinates(0, texture.length_s, 0, texture.length_t);
-                primitive.display();
-            }
+            if (texture != null)
+                primitive.setTextureCoordinates(0, texture.length_s, 0, texture.length_t);
+            primitive.display();
         }
         for (var i = 0; i < node.children.length; i++) {
             this.pushMatrix();

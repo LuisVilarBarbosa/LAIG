@@ -91,6 +91,47 @@ MySceneGraph.prototype.verifyLightsTypes = function (lightsElem) {
     }
 }
 
+MySceneGraph.prototype.verifyGraphAux = function (nodeId, ids) {    // emulates the 'processGraph' access to variables
+    var material = null;
+    var texture = null;
+    if (nodeId != null) {
+        for (var i = 0; i < ids.length; i++)
+            if (ids[i] == nodeId)
+                ids.splice(i, 1);   // remove id from 'ids', because it was found
+
+        var node = this.scene.sceneGraph[nodeId];
+        if (node === undefined)
+            throw "The node '" + nodeId + "' isn't declared in the 'components' element.";
+        var nodeMaterialId = node.getMaterialId();
+        if (nodeMaterialId != "inherit")
+            material = this.scene.materials[nodeMaterialId];
+        if (material === undefined)
+            throw "The material '" + nodeMaterialId + "' isn't declared in the 'materials' element.";
+        if (node.texture != "none" && node.texture != "inherit")
+            texture = this.scene.textures[node.texture];
+        if (texture === undefined)
+            throw "The texture '" + node.texture + "' isn't declared in the 'textures' element.";
+
+        for (var i = 0; i < node.primitives.length; i++) {
+            var primitive = this.scene.primitives[node.primitives[i]];
+            if (primitive === undefined)
+                throw "'" + node.primitives[i] + "' isn't declared in the 'primitives' element.";
+        }
+        for (var i = 0; i < node.children.length; i++)
+            this.verifyGraphAux(node.children[i], ids);
+    }
+}
+
+MySceneGraph.prototype.verifyGraph = function (componentsElem) {
+    var ids = [];
+    this.getElemChildrenIds(componentsElem, ids);
+    this.verifyGraphAux(this.scene.rootNodeId, ids);
+    var ids_length = ids.length;
+    if (ids_length > 0)
+        for (var i = 0; i < ids_length; i++)
+            console.warn("The node '" + ids[i] + "' isn't connected to the rest of the graph. By consequence it will not be shown.");
+}
+
 MySceneGraph.prototype.findOneChild = function (elem, tagNameToFind) {
     var elems = elem.getElementsByTagName(tagNameToFind);
     if (elems == null || elems.length != 1)
@@ -451,9 +492,11 @@ MySceneGraph.prototype.parseDSXFile = function (rootElement) {
         this.parsePrimitiveTags(primitiveElems);
 
         var componentsElem = this.findOneChild(rootElement, "components");
+        this.verifyElemChildrenIds(componentsElem);
 
         var componentElems = this.findChildren(componentsElem, "component");
         this.parseComponentTags(componentElems);
+        this.verifyGraph(componentsElem);
 
     } catch (e) {
         return e;
