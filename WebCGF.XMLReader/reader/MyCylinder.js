@@ -61,8 +61,8 @@ MyCylinder.prototype.setTextureCoordinates = function (lengthS, lengthT) {
 
     this.texCoords = [];
 
-    var decS = this.lengthS / this.slices;
-    var decT = this.lengthT / this.stacks;
+    var decS = (1 / this.lengthS) / this.slices;
+    var decT = (1 / this.lengthT) / this.stacks;
 
     for (var j = 0, t = this.lengthT; j <= this.stacks; j++, t -= decT)
         for (var i = 0, s = this.lengthS; i <= this.slices; i++, s -= decS)

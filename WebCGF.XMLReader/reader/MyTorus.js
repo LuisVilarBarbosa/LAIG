@@ -74,11 +74,11 @@ MyTorus.prototype.setTextureCoordinates = function (lengthS, lengthT) {
 
     this.texCoords = [];
 
-    var decS = this.lengthS / this.slices;
-    var decT = this.lengthT / this.loops;
+    var incS = (1 / this.lengthS) / this.slices;
+    var decT = (1 / this.lengthT) / this.loops;
 
     for (var j = 0, t = this.lengthT; j <= this.loops; j++, t -= decT)
-        for (var i = 0, s = this.lengthS; i <= this.slices; i++, s -= decS)
+        for (var i = 0, s = 0; i <= this.slices; i++, s += incS)
             this.texCoords.push(s, t);
 
     this.updateTexCoordsGLBuffers();
