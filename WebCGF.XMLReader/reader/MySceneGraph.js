@@ -232,10 +232,8 @@ MySceneGraph.prototype.parseLightsRelativeTags = function (elems, lightType, lig
 
         var locationElem = this.findOneChild(elems[i], "location");
         var location = null;
-        if (lightType != "spot")
-            location = this.getFloatsXYZW(locationElem);
-        else
-            location = this.getFloatsXYZ(locationElem);
+       
+        location = this.getFloatsXYZW(locationElem);
 
         var ambientElem = this.findOneChild(elems[i], "ambient");
         var ambient = this.getFloatsRGBA(ambientElem);
