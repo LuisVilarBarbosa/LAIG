@@ -155,6 +155,16 @@ MySceneGraph.prototype.getFloatsXYZ = function (elem) {
     return array;
 }
 
+MySceneGraph.prototype.getFloatsXYZW = function (elem) {
+    var array = [
+        this.reader.getFloat(elem, "x", true),
+        this.reader.getFloat(elem, "y", true),
+        this.reader.getFloat(elem, "z", true),
+		this.reader.getFloat(elem, "w", true)
+    ];
+    return array;
+}
+
 MySceneGraph.prototype.getFloatsRGBA = function (elem) {
     var array = [
         this.reader.getFloat(elem, "r", true),
@@ -221,7 +231,7 @@ MySceneGraph.prototype.parseLightsRelativeTags = function (elems, lightType, lig
         var enabled = this.reader.getBoolean(elems[i], "enabled", true);
 
         var locationElem = this.findOneChild(elems[i], "location");
-        var location = this.getFloatsXYZ(locationElem);
+        var location = this.getFloatsXYZW(locationElem);
 
         var ambientElem = this.findOneChild(elems[i], "ambient");
         var ambient = this.getFloatsRGBA(ambientElem);
@@ -243,6 +253,7 @@ MySceneGraph.prototype.parseLightsRelativeTags = function (elems, lightType, lig
         }
         else
             this.scene.setLight(lightType, lightsArrayIndex, id, enabled, location, ambient, diffuse, specular);
+		
     }
 
     return lightsArrayIndex;
