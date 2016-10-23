@@ -158,7 +158,7 @@ MySceneGraph.prototype.parseIlluminationTag = function (elem) {
 
     var ambientElem = this.findOneChild(elem, "ambient");
     var ambient = this.getFloatsRGBA(ambientElem);
-    this.scene.setAmbient(ambient[0], ambient[1], ambient[2], ambient[3]);
+    this.scene.setGlobalAmbientLight(ambient[0], ambient[1], ambient[2], ambient[3]);
 
     var backgroundElem = this.findOneChild(elem, "background");
     var background = this.getFloatsRGBA(backgroundElem);
@@ -466,9 +466,9 @@ MySceneGraph.prototype.parseDSXFile = function (rootElement) {
         var primitiveElems = this.findChildren(primitivesElem, "primitive");
         this.parsePrimitiveTags(primitiveElems);
 
-        var componentsElems = this.findOneChild(rootElement, "components");
+        var componentsElem = this.findOneChild(rootElement, "components");
 
-        var componentElems = this.findChildren(componentsElems, "component");
+        var componentElems = this.findChildren(componentsElem, "component");
         this.parseComponentTags(componentElems);
 
     } catch (e) {
