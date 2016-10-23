@@ -32,12 +32,12 @@ Node.prototype.setMatrix = function (m) {
     console.log(this.mat);
 }
 
-Node.prototype.pushChild = function (nodeName) {
-    this.children.push(nodeName);
+Node.prototype.pushChild = function (nodeId) {
+    this.children.push(nodeId);
 }
 
-Node.prototype.pushPrimitive = function (nodeName) {
-    this.primitives.push(nodeName);
+Node.prototype.pushPrimitive = function (nodeId) {
+    this.primitives.push(nodeId);
 }
 
 Node.prototype.getSize = function () {
