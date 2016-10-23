@@ -23,7 +23,9 @@ function MyTriangle(scene, x1, y1, z1, x2, y2, z2, x3, y3, z3, lengthS, lengthT)
 MyTriangle.prototype = Object.create(CGFobject.prototype);
 MyTriangle.prototype.constructor = MyTriangle;
 
+/* Calculation of normals based on "https://www.opengl.org/wiki/Calculating_a_Surface_Normal" (Newell's Method) */
 MyTriangle.prototype.initBuffers = function () {
+
     this.vertices = [
         this.x1, this.y1, this.z1,
         this.x2, this.y2, this.z2,
