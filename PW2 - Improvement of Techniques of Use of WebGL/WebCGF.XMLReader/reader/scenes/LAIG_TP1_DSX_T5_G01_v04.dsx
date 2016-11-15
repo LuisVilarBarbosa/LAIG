@@ -61,8 +61,8 @@
       <diffuse r="0.9" g="0.9" b="0.9" a="1" />
       <specular r="0" g="0" b="0" a="1" />
     </omni>
-	
-	<omni id="candeeiro" enabled="1" >
+
+    <omni id="candeeiro" enabled="1" >
       <location x="2.1" y="4" z="6" w="1" />
       <ambient r="0.4" g="0.4" b="0.4" a="1" />
       <diffuse r="0.9" g="0.9" b="0.9" a="1" />
@@ -77,8 +77,8 @@
       <diffuse r="0.2" g="0.8" b="0.2" a="1" />
       <specular r="0.2" g="0.8" b="0.2" a="1" />
     </spot>
-	
-	<spot id="spot_azul" enabled="0" angle="90" exponent="5">
+
+    <spot id="spot_azul" enabled="0" angle="90" exponent="5">
       <!-- atencao, "target" e' diferente de "direction" -->
       <target x="0" y="0" z="0" />
       <location x="0" y="0" z="5" />
@@ -86,8 +86,8 @@
       <diffuse r="0.2" g="0.2" b="0.8" a="1" />
       <specular r="0.2" g="0.2" b="0.8" a="1" />
     </spot>
-	
-	<spot id="spot_vermelho" enabled="0" angle="90" exponent="5">
+
+    <spot id="spot_vermelho" enabled="0" angle="90" exponent="5">
       <!-- atencao, "target" e' diferente de "direction" -->
       <target x="0" y="0" z="0" />
       <location x="0" y="0" z="5" />
@@ -95,6 +95,7 @@
       <diffuse r="0.8" g="0.2" b="0.2" a="1" />
       <specular r="0.8" g="0.2" b="0.2" a="1" />
     </spot>
+
   </lights>
 
 
@@ -116,14 +117,14 @@
     <texture id="fabric" file="./images/fabric.jpg" length_s="1" length_t="1" />
     <texture id="wood" file="./images/wood.jpg" length_s="1" length_t="1" />
     <texture id="metal" file="./images/metal.jpg" length_s="1" length_t="1" />
-	<texture id="floor_wood" file="./images/floor_wood.jpg" length_s="0.25" length_t="0.25" />
-	<texture id="white_wall" file="./images/white_wall.jpg" length_s="1" length_t="1" />
-	<texture id="sprinkles" file="./images/sprinkles.png" length_s="1" length_t="1" />
-	<texture id="lampshade" file="./images/lampshade.jpg" length_s="1" length_t="1" />
-	<texture id="rubiks_texture" file="./images/rubiks_cube.png" length_s="1" length_t="1" />
-	<texture id="galaxy" file="./images/galaxy.jpg" length_s="1" length_t="1" />
-	<texture id="aluminium" file="./images/aluminium.jpg" length_s="1" length_t="1" />
-	<texture id="soccer_ball" file="./images/soccer_ball.png" length_s="2.73" length_t="3" />
+    <texture id="floor_wood" file="./images/floor_wood.jpg" length_s="0.25" length_t="0.25" />
+    <texture id="white_wall" file="./images/white_wall.jpg" length_s="1" length_t="1" />
+    <texture id="sprinkles" file="./images/sprinkles.png" length_s="1" length_t="1" />
+    <texture id="lampshade" file="./images/lampshade.jpg" length_s="1" length_t="1" />
+    <texture id="rubiks_texture" file="./images/rubiks_cube.png" length_s="1" length_t="1" />
+    <texture id="galaxy" file="./images/galaxy.jpg" length_s="1" length_t="1" />
+    <texture id="aluminium" file="./images/aluminium.jpg" length_s="1" length_t="1" />
+    <texture id="soccer_ball" file="./images/soccer_ball.png" length_s="2.73" length_t="3" />
   </textures>
 
 
@@ -131,15 +132,15 @@
 
     <!-- Deve existir um ou mais blocos "material" -->
     <!-- Os identificadores "id" nao podem ser repetidos -->
-	
-	<material id="primer_material" >
+
+    <material id="primer_material" >
       <emission r="0" g="0" b="0" a="1" />
       <ambient r="0.85" g="0.85" b="0.85" a="1" />
       <diffuse r="0.85" g="0.85" b="0.85" a="1" />
       <specular r="0.85" g="0.85" b="0.85" a="1" />
       <shininess value="5" />
     </material>
-	
+
     <material id="blue_material" >
       <emission r="0" g="0" b="0" a="1" />
       <ambient r="0.1" g="0.1" b="0.9" a="1" />
@@ -156,7 +157,6 @@
       <shininess value="5" />
     </material>
 
-
     <material id="donut_material" >
       <emission r="0" g="0" b="0" a="1" />
       <ambient r="1" g="0.71" b="0.75" a="1" />
@@ -164,16 +164,16 @@
       <specular r="1" g="0.71" b="0.75" a="1" />
       <shininess value="15" />
     </material>
-	
-	<material id="marron_material" >
+
+    <material id="marron_material" >
       <emission r="0" g="0" b="0" a="1" />
       <ambient r="0.545" g="0.27" b="0.074" a="1" />
       <diffuse r="0.545" g="0.27" b="0.074" a="1" />
       <specular r="0.545" g="0.27" b="0.074" a="1" />
       <shininess value="15" />
     </material>
-	
-	<material id="green_material" >
+
+    <material id="green_material" >
       <emission r="0" g="0" b="0" a="1" />
       <ambient r="0.73" g="0.89" b="0.039" a="1" />
       <diffuse r="0.73" g="0.89" b="0.039" a="1" />
@@ -267,15 +267,15 @@
     <primitive id="torus">
       <torus inner="0.333" outer="1" slices="100" loops="100" />
     </primitive>
-	
-	<primitive id="conical_frustum">
+
+    <primitive id="conical_frustum">
       <cylinder base="0.5" top="0.3" height="1" slices="100" stacks="100" />
     </primitive>
 
-	<primitive id="cone">
+    <primitive id="cone">
       <cylinder base="0.5" top="0" height="1" slices="100" stacks="100" />
     </primitive>
-	
+
   </primitives>
 
 
@@ -322,24 +322,24 @@
         <!-- deve existir uma ou mais tags "componentref" e/ou -->
         <!-- "primitiveref", identificando outros -->
         <!-- componentes ou primitivas -->
-		<componentref id="floor" />
-		<componentref id="wall_1" />
-		<componentref id="wall_2" />
+        <componentref id="floor" />
+        <componentref id="wall_1" />
+        <componentref id="wall_2" />
         <componentref id="table" />
         <componentref id="donut" />
-		<componentref id="pyramid" />
-		<componentref id="ball" />
-		<componentref id="lamp" />
-		<componentref id="poster" />
-		<componentref id="rubiks" />
+        <componentref id="pyramid" />
+        <componentref id="ball" />
+        <componentref id="lamp" />
+        <componentref id="poster" />
+        <componentref id="rubiks" />
       </children>
 
     </component>
 
-	<!-- TABLE -->
+    <!-- TABLE -->
     <component id="table">
       <transformation>
-		<translate x="0.5" y="0" z="0.5" />
+        <translate x="0.5" y="0" z="0.5" />
       </transformation>
 
       <!-- bloco "animation" opcional -->
@@ -366,12 +366,11 @@
       <texture id="none" />
 
       <children>
-        
         <componentref id="leg_1" />
         <componentref id="leg_2" />
         <componentref id="leg_3" />
         <componentref id="leg_4" />
-		<componentref id="table_top" />
+        <componentref id="table_top" />
       </children>
     </component>
 
@@ -392,7 +391,7 @@
       </children>
     </component>
 
-	<!-- CUBE -->
+    <!-- CUBE -->
     <component id="cube">
       <transformation>
       </transformation>
@@ -514,7 +513,7 @@
       </children>
     </component>
 
-	<!-- TABLE_LEGS -->
+    <!-- TABLE_LEGS -->
     <component id="leg">
       <transformation>
         <rotate axis="x" angle="-90" />
@@ -554,7 +553,7 @@
       </transformation>
 
       <materials>
-		<material id="inherit" />
+        <material id="inherit" />
       </materials>
 
       <texture id="none" />
@@ -596,7 +595,7 @@
       </children>
     </component>
 
-	<!-- PYRAMID -->
+    <!-- PYRAMID -->
     <component id="pyramid">
       <transformation>
         <translate x="0.8" y="1.1" z="1.2" />
@@ -705,7 +704,7 @@
       </children>
     </component>
 
-	<!-- BALL -->
+    <!-- BALL -->
     <component id="ball">
       <transformation>
         <translate x="1.2" y="1.25" z="1.2" />
@@ -722,8 +721,8 @@
         <primitiveref id="sphere" />
       </children>
     </component>
-	
-	<!-- DONUT -->
+
+    <!-- DONUT -->
     <component id="donut">
       <transformation>
         <translate x="0.9" y="1.165" z="0.75" />
@@ -734,8 +733,8 @@
       <materials>
         <material id="donut_material" />
         <material id="blue_material" />
-		<material id="green_material" />
-		
+        <material id="green_material" />
+
       </materials>
 
       <texture id="sprinkles" />
@@ -744,14 +743,13 @@
         <primitiveref id="torus" />
       </children>
     </component>
-	
-	<!-- FLOOR -->
-	<component id="floor">
+
+    <!-- FLOOR -->
+    <component id="floor">
       <transformation>
-		<translate x="2" y="0" z="2" />
-		<scale x="4" y="0" z="4" />
-		<rotate axis="x" angle="-90" />
-		
+        <translate x="2" y="0" z="2" />
+        <scale x="4" y="0" z="4" />
+        <rotate axis="x" angle="-90" />
       </transformation>
 
       <materials>
@@ -765,13 +763,11 @@
         <primitiveref id="rectangle" />
       </children>
     </component>
-	
-	<!-- WALLS -->
-	<component id="wall">
+
+    <!-- WALLS -->
+    <component id="wall">
       <transformation>
-		<scale x="4" y ="2.5" z="0" />
-		
-		
+        <scale x="4" y ="2.5" z="0" />
       </transformation>
 
       <materials>
@@ -786,10 +782,10 @@
         <primitiveref id="rectangle" />
       </children>
     </component>
-	
-	<component id="wall_1">
+
+    <component id="wall_1">
       <transformation>
-		<translate x="2" y ="1.250" z="0" />
+        <translate x="2" y ="1.250" z="0" />
       </transformation>
 
       <materials>
@@ -802,13 +798,11 @@
         <componentref id="wall" />
       </children>
     </component>
-	
-	<component id="wall_2">
+
+    <component id="wall_2">
       <transformation>
-		<translate x="0" y ="1.250" z="2" />
-		<rotate axis="y" angle="90" />
-		
-		
+        <translate x="0" y ="1.250" z="2" />
+        <rotate axis="y" angle="90" />
       </transformation>
 
       <materials>
@@ -821,12 +815,12 @@
         <componentref id="wall" />
       </children>
     </component>
-	
-	<!-- LAMP -->
-	<component id="lamp">
+
+    <!-- LAMP -->
+    <component id="lamp">
       <transformation>
-		<translate x="1" y ="0" z="3" />
-		<scale x="0.5" y ="1" z="0.5" />
+        <translate x="1" y ="0" z="3" />
+        <scale x="0.5" y ="1" z="0.5" />
       </transformation>
 
       <materials>
@@ -836,21 +830,21 @@
       <texture id="inherit" />
 
       <children>
-		<componentref id="lamp_shaft" />
+        <componentref id="lamp_shaft" />
         <componentref id="lamp_base" />
-		<componentref id="lamp_lampshade" />
+        <componentref id="lamp_lampshade" />
       </children>
     </component>
-	
-	<component id="lamp_base">
+
+    <component id="lamp_base">
       <transformation>
-		<scale x="1.5" y ="0.1" z="1.5" />
-		<rotate axis="x" angle="-90" />
+        <scale x="1.5" y ="0.1" z="1.5" />
+        <rotate axis="x" angle="-90" />
       </transformation>
 
       <materials>
         <material id="inherit" />
-		<material id="blue_material" />
+        <material id="blue_material" />
       </materials>
 
       <texture id="metal" />
@@ -859,11 +853,11 @@
         <primitiveref id="cylinder" />
       </children>
     </component>
-	
-	<component id="lamp_shaft">
+
+    <component id="lamp_shaft">
       <transformation>
-		<scale x="0.13" y ="2" z="0.13" />
-		<rotate axis="x" angle="-90" />
+        <scale x="0.13" y ="2" z="0.13" />
+        <rotate axis="x" angle="-90" />
       </transformation>
 
       <materials>
@@ -876,14 +870,12 @@
         <primitiveref id="cylinder" />
       </children>
     </component>
-	
-	<component id="lamp_lampshade">
+
+    <component id="lamp_lampshade">
       <transformation>
-		<translate x="0" y ="1.7" z="0" />
-		<rotate axis="x" angle="-90" />
-		<scale x="1.5" y ="1.5" z="0.45" />
-		
-		
+        <translate x="0" y ="1.7" z="0" />
+        <rotate axis="x" angle="-90" />
+        <scale x="1.5" y ="1.5" z="0.45" />
       </transformation>
 
       <materials>
@@ -896,16 +888,16 @@
         <primitiveref id="conical_frustum" />
       </children>
     </component>
-	
-	<!-- RUBIKS_CUBE -->
-	<component id="rubiks">
+
+    <!-- RUBIKS_CUBE -->
+    <component id="rubiks">
       <transformation>
-		<translate x="2.75" y ="0" z="2" />
+        <translate x="2.75" y ="0" z="2" />
       </transformation>
-    
-    <animation>
-      <animationref id="cube_rotation" />
-    </animation>
+
+      <animation>
+        <animationref id="cube_rotation" />
+      </animation>
 
       <materials>
         <material id="primer_material" />
@@ -914,18 +906,16 @@
       <texture id="rubiks_texture" />
 
       <children>
-		
-		<componentref id="rubiks_holder" />
-		<componentref id="rubiks_cube" />
+        <componentref id="rubiks_holder" />
+        <componentref id="rubiks_cube" />
       </children>
-	  
     </component>
-	
-	<component id="rubiks_cube">
+
+    <component id="rubiks_cube">
       <transformation>
-		<translate x="-0.13" y ="0.9" z="0" />
-		<rotate axis="z" angle="45" />
-		<rotate axis="x" angle="45" />
+        <translate x="-0.13" y ="0.9" z="0" />
+        <rotate axis="z" angle="45" />
+        <rotate axis="x" angle="45" />
       </transformation>
 
       <materials>
@@ -937,13 +927,12 @@
       <children>
         <componentref id="cube" />
       </children>
-	  
     </component>
-	
-	<component id="rubiks_holder">
+
+    <component id="rubiks_holder">
       <transformation>
-		<rotate axis="x" angle="-90" />
-		<scale x="0.5" y ="0.5" z="1" />
+        <rotate axis="x" angle="-90" />
+        <scale x="0.5" y ="0.5" z="1" />
       </transformation>
 
       <materials>
@@ -955,13 +944,12 @@
       <children>
         <primitiveref id="cone" />
       </children>
-	  
     </component>
-	
-	<component id="poster">
+
+    <component id="poster">
       <transformation>
-		<translate x="2.3" y="1.3" z="0.05" />
-		<scale x="1" y="1.41" z="1" />
+        <translate x="2.3" y="1.3" z="0.05" />
+        <scale x="1" y="1.41" z="1" />
       </transformation>
 
       <materials>
@@ -973,9 +961,8 @@
       <children>
         <primitiveref id="rectangle" />
       </children>
-	  
     </component>
-	
+
   </components>
 
 </dsx>
