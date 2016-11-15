@@ -147,7 +147,8 @@ XMLscene.prototype.setLight = function (lightType, lightsArrayIndex, id, enabled
     if (lightType != "spot")
         this.lights[lightsArrayIndex].setPosition(location[0], location[1], location[2], location[3]);
     else
-        this.lights[lightsArrayIndex].setPosition(location[0], location[1], location[2], null);
+        // If w=1, then it's a positional light source. If w=0, it's a directional light source.
+        this.lights[lightsArrayIndex].setPosition(location[0], location[1], location[2], 0);
 
     this.lights[lightsArrayIndex].setAmbient(ambient[0], ambient[1], ambient[2], ambient[3]);
     this.lights[lightsArrayIndex].setDiffuse(diffuse[0], diffuse[1], diffuse[2], diffuse[3]);
