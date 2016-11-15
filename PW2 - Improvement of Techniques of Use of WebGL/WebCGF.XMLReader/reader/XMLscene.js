@@ -134,6 +134,7 @@ XMLscene.prototype.setDefaultPerspective = function (id) {
     }
     else
         this.camera = this.perspectives[this.perspectivesIds[this.actualPerspectivesIdsIndex]];
+    this.myInterface.setActiveCamera(this.camera);
 }
 
 /* 'angle', 'exponent' and 'target' will be undefined when 'lightType' equal to 'omni' */
@@ -241,6 +242,7 @@ XMLscene.prototype.processGraph = function (nodeId) {
 XMLscene.prototype.nextView = function () {
     this.actualPerspectivesIdsIndex = (this.actualPerspectivesIdsIndex + 1) % this.perspectivesIds.length;
     this.camera = this.perspectives[this.perspectivesIds[this.actualPerspectivesIdsIndex]];
+    this.myInterface.setActiveCamera(this.camera);
 }
 
 XMLscene.prototype.nextMaterial = function (nodeId) {
