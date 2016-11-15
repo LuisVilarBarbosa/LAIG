@@ -222,6 +222,23 @@
 
   </transformations>
 
+  <!-- novo bloco de animacao -->
+  <animations>
+    <!-- podem existir zero ou mais nós "animation" -->
+    <!-- span é o tempo, em segundos, que a animação deve -->
+    <!-- demorar. Nesta versão do formato DSX, type pode ter -->
+    <!-- o valor "linear" ou "circular"; na animacao circular -->
+    <!-- os angulos sao expressos em graus  -->
+    <animation id="table_move" span="10.0" type="linear">
+      <controlpoint xx="0" yy="0" zz="0" />
+      <controlpoint xx="1" yy="0" zz="0" />
+      <controlpoint xx="1" yy="1" zz="0" />
+    </animation>
+    <animation id="cube_rotation" span="20" type="circular"
+               centerx="10" centery="10" centerz="10"
+               radius="5" startang="40" rotang="20" />
+  </animations>
+
 
   <primitives>
 
@@ -324,6 +341,23 @@
       <transformation>
 		<translate x="0.5" y="0" z="0.5" />
       </transformation>
+
+      <!-- bloco "animation" opcional -->
+      <animation>
+        <!-- podem ser declaradas zero ou mais animacoes -->
+        <!-- de entre as declaradas no bloco de animacoes; -->
+        <!-- as animacoes devem ser executadas sequencialmente -->
+        <!-- pela ordem com que sao declaradas.     -->
+        <!-- NOTA: as transformacoes geometricas da -->
+        <!-- animacao seguem as mesmas regras de ordenacao -->
+        <!-- definidas no trabalho anterior para as -->
+        <!-- transformacoes geometricas; dado que as -->
+        <!-- animacoes sao declaradas apos as transformacoes -->
+        <!-- geometricas do mesmo objeto, isso significa -->
+        <!-- que as animacoes sao afetadas pelas transformacoes -->
+        <!-- geometricas do objeto.  -->
+        <animationref id="table_move" />
+      </animation>
 
       <materials>
         <material id="blue_material" />
@@ -868,6 +902,10 @@
       <transformation>
 		<translate x="2.75" y ="0" z="2" />
       </transformation>
+    
+    <animation>
+      <animationref id="cube_rotation" />
+    </animation>
 
       <materials>
         <material id="primer_material" />

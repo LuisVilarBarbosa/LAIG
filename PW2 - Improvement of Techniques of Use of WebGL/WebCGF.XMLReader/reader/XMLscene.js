@@ -42,9 +42,13 @@ XMLscene.prototype.init = function (application) {
     this.transformations = [];
     this.primitives = [];
     this.sceneGraph = [];
+    this.animations = [];
 
     this.materialsStack = new Stack(this.defaultAppearance);
     this.texturesStack = new Stack(null);
+
+    this.updatePeriod = 25; /* millis */
+    this.setUpdatePeriod(this.updatePeriod);
 };
 
 XMLscene.prototype.initLights = function () {
@@ -139,18 +143,18 @@ XMLscene.prototype.setLight = function (lightType, lightsArrayIndex, id, enabled
         this.lights[lightsArrayIndex].enable();
     else
         this.lights[lightsArrayIndex].disable();
-    
-    if(lightType != "spot")
+
+    if (lightType != "spot")
         this.lights[lightsArrayIndex].setPosition(location[0], location[1], location[2], location[3]);
     else
         this.lights[lightsArrayIndex].setPosition(location[0], location[1], location[2], null);
-	
+
     this.lights[lightsArrayIndex].setAmbient(ambient[0], ambient[1], ambient[2], ambient[3]);
     this.lights[lightsArrayIndex].setDiffuse(diffuse[0], diffuse[1], diffuse[2], diffuse[3]);
     this.lights[lightsArrayIndex].setSpecular(specular[0], specular[1], specular[2], specular[3]);
     this.lights[lightsArrayIndex].setVisible(true);
     this.myInterface.addLight(id, this.lights[lightsArrayIndex], lightType);
-	
+
     if (lightType == "spot") {
         var direction = [];
         direction[0] = target[0] - location[0];
@@ -183,6 +187,10 @@ XMLscene.prototype.addNode = function (id, node) {
     this.sceneGraph[id] = node;
 }
 
+XMLscene.prototype.addAnimation = function (id, animation) {
+    this.animations[id] = animation;
+}
+
 XMLscene.prototype.processGraph = function (nodeId) {
     var material = null;
     var texture = null;
@@ -204,6 +212,13 @@ XMLscene.prototype.processGraph = function (nodeId) {
         material.apply();
 
         this.multMatrix(node.mat);
+
+        var animationId = node.getAnimation();
+        if (animationId != null) {
+            var animation = this.animations[animationId];
+            this.multMatrix(animation.getGeometricTransformation());
+        }
+
         for (var i = 0; i < node.primitives.length; i++) {
             var primitive = this.primitives[node.primitives[i]];
             if (texture != null)
@@ -236,4 +251,25 @@ XMLscene.prototype.nextMaterial = function (nodeId) {
         for (var i = 0, length = node.children.length; i < length; i++)
             this.nextMaterial(node.children[i]);
     }
+}
+
+XMLscene.prototype.update = function (currTime) {
+    if (this.graph.loadedOk)
+        this.updateAux(currTime, this.rootNodeId);
+}
+
+// Variables access is like in 'processGraph', so it is already simulated.
+XMLscene.prototype.updateAux = function (currTime, nodeId) {
+    var node = this.sceneGraph[nodeId];
+    var animationId = node.getAnimation();
+
+    if (animationId != null) {
+        var animation = this.animations[animationId];
+        animation.calculateGeometricTransformation(currTime);
+        if (animation.done)
+            node.nextAnimation();
+    }
+
+    for (var i = 0; i < node.children.length; i++)
+        this.updateAux(currTime, node.children[i]);
 }

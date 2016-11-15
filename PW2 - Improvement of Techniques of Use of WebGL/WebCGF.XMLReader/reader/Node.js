@@ -9,6 +9,8 @@ function Node() {
     this.mat = null;    // transformation matrix
     this.children = [];
     this.primitives = [];
+    this.animations = [];
+    this.animationIndex = -1;
 };
 
 Node.prototype.addMaterialId = function (m) {
@@ -42,4 +44,21 @@ Node.prototype.pushPrimitive = function (nodeId) {
 
 Node.prototype.getSize = function () {
     return this.children.length;
+}
+
+Node.prototype.getAnimation = function () {
+    if (this.animationIndex == -1)
+        return null;
+    return this.animations[this.animationIndex];
+}
+
+Node.prototype.addAnimation = function (animation) {
+    this.animations.push(animation);
+    if (this.animationIndex == -1)
+        this.animationIndex = 0;
+}
+
+Node.prototype.nextAnimation = function () {
+    if (this.animationIndex < this.animations.length - 1)
+        this.animationIndex++;
 }

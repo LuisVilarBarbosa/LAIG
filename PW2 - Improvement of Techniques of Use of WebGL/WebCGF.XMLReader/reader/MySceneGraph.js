@@ -45,7 +45,7 @@ MySceneGraph.prototype.onXMLReady = function () {
 
 MySceneGraph.prototype.verifyDSXFileStructure = function (rootElement) {
     var name;
-    if (rootElement.children.length != 9) throw "Invalid number of 'dsx' children tags detected (verify if all the elements begin with <tag> and end </tag>).";
+    if (rootElement.children.length != 10) throw "Invalid number of 'dsx' children tags detected (verify if all the elements begin with <tag> and end </tag>).";
     if ((name = rootElement.children[0].nodeName) != "scene") throw "Expected 'scene' tag instead of '" + name + "'.";
     if ((name = rootElement.children[1].nodeName) != "views") throw "Expected 'views' tag instead of '" + name + "'.";
     if ((name = rootElement.children[2].nodeName) != "illumination") throw "Expected 'illumination' tag instead of '" + name + "'.";
@@ -53,8 +53,9 @@ MySceneGraph.prototype.verifyDSXFileStructure = function (rootElement) {
     if ((name = rootElement.children[4].nodeName) != "textures") throw "Expected 'textures' tag instead of '" + name + "'.";
     if ((name = rootElement.children[5].nodeName) != "materials") throw "Expected 'materials' tag instead of '" + name + "'.";
     if ((name = rootElement.children[6].nodeName) != "transformations") throw "Expected 'transformations' tag instead of '" + name + "'.";
-    if ((name = rootElement.children[7].nodeName) != "primitives") throw "Expected 'primitives' tag instead of '" + name + "'.";
-    if ((name = rootElement.children[8].nodeName) != "components") throw "Expected 'components' tag instead of '" + name + "'.";
+    if ((name = rootElement.children[7].nodeName) != "animations") throw "Expected 'animations' tag instead of '" + name + "'.";
+    if ((name = rootElement.children[8].nodeName) != "primitives") throw "Expected 'primitives' tag instead of '" + name + "'.";
+    if ((name = rootElement.children[9].nodeName) != "components") throw "Expected 'components' tag instead of '" + name + "'.";
 }
 
 MySceneGraph.prototype.getElemChildrenIds = function (elem, ids) {
@@ -111,6 +112,13 @@ MySceneGraph.prototype.verifyGraphAux = function (nodeId, ids) {    // emulates 
             texture = this.scene.textures[node.texture];
         if (texture === undefined)
             throw "The texture '" + node.texture + "' isn't declared in the 'textures' element.";
+
+        var animationId = node.getAnimation();
+        if (animationId != null) {
+            var animation = this.scene.animations[animationId];
+            if (animation === undefined)
+                throw "The animation '" + animationId + "' isn't declared in the 'animations' element.";
+        }
 
         for (var i = 0; i < node.primitives.length; i++) {
             var primitive = this.scene.primitives[node.primitives[i]];
@@ -232,7 +240,7 @@ MySceneGraph.prototype.parseLightsRelativeTags = function (elems, lightType, lig
 
         var locationElem = this.findOneChild(elems[i], "location");
         var location = null;
-       
+
         if (lightType != "spot")
             location = this.getFloatsXYZW(locationElem);
         else
@@ -347,6 +355,43 @@ MySceneGraph.prototype.parseTransformationTags = function (elems) {
     }
 }
 
+MySceneGraph.prototype.parseAnimationTags = function (elems) {
+    for (var i = 0, nnodes = elems.length; i < nnodes; i++) {
+        var id = this.reader.getString(elems[i], "id", true);
+        var span = this.reader.getFloat(elems[i], "span", true);
+        var type = this.reader.getString(elems[i], "type", true);
+
+        if (type == "linear") {
+            var children = elems[i].children;
+            var controlPoints = [];
+            for (var j = 0, nnodes2 = children.length; j < nnodes2; j++) {
+                if (children[j].tagName == "controlpoint") {
+                    var xx = this.reader.getFloat(children[j], "xx", true);
+                    var yy = this.reader.getFloat(children[j], "yy", true);
+                    var zz = this.reader.getFloat(children[j], "zz", true);
+                    controlPoints.push(xx, yy, zz);
+                }
+                else
+                    throw "Invalid linear animation child tag found: '" + children[j].tagName + "'.";
+            }
+            this.scene.addAnimation(id, new LinearAnimation(controlPoints, span));
+        }
+        else if (type == "circular") {
+            var centerx = this.reader.getFloat(elems[i], "centerx", true);
+            var centery = this.reader.getFloat(elems[i], "centery", true);
+            var centerz = this.reader.getFloat(elems[i], "centerz", true);
+            var center = [centerx, centery, centerz];
+            var radius = this.reader.getFloat(elems[i], "radius", true);
+            var startang = this.reader.getFloat(elems[i], "startang", true);
+            var rotang = this.reader.getFloat(elems[i], "rotang", true);
+            this.scene.addAnimation(id, new CircularAnimation(span, center, radius, startang, rotang));
+        }
+        else
+            throw "Invalid animation type found: '" + type + "'.";
+    }
+
+}
+
 MySceneGraph.prototype.parsePrimitiveTags = function (elems) {
     for (var i = 0, nnodes = elems.length; i < nnodes; i++) {
         var id = this.reader.getString(elems[i], "id", true);
@@ -415,6 +460,22 @@ MySceneGraph.prototype.parseComponentTags = function (elems) {
             var transformation = mat4.create();
             this.parseTransformationTag(transformationElem, transformation);
             node.setMatrix(transformation);
+        }
+
+        /* 'animation' tags loading */
+        var animationElems = elems[i].getElementsByTagName("animation");
+        if (animationElems == null || animationElems.length > 1)
+            throw "A problem occurred while finding an 'animation' element. 0 or 1 'animation' elements must exist.";
+
+        /* 'animationref' tags loading */
+        if (animationElems.length == 1) {
+            var animationrefElems = animationElems[0].getElementsByTagName("animationref");
+            if (animationrefElems == null)
+                throw "A problem occurred while finding an 'animationref' element.";
+            for (var j = 0, nnodes2 = animationrefElems.length; j < nnodes2; j++) {
+                var animationref = this.reader.getString(animationrefElems[j], "id", true);
+                node.addAnimation(animationref);
+            }
         }
 
         /* 'materials' tags loading */
@@ -501,6 +562,12 @@ MySceneGraph.prototype.parseDSXFile = function (rootElement) {
 
         var transformationElems = this.findChildren(transformationsElem, "transformation");
         this.parseTransformationTags(transformationElems);
+
+        var animationsElem = this.findOneChild(rootElement, "animations");
+        this.verifyElemChildrenIds(animationsElem);
+
+        var animationElems = this.findChildren(animationsElem, "animation");
+        this.parseAnimationTags(animationElems);
 
         var primitivesElem = this.findOneChild(rootElement, "primitives");
         this.verifyElemChildrenIds(primitivesElem);
