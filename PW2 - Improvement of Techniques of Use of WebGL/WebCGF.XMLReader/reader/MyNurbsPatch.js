@@ -53,3 +53,5 @@ MyNurbsPatch.prototype.init = function () {
 MyNurbsPatch.prototype.display = function () {
     this.nurbsObject.display();
 }
+
+MyNurbsPlane.prototype.setTextureCoordinates = function (lengthS, lengthT) {}
