@@ -6,7 +6,7 @@ function MySceneGraph(filename, scene) {
     this.scene = scene;
     scene.graph = this;
 
-    // File reading 
+    // File reading
     this.reader = new CGFXMLreader();
 
     /*
@@ -389,7 +389,6 @@ MySceneGraph.prototype.parseAnimationTags = function (elems) {
         else
             throw "Invalid animation type found: '" + type + "'.";
     }
-
 }
 
 MySceneGraph.prototype.parsePrimitiveTags = function (elems) {
@@ -438,6 +437,51 @@ MySceneGraph.prototype.parsePrimitiveTags = function (elems) {
             var slices = this.reader.getInteger(primitive, "slices", true);
             var loops = this.reader.getInteger(primitive, "loops", true);
             this.scene.addPrimitive(id, new MyTorus(this.scene, inner, outer, slices, loops));
+        }
+        else if (primitive.tagName == "plane") {
+            var dimX = this.reader.getFloat(primitive, "dimX", true);
+            var dimY = this.reader.getFloat(primitive, "dimY", true);
+            var partsX = this.reader.getInteger(primitive, "partsX", true);
+            var partsY = this.reader.getInteger(primitive, "partsY", true);
+            this.scene.addPrimitive(id, new MyNurbsPlane(this.scene, dimX, dimY, partsX, partsY));
+        }
+        else if (primitive.tagName == "patch") {
+            var orderU = this.reader.getFloat(primitive, "orderU", true);
+            var orderV = this.reader.getFloat(primitive, "orderV", true);
+            var partsU = this.reader.getInteger(primitive, "partsU", true);
+            var partsV = this.reader.getInteger(primitive, "partsV", true);
+
+            var children = primitive.children;
+            var controlPoints = [];
+            for (var j = 0, nnodes2 = children.length; j < nnodes2; j++) {
+                if (children[j].tagName == "controlpoint")
+                    controlPoints.push(this.getFloatsXYZ(children[j]));
+                else
+                    throw "Invalid patch child tag found: '" + children[j].tagName + "'.";
+            }
+            this.scene.addPrimitive(id, new MyNurbsPatch(this.scene, orderU, orderV, partsU, partsV, controlPoints));
+        }
+        else if (primitive.tagName == "vehicle") {
+            //this.scene.addPrimitive(id, new MyVehicle(this.scene));
+        }
+        else if (primitive.tagName == "chessboard") {
+            var du = this.reader.getInteger(primitive, "du", true);
+            var dv = this.reader.getInteger(primitive, "dv", true);
+            var textureref = this.reader.getString(primitive, "textureref", true);
+            var su = this.reader.getInteger(primitive, "su", true);
+            var sv = this.reader.getInteger(primitive, "sv", true);
+
+            if (primitive.children.length != 3)
+                throw "Invalid number of " + primitive.tagName + " child tags found. Expected 3 children.";
+
+            var tagNames = ["c1", "c2", "cs"];
+            var cx = [];
+            for (var j = 0, nnodes2 = tagNames.length; j < nnodes2; j++)
+              if (primitive.children[j].tagName == tagNames[j])
+                cx[j] = this.getFloatsRGBA(primitive.children[j]);
+              else
+                throw "Invalid chessboard child found: '" + primitive.children[j].tagName + "'. Expected '" + tagNames[j] + "'.";
+            //this.scene.addPrimitive(id, new MyBoard(this.scene, du, dv, textureref, su, sv, cx[0], cx[1], cx[2]));
         }
         else
             throw "Invalid primitive element found: '" + primitive.tagName + "'.";
@@ -595,5 +639,3 @@ MySceneGraph.prototype.onXMLError = function (message) {
     console.error("XML Loading Error: " + message);
     this.loadedOk = false;
 };
-
-

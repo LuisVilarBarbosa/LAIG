@@ -14,6 +14,7 @@ function getUrlVars() {
 serialInclude(['../lib/CGF.js', 'XMLscene.js', 'MySceneGraph.js', 'Node.js', 'MyTriangle.js',
     'MyRectangle.js', 'MyCylinder.js', 'MyCircle.js', 'MyCylinderWithTops.js', 'MySphere.js',
     'MyTorus.js', 'MyInterface.js', 'Stack.js', 'Animation.js', 'LinearAnimation.js', 'CircularAnimation.js',
+    'MyNurbsPlane.js', 'MyNurbsPatch.js',
 
 main = function () {
     // Standard application, scene and interface setup
@@ -28,12 +29,12 @@ main = function () {
 
     myInterface.setActiveCamera(myScene.camera);
 
-    // get file name provided in URL, e.g. http://localhost/myproj/?file=myfile.xml 
-    // or use "demo.xml" as default (assumes files in subfolder "scenes", check MySceneGraph constructor) 
+    // get file name provided in URL, e.g. http://localhost/myproj/?file=myfile.xml
+    // or use "demo.xml" as default (assumes files in subfolder "scenes", check MySceneGraph constructor)
 
     var filename = getUrlVars()['file'] || "LAIG_TP1_DSX_T5_G01_v04.dsx";
 
-    // create and load graph, and associate it to scene. 
+    // create and load graph, and associate it to scene.
     // Check console for loading errors
     var myGraph = new MySceneGraph(filename, myScene);
 
