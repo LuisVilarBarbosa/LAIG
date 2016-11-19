@@ -2,23 +2,23 @@
  * LinearAnimation
  * @constructor
  */
-function LinearAnimation(controlpoints, span) {
+function LinearAnimation(controlPoints, span) {
     Animation.call(this);
-    if (controlpoints == null)   // include 'undefined'
+    if (controlPoints == null)   // include 'undefined'
         throw new Error("The control points should be instantiated.");
-    if (controlpoints.length < 2)
+    if (controlPoints.length < 2)
         console.warn("The number of control points should be, at least, 2. The animation will not take effect.");
     if (span == null)   // include 'undefined'
         throw new Error("The animation time should be instantiated.");
     if (span < 0)
         throw new Error("The animation time cannot be negative.");
 
-    this.controlpoints = controlpoints;
+    this.controlPoints = controlPoints;
     this.span = span;   /* in seconds */
 
     var distance = 0;
-    for (var i = 1; i < this.controlpoints.length; i++)
-        distance += this.calculateLineLength(this.controlpoints[i - 1], this.controlpoints[i]);
+    for (var i = 1; i < this.controlPoints.length; i++)
+        distance += this.calculateLineLength(this.controlPoints[i - 1], this.controlPoints[i]);
     this.velocity = distance / this.span;
     this.transform = mat4.create();
 };
@@ -38,7 +38,7 @@ LinearAnimation.prototype.calculateYAngle = function (point1, point2) {
 }
 
 LinearAnimation.prototype.calculateGeometricTransformation = function (currTime) {
-    if (this.controlpoints.length < 2 || this.done === true)  /* static animation or animation done */
+    if (this.controlPoints.length < 2 || this.done === true)  /* static animation or animation done */
         return;
 
     this.firstTime = this.firstTime || currTime;
@@ -51,7 +51,7 @@ LinearAnimation.prototype.calculateGeometricTransformation = function (currTime)
         /* calculate what is the actual pair of control points ('i' will be the second control point) */
         var actualLineLength, i = 1, distanceCompletedLines = 0;
         for (var stop = false; !stop;) {
-            actualLineLength = this.calculateLineLength(this.controlpoints[i - 1], this.controlpoints[i]);
+            actualLineLength = this.calculateLineLength(this.controlPoints[i - 1], this.controlPoints[i]);
             if (distanceCompletedLines + actualLineLength <= newTotalDistanceDone) {
                 distanceCompletedLines += actualLineLength;
                 i++;
@@ -65,12 +65,12 @@ LinearAnimation.prototype.calculateGeometricTransformation = function (currTime)
 
         /* calculate the line point where the object must be placed */
         for (var j = 0, ratio = lineDeltaTime / lineTime; j < 3; j++)
-            translation[j] = this.controlpoints[i - 1][j] + (this.controlpoints[i][j] - this.controlpoints[i - 1][j]) * ratio;
-        yRotationAngle = -this.calculateYAngle(this.controlpoints[i - 1], this.controlpoints[i]);
+            translation[j] = this.controlPoints[i - 1][j] + (this.controlPoints[i][j] - this.controlPoints[i - 1][j]) * ratio;
+        yRotationAngle = -this.calculateYAngle(this.controlPoints[i - 1], this.controlPoints[i]);
     } else {
-        var lastIndex = this.controlpoints.length - 1;
-        translation = this.controlpoints[lastIndex];
-        yRotationAngle = -this.calculateYAngle(this.controlpoints[lastIndex - 1], this.controlpoints[lastIndex]);
+        var lastIndex = this.controlPoints.length - 1;
+        translation = this.controlPoints[lastIndex];
+        yRotationAngle = -this.calculateYAngle(this.controlPoints[lastIndex - 1], this.controlPoints[lastIndex]);
         this.done = true;
     }
 
