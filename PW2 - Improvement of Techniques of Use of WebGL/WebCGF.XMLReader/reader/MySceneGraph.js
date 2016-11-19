@@ -454,8 +454,11 @@ MySceneGraph.prototype.parsePrimitiveTags = function (elems) {
             var children = primitive.children;
             var controlPoints = [];
             for (var j = 0, nnodes2 = children.length; j < nnodes2; j++) {
-                if (children[j].tagName == "controlpoint")
-                    controlPoints.push(this.getFloatsXYZ(children[j]));
+                if (children[j].tagName == "controlpoint") {
+                  var controlpoint = this.getFloatsXYZ(children[j]);
+                  controlpoint.push(1); // W
+                  controlPoints.push(controlpoint);
+                }
                 else
                     throw "Invalid patch child tag found: '" + children[j].tagName + "'.";
             }
