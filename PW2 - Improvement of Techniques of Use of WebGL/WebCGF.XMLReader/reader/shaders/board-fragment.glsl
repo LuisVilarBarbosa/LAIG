@@ -9,6 +9,5 @@ varying vec4 color;
 
 void main()
 {
-	gl_FragColor = color;
-	//gl_FragColor = vec4(1, 0, 0, 1) * texture2D(vSampler, vTextureCoord);
+	gl_FragColor = color * texture2D(vSampler, vTextureCoord);
 }

@@ -16,14 +16,14 @@ varying vec4 color;
 void main()
 {
 	vec3 offset = vec3(0.0, 0.0, 0.0);
-	ivec2 f = ivec2(floor(aTextureCoord * vec2(dim.s, dim.t)));
-	ivec2 mod = f * 2 - f / 2;	// mod(f, 2)
+	ivec2 f = ivec2(floor(aTextureCoord * vec2(dim)));
+	ivec2 mod = f - 2 * (f / 2);	// mod(f, 2)
 
 	if(f == sel) {
-		offset.z = 0.5;
+		offset.z = 0.1;
 		color = cs;
 	}
-	else if ((mod.s == 0 && mod.t == 0) || (mod.s == 1 && mod.t == 1))
+	else if ((mod == ivec2(0, 0)) || (mod == ivec2(1, 1)))
 		color = c1;
 	else
 		color = c2;

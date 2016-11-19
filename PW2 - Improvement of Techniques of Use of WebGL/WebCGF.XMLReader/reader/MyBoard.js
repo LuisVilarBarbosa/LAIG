@@ -36,6 +36,7 @@ MyBoard.prototype.setTextureCoordinates = function (lengthS, lengthT) {
 MyBoard.prototype.display = function () {
     var originalActiveShader = this.scene.activeShader;
     this.scene.setActiveShader(this.shader);
+    this.texture.bind();
     this.texture.bind(1);
     this.plane.display();
     this.scene.setActiveShader(originalActiveShader);
