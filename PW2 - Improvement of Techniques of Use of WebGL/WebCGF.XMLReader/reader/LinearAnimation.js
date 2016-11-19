@@ -9,7 +9,7 @@ function LinearAnimation(controlPoints, span) {
     if (controlPoints.length < 2)
         console.warn(this.constructor.name + ": The number of control points should be, at least, 2. The animation will be static.");
     if (span == null)   // include 'undefined'
-        throw this.constructor.name +  ": The animation span should be instantiated.";
+        throw this.constructor.name + ": The animation span should be instantiated.";
     if (span < 0)
         throw this.constructor.name + ": The animation span cannot be negative.";
 

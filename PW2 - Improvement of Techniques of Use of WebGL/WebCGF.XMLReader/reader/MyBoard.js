@@ -6,7 +6,7 @@ function MyBoard(scene, du, dv, textureref, su, sv, colors) {
     CGFobject.call(this, scene);
 
     if (colors.length != 3)
-      throw this.constructor.name + ": Invalid number of colors, expected 3.";
+        throw this.constructor.name + ": Invalid number of colors, expected 3.";
 
     this.du = du;
     this.dv = dv;
@@ -25,8 +25,10 @@ function MyBoard(scene, du, dv, textureref, su, sv, colors) {
     this.setTextureCoordinates(this.texture.length_s, this.texture.length_t);
 
     this.shader = new CGFshader(this.scene.gl, "shaders/board-vertex.glsl", "shaders/board-fragment.glsl");
-    this.shader.setUniformsValues({ dim: [this.du, this.dv], vSampler: 1,
-      sel: [this.su, this.sv], c1: this.c1, c2: this.c2, cs: this.cs });
+    this.shader.setUniformsValues({
+        dim: [this.du, this.dv], vSampler: 1,
+        sel: [this.su, this.sv], c1: this.c1, c2: this.c2, cs: this.cs
+    });
 };
 
 MyBoard.prototype.setTextureCoordinates = function (lengthS, lengthT) {

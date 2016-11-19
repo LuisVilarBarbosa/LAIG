@@ -311,7 +311,7 @@
       <plane dimX="2" dimY="0.4" partsX="40" partsY="20"/>
     </primitive>
 
-      <primitive id="curve">
+    <primitive id="curve">
       <!-- Nova primitiva: patch, discretizado em grelha -->
       <!-- Exemplo:                                   -->
       <!-- <patch orderU="2" orderV="3" partsU="7" partsV="9" > -->
@@ -421,7 +421,7 @@
       <transformation>
         <translate x="1" y="1.11" z="1" />
         <scale x="0.6" y="1" z="0.6" />
-        <rotate axis="x" angle="-90" /> 
+        <rotate axis="x" angle="-90" />
       </transformation>
 
       <materials>

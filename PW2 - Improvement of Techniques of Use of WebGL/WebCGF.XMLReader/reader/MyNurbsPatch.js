@@ -16,10 +16,10 @@ function MyNurbsPatch(scene, orderU, orderV, partsU, partsV, controlPoints) {
     this.controlPoints = [];
 
     for (var i = 0, pos = 0; i < this.orderU + 1; i++) {
-      var controlPointsU = [];
-      for (var j = 0; j < this.orderV + 1; j++, pos++)
-        controlPointsU.push(controlPoints[pos]);
-      this.controlPoints.push(controlPointsU);
+        var controlPointsU = [];
+        for (var j = 0; j < this.orderV + 1; j++, pos++)
+            controlPointsU.push(controlPoints[pos]);
+        this.controlPoints.push(controlPointsU);
     }
 
     this.init();
@@ -54,4 +54,4 @@ MyNurbsPatch.prototype.display = function () {
     this.nurbsObject.display();
 }
 
-MyNurbsPatch.prototype.setTextureCoordinates = function (lengthS, lengthT) {}
+MyNurbsPatch.prototype.setTextureCoordinates = function (lengthS, lengthT) { }

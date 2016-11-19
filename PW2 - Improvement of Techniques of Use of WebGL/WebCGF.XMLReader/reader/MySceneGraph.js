@@ -50,9 +50,9 @@ MySceneGraph.prototype.verifyDSXFileStructure = function (rootElement) {
     if (rootElement.children.length != tagsLength)
         throw "Invalid number of 'dsx' children tags detected (verify if all the elements begin with <tag> and end </tag>).";
 
-    for(var i = 0; i < tagsLength; i++)
-      if (rootElement.children[i].nodeName != tags[i])
-        throw "Expected '" + tags[i] + "' tag instead of '" + rootElement.children[i].nodeName + "'.";
+    for (var i = 0; i < tagsLength; i++)
+        if (rootElement.children[i].nodeName != tags[i])
+            throw "Expected '" + tags[i] + "' tag instead of '" + rootElement.children[i].nodeName + "'.";
 }
 
 MySceneGraph.prototype.getElemChildrenIds = function (elem, ids) {
@@ -452,9 +452,9 @@ MySceneGraph.prototype.parsePrimitiveTags = function (elems) {
             var controlPoints = [];
             for (var j = 0, nnodes2 = children.length; j < nnodes2; j++) {
                 if (children[j].tagName == "controlpoint") {
-                  var controlpoint = this.getFloatsXYZ(children[j]);
-                  controlpoint.push(1); // W
-                  controlPoints.push(controlpoint);
+                    var controlpoint = this.getFloatsXYZ(children[j]);
+                    controlpoint.push(1); // W
+                    controlPoints.push(controlpoint);
                 }
                 else
                     throw "Invalid patch child tag found: '" + children[j].tagName + "'.";
@@ -477,10 +477,10 @@ MySceneGraph.prototype.parsePrimitiveTags = function (elems) {
 
             var colors = [];
             for (var j = 0, nnodes2 = tagNames.length; j < nnodes2; j++)
-              if (primitive.children[j].tagName == tagNames[j])
-                colors[j] = this.getFloatsRGBA(primitive.children[j]);
-              else
-                throw "Invalid chessboard child found: '" + primitive.children[j].tagName + "'. Expected '" + tagNames[j] + "'.";
+                if (primitive.children[j].tagName == tagNames[j])
+                    colors[j] = this.getFloatsRGBA(primitive.children[j]);
+                else
+                    throw "Invalid chessboard child found: '" + primitive.children[j].tagName + "'. Expected '" + tagNames[j] + "'.";
             this.scene.addPrimitive(id, new MyBoard(this.scene, du, dv, textureref, su, sv, colors));
         }
         else

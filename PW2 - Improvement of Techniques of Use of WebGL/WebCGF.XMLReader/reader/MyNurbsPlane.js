@@ -28,7 +28,7 @@ MyNurbsPlane.prototype = Object.create(CGFobject.prototype);
 MyNurbsPlane.prototype.constructor = MyNurbsPlane;
 
 MyNurbsPlane.prototype.display = function () {
-  this.nurbsPatch.display();
+    this.nurbsPatch.display();
 }
 
-MyNurbsPlane.prototype.setTextureCoordinates = function (lengthS, lengthT) {}
+MyNurbsPlane.prototype.setTextureCoordinates = function (lengthS, lengthT) { }
