@@ -44,7 +44,6 @@ MyNurbsPlane.prototype.init = function () {
 								[this.dimX / 2, this.dimY / 2, 0, 1]
 							]
     ]
-    console.log(controlPoints);
 
     var nurbsSurface = new CGFnurbsSurface(orderU, orderV, knotsU, knotsV, controlPoints);
 
