@@ -1,4 +1,4 @@
-/**d
+/**
  * MyVehicle
  * @constructor
  */
@@ -40,7 +40,6 @@ MyVehicle.prototype = Object.create(CGFobject.prototype);
 MyVehicle.prototype.constructor = MyVehicle;
 
 MyVehicle.prototype.init_materials = function () {
-
     this.paint_material = new CGFappearance(this.scene);
     this.paint_material.setAmbient(0.441/2, 0.507/2, 0.129/2, 1);
     this.paint_material.setDiffuse(0.441, 0.507, 0.129, 1);
@@ -58,7 +57,6 @@ MyVehicle.prototype.init_materials = function () {
     this.interior_material.setDiffuse(1, 0.867, 0.678, 1);
     this.interior_material.setSpecular(0, 0, 0, 1);
     this.interior_material.setShininess(50);
-
 }
 
 MyVehicle.prototype.init_objects = function () {
@@ -146,6 +144,7 @@ MyVehicle.prototype.init_objects = function () {
                                 [-1, -1.3, 3.3, 1],
                                 [-1, -1.1, 3.7, 1]
                             ];
+
     rear_bumper_CP =    [
                             // U = 0
                             [1, -1.5, -2.5, 1],
@@ -323,11 +322,10 @@ MyVehicle.prototype.init_objects = function () {
 
 }
 
-
 MyVehicle.prototype.display = function () {
 
 this.scene.pushMatrix();
-    this.scene.rotate(90*Math.PI/180, 0, 1, 0);
+    this.scene.rotate(90 * Math.PI / 180, 0, 1, 0);
     this.scene.scale(0.04, 0.04, 0.04);
 
 
