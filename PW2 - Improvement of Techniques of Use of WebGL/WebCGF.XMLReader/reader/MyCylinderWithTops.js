@@ -18,7 +18,7 @@ MyCylinderWithTops.prototype.constructor = MyCylinderWithTops;
 MyCylinderWithTops.prototype.display = function () {
 
     this.scene.pushMatrix();
-        
+
         this.cylinder.display();
 
         this.scene.pushMatrix();

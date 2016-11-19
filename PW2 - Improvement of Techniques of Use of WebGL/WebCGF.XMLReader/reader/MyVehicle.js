@@ -5,7 +5,7 @@
 function MyVehicle(scene) {
     CGFobject.call(this, scene);
     this.scene = scene;
-    
+
     //objects
     this.wheel;
     this.glass;
@@ -30,7 +30,7 @@ function MyVehicle(scene) {
     this.glass_material;
     this.paint_material;
     this.interior_material;
-    
+
     this.init_materials()
     this.init_objects();
 
@@ -58,7 +58,7 @@ MyVehicle.prototype.init_materials = function () {
     this.interior_material.setDiffuse(1, 0.867, 0.678, 1);
     this.interior_material.setSpecular(0, 0, 0, 1);
     this.interior_material.setShininess(50);
-    
+
 }
 
 MyVehicle.prototype.init_objects = function () {
@@ -67,12 +67,12 @@ MyVehicle.prototype.init_objects = function () {
                         [-1, -0.5, 0.5, 1],
                         [-0.95, 0, 0.25, 1],
                         [-0.90, 0.5, 0, 1],
-                        
+
                         // U = 1
                         [0, -0.5, 0.7, 1],
                         [0, 0, 0.45, 1],
                         [0, 0.5, 0.2, 1],
-                        
+
                         // U = 2
                         [1, -0.5, 0.5, 1],
                         [0.95, 0, 0.25, 1],
@@ -84,12 +84,12 @@ MyVehicle.prototype.init_objects = function () {
                     [1, -0.5, 0.5, 1],
                     [1, -0.5, 3, 1],
                     [1, -1.1, 3.7, 1],
-                    
+
                     // U = 1
                     [0, -0.5, 0.7, 1],
                     [0, -0.5, 3, 1],
                     [0, -1.1, 3.7, 1],
-                    
+
                     // U = 2
                     [-1, -0.5, 0.5, 1],
                     [-1, -0.5, 3, 1],
@@ -101,12 +101,12 @@ MyVehicle.prototype.init_objects = function () {
                     [-0.90, 0.5, 0, 1],
                     [-0.95, 0.2, -2, 1],
                     [-1, -0.5, -3, 1],
-                    
+
                     // U = 1
                     [0, 0.5, 0.2, 1],
                     [0, 0.2, -2, 1],
                     [0, -0.5, -3, 1],
-                    
+
                     // U = 2
                     [0.90, 0.5, 0, 1],
                     [0.95, 0.2, -2, 1],
@@ -118,12 +118,12 @@ MyVehicle.prototype.init_objects = function () {
                                 [1, -1.5, 3, 1],
                                 [1, -1.3, 3.3, 1],
                                 [1, -1.1, 3.7, 1],
-                                
+
                                 // U = 1
                                 [1, -1.5, 2.8, 1],
                                 [1, -1.0, 3.1, 1],
                                 [1, -0.5, 3.5, 1],
-                                
+
                                 // U = 2
                                 [1, -1.5, 0.5, 1],
                                 [1, -1.0, 0.5, 1],
@@ -135,12 +135,12 @@ MyVehicle.prototype.init_objects = function () {
                                 [-1, -1.5, 0.5, 1],
                                 [-1, -1.0, 0.5, 1],
                                 [-1, -0.5, 0.5, 1],
-                                
+
                                 // U = 1
                                 [-1, -1.5, 2.8, 1],
                                 [-1, -1.0, 3.1, 1],
                                 [-1, -0.5, 3.5, 1],
-                                
+
                                 // U = 2
                                 [-1, -1.5, 3, 1],
                                 [-1, -1.3, 3.3, 1],
@@ -150,7 +150,7 @@ MyVehicle.prototype.init_objects = function () {
                             // U = 0
                             [1, -1.5, -2.5, 1],
                             [1, -0.5, -3, 1],
-                            
+
                             // U = 1
                             [-1, -1.5, -2.5, 1],
                             [-1, -0.5, -3, 1]
@@ -161,7 +161,7 @@ MyVehicle.prototype.init_objects = function () {
                             [-1, -1.5, 3, 1],
                             [-1, -1.3, 3.3, 1],
                             [-1, -1.1, 3.7, 1],
-                            
+
                             // U = 1
                             [1, -1.5, 3, 1],
                             [1, -1.3, 3.3, 1],
@@ -172,7 +172,7 @@ MyVehicle.prototype.init_objects = function () {
                         // U = 0
                         [1, -1.5, 0.5, 1],
                         [1, -0.5, 0.5, 1],
-                        
+
                         // U = 1
                         [1, -1.5, -2.5, 1],
                         [1, -0.5, -3, 1]
@@ -182,7 +182,7 @@ MyVehicle.prototype.init_objects = function () {
                         // U = 0
                         [-1, -1.5, -2.5, 1],
                         [-1, -0.5, -3, 1],
-                        
+
                         // U = 1
                         [-1, -1.5, 0.5, 1],
                         [-1, -0.5, 0.5, 1]
@@ -191,7 +191,7 @@ MyVehicle.prototype.init_objects = function () {
                     // U = 0
                     [-1, -1.5, 3, 1],
                     [1, -1.5, 3, 1],
-                    
+
                     // U = 1
                     [-1, -1.5, -2.5, 1],
                     [1, -1.5, -2.5, 1]
@@ -201,12 +201,12 @@ MyVehicle.prototype.init_objects = function () {
                         // U = 0
                         [1, -0.5, -3, 1],
                         [1, -0.5, 0.5, 1],
-                        
+
                         // U = 1
                         [0, -0.5, -3, 1],
                         [0, -0.5, 0.7, 1],
-                        
-                        
+
+
                         [-1, -0.5, -3, 1],
                         [-1, -0.5, 0.5, 1]
                     ];
@@ -216,12 +216,12 @@ MyVehicle.prototype.init_objects = function () {
                             [0.90, 0.5, 0, 1],
                             [0.95, 0.2, -2, 1],
                             [1, -0.5, -3, 1],
-                            
+
                             // U = 1
                             [0, 0.5, 0.2, 1],
                             [0, 0.2, -2, 1],
                             [0, -0.5, -3, 1],
-                            
+
                             // U = 2
                             [-0.90, 0.5, 0, 1],
                             [-0.95, 0.2, -2, 1],
@@ -233,12 +233,12 @@ MyVehicle.prototype.init_objects = function () {
                             [1, -0.5, 0.5, 1],
                             [0.95, 0, 0.25, 1],
                             [0.90, 0.5, 0, 1],
-                            
+
                             // U = 1
                             [0, -0.5, 0.7, 1],
                             [0, 0, 0.45, 1],
                             [0, 0.5, 0.2, 1],
-                            
+
                             // U = 2
                             [-1, -0.5, 0.5, 1],
                             [-0.95, 0, 0.25, 1],
@@ -249,11 +249,11 @@ MyVehicle.prototype.init_objects = function () {
                         // U = 0
                         [0.9, -0.5, -1.5, 1],
                         [0.9, 0.175, -1.5, 1],
-                        
-                        // U = 1 
+
+                        // U = 1
                         [0.95, -0.5, -2.25, 1],
                         [0.95, -0.05, -2.3, 1],
-                        
+
                         // U = 2
                         [1, -0.5, -3, 1],
                         [1, -0.5, -3, 1]
@@ -263,11 +263,11 @@ MyVehicle.prototype.init_objects = function () {
                         // U = 0
                         [-1, -0.5, -3, 1],
                         [-1, -0.5, -3, 1],
-                        
-                        // U = 1 
+
+                        // U = 1
                         [-0.95, -0.5, -2.25, 1],
                         [-0.95, -0.05, -2.3, 1],
-                        
+
                         // U = 2
                         [-0.9, -0.5, -1.5, 1],
                         [-0.9, 0.175, -1.5, 1]
@@ -277,11 +277,11 @@ MyVehicle.prototype.init_objects = function () {
                                 // U = 0
                                 [1, -0.5, -3, 1],
                                 [1, -0.5, -3, 1],
-                                
-                                // U = 1 
+
+                                // U = 1
                                 [0.95, -0.5, -2.25, 1],
                                 [0.95, -0.05, -2.3, 1],
-                                
+
                                 // U = 2
                                 [0.9, -0.5, -1.5, 1],
                                 [0.9, 0.175, -1.5, 1]
@@ -291,11 +291,11 @@ MyVehicle.prototype.init_objects = function () {
                                 // U = 0
                                 [-0.9, -0.5, -1.5, 1],
                                 [-0.9, 0.175, -1.5, 1],
-                                
-                                // U = 1 
+
+                                // U = 1
                                 [-0.95, -0.5, -2.25, 1],
                                 [-0.95, -0.05, -2.3, 1],
-                                
+
                                 // U = 2
                                 [-1, -0.5, -3, 1],
                                 [-1, -0.5, -3, 1]
@@ -320,12 +320,12 @@ MyVehicle.prototype.init_objects = function () {
     this.right_side = new MyNurbsPatch(this.scene, 2, 1, 20, 20, right_side_CP);
     this.interior_left_side = new MyNurbsPatch(this.scene, 2, 1, 20, 20, interior_left_side_CP);
     this.interior_right_side = new MyNurbsPatch(this.scene, 2, 1, 20, 20, interior_right_side_CP);
-    
+
 }
 
 
 MyVehicle.prototype.display = function () {
-    
+
 this.scene.pushMatrix();
     this.scene.rotate(90*Math.PI/180, 0, 1, 0);
     this.scene.scale(0.04, 0.04, 0.04);
@@ -389,5 +389,3 @@ this.scene.pushMatrix();
     this.scene.popMatrix();
 this.scene.popMatrix();
 };
-
-

@@ -8,13 +8,13 @@ function MyWheel(scene) {
 
     this.tire;
     this.rim;
-    
+
     this.tire_material;
     this.rim_material;
 
     this.define_materials();
     this.build();
-    
+
 };
 
 MyWheel.prototype = Object.create(CGFobject.prototype);
@@ -61,5 +61,3 @@ MyWheel.prototype.display = function () {
 
     this.scene.defaultAppearance.apply();
 };
-
-
