@@ -471,10 +471,10 @@ MySceneGraph.prototype.parsePrimitiveTags = function (elems) {
             var su = this.reader.getInteger(primitive, "su", true);
             var sv = this.reader.getInteger(primitive, "sv", true);
 
-            if (primitive.children.length != 3)
-                throw "Invalid number of " + primitive.tagName + " child tags found. Expected 3 children.";
-
             var tagNames = ["c1", "c2", "cs"];
+            if (primitive.children.length != tagNames.length)
+                throw "Invalid number of " + primitive.tagName + " child tags found. Expected " + tagNames.length + " children.";
+
             var colors = [];
             for (var j = 0, nnodes2 = tagNames.length; j < nnodes2; j++)
               if (primitive.children[j].tagName == tagNames[j])

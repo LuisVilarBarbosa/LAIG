@@ -6,7 +6,7 @@ function MyBoard(scene, du, dv, textureref, su, sv, colors) {
     CGFobject.call(this, scene);
 
     if (colors.length != 3)
-      throw "'MyBoard': Invalid number of colors, expected 3.";
+      throw this.constructor.name + ": Invalid number of colors, expected 3.";
 
     this.du = du;
     this.dv = dv;
@@ -21,7 +21,7 @@ function MyBoard(scene, du, dv, textureref, su, sv, colors) {
 
     this.texture = this.scene.textures[this.textureref];
     if (this.texture === undefined)
-        throw "The texture '" + this.textureref + "' isn't declared in the 'textures' element.";
+        throw this.constructor.name + ": The texture '" + this.textureref + "' isn't declared in the 'textures' element.";
     this.setTextureCoordinates(this.texture.length_s, this.texture.length_t);
 
     this.shader = new CGFshader(this.scene.gl, "shaders/board-vertex.glsl", "shaders/board-fragment.glsl");

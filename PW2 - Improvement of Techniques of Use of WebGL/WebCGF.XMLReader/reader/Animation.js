@@ -5,7 +5,7 @@
  */
 function Animation() {
     if (this.constructor === Animation)
-        throw new Error("Can't instantiate abstract class!");
+        throw this.constructor.name + ": Can't instantiate abstract class!";
     this.done = false;  // indicates if the animation ended
 };
 
@@ -14,12 +14,12 @@ function Animation() {
  Must set 'this.done' as true when the animation is ended
  */
 Animation.prototype.calculateGeometricTransformation = function () {
-    throw new Error("Abstract method!");
+    throw this.constructor.name + ": Abstract method!";
 }
 
 /**
  @abstract
  */
 Animation.prototype.getGeometricTransformation = function () {
-    throw new Error("Abstract method!");
+    throw this.constructor.name + ": Abstract method!";
 }

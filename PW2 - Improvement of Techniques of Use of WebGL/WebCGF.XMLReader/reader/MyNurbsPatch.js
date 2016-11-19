@@ -6,7 +6,7 @@ function MyNurbsPatch(scene, orderU, orderV, partsU, partsV, controlPoints) {
     CGFobject.call(this, scene);
 
     if (controlPoints.length != (orderU + 1) * (orderV + 1))
-        throw "The number of control points of the patch is not correct.";
+        throw this.constructor.name + ": The number of control points of the patch is not correct.";
 
     this.scene = scene;
     this.orderU = orderU;

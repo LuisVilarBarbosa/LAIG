@@ -5,13 +5,13 @@
 function LinearAnimation(controlPoints, span) {
     Animation.call(this);
     if (controlPoints == null)   // include 'undefined'
-        throw new Error("The control points should be instantiated.");
+        throw this.constructor.name + ": The control points should be instantiated.";
     if (controlPoints.length < 2)
-        console.warn("The number of control points should be, at least, 2. The animation will not take effect.");
+        console.warn(this.constructor.name + ": The number of control points should be, at least, 2. The animation will be static.");
     if (span == null)   // include 'undefined'
-        throw new Error("The animation time should be instantiated.");
+        throw this.constructor.name +  ": The animation span should be instantiated.";
     if (span < 0)
-        throw new Error("The animation time cannot be negative.");
+        throw this.constructor.name + ": The animation span cannot be negative.";
 
     this.controlPoints = controlPoints;
     this.span = span;   /* in seconds */

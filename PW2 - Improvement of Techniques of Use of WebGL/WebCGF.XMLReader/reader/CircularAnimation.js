@@ -5,13 +5,13 @@
 function CircularAnimation(span, center, radius, startang, rotang) {
     Animation.call(this);
     if (span == null)   // include 'undefined'
-        throw new Error("The animation time should be instantiated.");
+        throw this.constructor.name + ": The animation span should be instantiated.";
     if (span < 0)
-        throw new Error("The animation time cannot be negative.");
+        throw this.constructor.name + ": The animation span cannot be negative.";
     if (center == null || radius == null || startang == null || rotang == null)
-        throw new Error("Invalid variable. 'CircularAnimation' doesn't accept 'null' or 'undefined' variables.");
+        throw this.constructor.name + ": Invalid variable. 'CircularAnimation' doesn't accept 'null' or 'undefined' variables.";
     if (center.length != 3)
-        throw new Error("Invalid center. The center must have 3 components (xyz).");
+        throw this.constructor.name + ": Invalid center. The center must have 3 components (xyz).";
 
     this.degToRad = Math.PI / 180;
 
