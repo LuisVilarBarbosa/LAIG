@@ -33,11 +33,13 @@ CircularAnimation.prototype.calculateGeometricTransformation = function (currTim
 
     if (deltaTime <= this.span) {
         var newTotalAngleDone = this.angVelocity * deltaTime;
+        mat4.translate(this.transform, this.transform, this.center);
         mat4.rotate(this.transform, this.transform, this.startang + newTotalAngleDone, [0, 1, 0]);
-        mat4.translate(this.transform, this.transform, [this.radius, this.radius, this.radius]);
+        mat4.translate(this.transform, this.transform, [this.radius, 0, this.radius]);
     } else {
+        mat4.translate(this.transform, this.transform, this.center);
         mat4.rotate(this.transform, this.transform, this.startang + this.rotang, [0, 1, 0]);
-        mat4.translate(this.transform, this.transform, [this.radius, this.radius, this.radius]);
+        mat4.translate(this.transform, this.transform, [this.radius, 0, this.radius]);
         this.done = true;
     }
 }
@@ -45,4 +47,3 @@ CircularAnimation.prototype.calculateGeometricTransformation = function (currTim
 CircularAnimation.prototype.getGeometricTransformation = function () {
     return this.transform;
 }
-
