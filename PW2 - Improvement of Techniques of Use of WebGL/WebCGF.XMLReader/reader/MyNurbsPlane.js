@@ -11,8 +11,6 @@ function MyNurbsPlane(scene, dimX, dimY, partsX, partsY) {
     this.partsX = partsX;
     this.partsY = partsY;
 
-    this.setTextureCoordinates(1, 1);
-
     this.init();
 };
 
@@ -58,15 +56,4 @@ MyNurbsPlane.prototype.display = function () {
     this.nurbsObject.display();
 }
 
-MyNurbsPlane.prototype.setTextureCoordinates = function (lengthS, lengthT) {
-    this.lengthS = lengthS || 1;
-    this.lengthT = lengthT || 1;
-
-    this.texCoords = [
-        0, 1,
-        1 / this.lengthS, 1,
-        1 / this.lengthS, 1 - (this.y2 - this.y1) / this.lengthT,
-        0, 1 - (this.y2 - this.y1) / this.lengthT
-    ];
-    this.updateTexCoordsGLBuffers();
-}
+MyNurbsPlane.prototype.setTextureCoordinates = function (lengthS, lengthT) {}
