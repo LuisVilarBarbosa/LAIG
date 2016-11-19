@@ -28,6 +28,7 @@ function MyNurbsPatch(scene, orderU, orderV, partsU, partsV, controlPoints) {
 MyNurbsPatch.prototype = Object.create(CGFobject.prototype);
 MyNurbsPatch.prototype.constructor = MyNurbsPatch;
 
+/* Based on "NURBS Example" on Moodle */
 MyNurbsPatch.prototype.getKnotsVector = function (degree) {
     var v = [];
     for (var i = 0; i <= degree; i++)
@@ -37,6 +38,7 @@ MyNurbsPatch.prototype.getKnotsVector = function (degree) {
     return v;
 }
 
+/* Based on "NURBS Example" on Moodle */
 MyNurbsPatch.prototype.init = function () {
     var knotsU = this.getKnotsVector(this.orderU);
     var knotsV = this.getKnotsVector(this.orderV);
