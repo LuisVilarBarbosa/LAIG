@@ -455,14 +455,14 @@ MySceneGraph.prototype.parsePrimitiveTags = function (elems) {
             var controlPoints = [];
             for (var j = 0, nnodes2 = children.length; j < nnodes2; j++) {
                 if (children[j].tagName == "controlpoint")
-                    controlPoints.push(this.getFloatsXYZ(children[j]));
+                    controlPoints.push(this.getFloatsXYZW(children[j]));
                 else
                     throw "Invalid patch child tag found: '" + children[j].tagName + "'.";
             }
             this.scene.addPrimitive(id, new MyNurbsPatch(this.scene, orderU, orderV, partsU, partsV, controlPoints));
         }
         else if (primitive.tagName == "vehicle") {
-            //this.scene.addPrimitive(id, new MyVehicle(this.scene));
+            this.scene.addPrimitive(id, new MyVehicle(this.scene));
         }
         else if (primitive.tagName == "chessboard") {
             var du = this.reader.getInteger(primitive, "du", true);
