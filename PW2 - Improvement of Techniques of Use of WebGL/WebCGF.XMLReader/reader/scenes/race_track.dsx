@@ -254,12 +254,12 @@
     </animation>
 
     <animation id="car_curve1" span="5" type="circular"
-               centerx="2.2" centery="0.09" centerz="3"
-               radius="0.6" startang="225" rotang="180" />
+               centerx="2.6" centery="0.09" centerz="3"
+               radius="0.4" startang="225" rotang="180" />
 
     <animation id="car_curve2" span="5" type="circular"
-               centerx="2.2" centery="0.09" centerz="1"
-               radius="0.6" startang="45" rotang="180" />
+               centerx="2.6" centery="0.09" centerz="1"
+               radius="0.4" startang="45" rotang="180" />
 
   </animations>
 
@@ -405,40 +405,54 @@
         <componentref id="wall_1" />
         <componentref id="wall_2" />
         <componentref id="table" />
-        <componentref id="donut" />
-        <componentref id="pyramid" />
-        <componentref id="ball" />
         <componentref id="lamp" />
         <componentref id="poster" />
         <componentref id="car" />
-        <componentref id="track_straight_left" />
-        <componentref id="track_curve1" />
-        <componentref id="track_curve2" />
-        <componentref id="track_curve3" />
-        <componentref id="track_curve4" />
-        <componentref id="track_straight_right" />
-        <componentref id="b" />
+        <componentref id="race_track" />
+        <componentref id="chess_board" />
 
 
         <!-- <componentref id="rubiks" /> -->
       </children>
     </component>
 
-
-    <component id="b">
+    <!-- CHESSBOARD -->
+    <component id="chess_board">
       <transformation>
+        <translate x="1" y="1.11" z="1" />
+        <scale x="0.6" y="1" z="0.6" />
+        <rotate axis="x" angle="-90" /> 
       </transformation>
-
-
 
       <materials>
         <material id="primer_material" />
       </materials>
 
-      <texture id="sprinkles" />
+      <texture id="wood" />
 
       <children>
-        <primitiveref id="sphere" />
+        <primitiveref id="chessboard" />
+      </children>
+    </component>
+
+    <!-- TRACK -->
+    <component id="race_track">
+      <transformation>
+      </transformation>
+
+      <materials>
+        <material id="primer_material" />
+      </materials>
+
+      <texture id="none" />
+
+      <children>
+        <componentref id="track_straight_right" />
+        <componentref id="track_straight_left" />
+        <componentref id="track_curve1" />
+        <componentref id="track_curve2" />
+        <componentref id="track_curve3" />
+        <componentref id="track_curve4" />
       </children>
     </component>
 
@@ -545,7 +559,7 @@
       </children>
     </component>
 
-
+    <!-- CAR -->
     <component id="car">
       <transformation>
       </transformation>
@@ -810,155 +824,6 @@
       </children>
     </component>
 
-    <!-- PYRAMID -->
-    <component id="pyramid">
-      <transformation>
-        <translate x="0.8" y="1.1" z="1.2" />
-        <scale x="0.3" y="0.3" z="0.3" />
-      </transformation>
-
-      <materials>
-        <material id="primer_material" />
-      </materials>
-
-      <texture id="cork" />
-
-      <children>
-        <componentref id="triangle_1" />
-        <componentref id="triangle_2" />
-        <componentref id="triangle_3" />
-        <componentref id="triangle_4" />
-        <componentref id="pyramid_base" />
-      </children>
-    </component>
-
-    <component id="pyramid_base">
-      <transformation>
-        <rotate axis="x" angle="90" />
-      </transformation>
-
-      <materials>
-        <material id="inherit" />
-      </materials>
-
-      <texture id="inherit" />
-
-      <children>
-        <primitiveref id="rectangle" />
-      </children>
-    </component>
-
-    <component id="triangle_1">
-      <transformation>
-        <translate x="0" y="0" z="0.5" />
-        <rotate axis="x" angle="-30" />
-      </transformation>
-
-      <materials>
-        <material id="inherit" />
-      </materials>
-
-      <texture id="inherit" />
-
-      <children>
-        <primitiveref id="triangle" />
-      </children>
-    </component>
-
-    <component id="triangle_2">
-      <transformation>
-        <translate x="0.5" y="0" z="0" />
-        <rotate axis="y" angle="90" />
-        <rotate axis="x" angle="-30" />
-      </transformation>
-
-      <materials>
-        <material id="inherit" />
-      </materials>
-
-      <texture id="inherit" />
-
-      <children>
-        <primitiveref id="triangle" />
-      </children>
-    </component>
-
-    <component id="triangle_3">
-      <transformation>
-        <translate x="0" y="0" z="-0.5" />
-        <rotate axis="y" angle="180" />
-        <rotate axis="x" angle="-30" />
-      </transformation>
-
-      <materials>
-        <material id="inherit" />
-      </materials>
-
-      <texture id="inherit" />
-
-      <children>
-        <primitiveref id="triangle" />
-      </children>
-    </component>
-
-    <component id="triangle_4">
-      <transformation>
-        <translate x="-0.5" y="0" z="0" />
-        <rotate axis="y" angle="270" />
-        <rotate axis="x" angle="-30" />
-      </transformation>
-
-      <materials>
-        <material id="inherit" />
-      </materials>
-
-      <texture id="inherit" />
-
-      <children>
-        <primitiveref id="triangle" />
-      </children>
-    </component>
-
-    <!-- BALL -->
-    <component id="ball">
-      <transformation>
-        <translate x="1.2" y="1.25" z="1.2" />
-        <scale x="0.3" y="0.3" z="0.3" />
-      </transformation>
-
-      <materials>
-        <material id="primer_material" />
-      </materials>
-
-      <texture id="soccer_ball" />
-
-      <children>
-        <primitiveref id="sphere" />
-      </children>
-    </component>
-
-    <!-- DONUT -->
-    <component id="donut">
-      <transformation>
-        <translate x="0.9" y="1.165" z="0.75" />
-        <rotate axis="x" angle="90" />
-        <scale x="0.2" y="0.2" z="0.2" />
-      </transformation>
-
-      <materials>
-        <material id="donut_material" />
-        <material id="blue_material" />
-        <material id="green_material" />
-
-      </materials>
-
-      <texture id="sprinkles" />
-
-      <children>
-        <primitiveref id="torus" />
-      </children>
-    </component>
-
     <!-- FLOOR -->
     <component id="floor">
       <transformation>
@@ -1101,59 +966,6 @@
 
       <children>
         <primitiveref id="conical_frustum" />
-      </children>
-    </component>
-
-    <!-- RUBIKS_CUBE -->
-    <component id="rubiks">
-      <transformation>
-        <translate x="2.75" y ="0" z="2" />
-      </transformation>
-
-      <materials>
-        <material id="primer_material" />
-      </materials>
-
-      <texture id="rubiks_texture" />
-
-      <children>
-        <componentref id="rubiks_holder" />
-        <componentref id="rubiks_cube" />
-      </children>
-    </component>
-
-    <component id="rubiks_cube">
-      <transformation>
-        <translate x="-0.13" y ="0.9" z="0" />
-        <rotate axis="z" angle="45" />
-        <rotate axis="x" angle="45" />
-      </transformation>
-
-      <materials>
-        <material id="primer_material" />
-      </materials>
-
-      <texture id="rubiks_texture" />
-
-      <children>
-        <componentref id="cube" />
-      </children>
-    </component>
-
-    <component id="rubiks_holder">
-      <transformation>
-        <rotate axis="x" angle="-90" />
-        <scale x="0.5" y ="0.5" z="1" />
-      </transformation>
-
-      <materials>
-        <material id="inherit" />
-      </materials>
-
-      <texture id="aluminium" />
-
-      <children>
-        <primitiveref id="cone" />
       </children>
     </component>
 
