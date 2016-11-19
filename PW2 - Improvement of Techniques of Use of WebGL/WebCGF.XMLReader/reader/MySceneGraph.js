@@ -44,18 +44,15 @@ MySceneGraph.prototype.onXMLReady = function () {
 
 
 MySceneGraph.prototype.verifyDSXFileStructure = function (rootElement) {
-    var name;
-    if (rootElement.children.length != 10) throw "Invalid number of 'dsx' children tags detected (verify if all the elements begin with <tag> and end </tag>).";
-    if ((name = rootElement.children[0].nodeName) != "scene") throw "Expected 'scene' tag instead of '" + name + "'.";
-    if ((name = rootElement.children[1].nodeName) != "views") throw "Expected 'views' tag instead of '" + name + "'.";
-    if ((name = rootElement.children[2].nodeName) != "illumination") throw "Expected 'illumination' tag instead of '" + name + "'.";
-    if ((name = rootElement.children[3].nodeName) != "lights") throw "Expected 'lights' tag instead of '" + name + "'.";
-    if ((name = rootElement.children[4].nodeName) != "textures") throw "Expected 'textures' tag instead of '" + name + "'.";
-    if ((name = rootElement.children[5].nodeName) != "materials") throw "Expected 'materials' tag instead of '" + name + "'.";
-    if ((name = rootElement.children[6].nodeName) != "transformations") throw "Expected 'transformations' tag instead of '" + name + "'.";
-    if ((name = rootElement.children[7].nodeName) != "animations") throw "Expected 'animations' tag instead of '" + name + "'.";
-    if ((name = rootElement.children[8].nodeName) != "primitives") throw "Expected 'primitives' tag instead of '" + name + "'.";
-    if ((name = rootElement.children[9].nodeName) != "components") throw "Expected 'components' tag instead of '" + name + "'.";
+    var tags = ["scene", "views", "illumination", "lights", "textures",
+      "materials", "transformations", "animations", "primitives", "components"];
+    var tagsLength = tags.length;
+    if (rootElement.children.length != tagsLength)
+        throw "Invalid number of 'dsx' children tags detected (verify if all the elements begin with <tag> and end </tag>).";
+
+    for(var i = 0; i < tagsLength; i++)
+      if (rootElement.children[i].nodeName != tags[i])
+        throw "Expected '" + tags[i] + "' tag instead of '" + rootElement.children[i].nodeName + "'.";
 }
 
 MySceneGraph.prototype.getElemChildrenIds = function (elem, ids) {
