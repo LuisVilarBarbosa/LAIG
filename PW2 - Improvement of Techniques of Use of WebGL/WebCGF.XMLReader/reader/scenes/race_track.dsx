@@ -324,12 +324,12 @@
       <!-- O numero total de pontos a fornecer e' -->
       <!--      (2+1)*(3+1)=12 pontos              -->
       <patch orderU="1" orderV="2" partsU="30" partsV="30" >
-        <controlpoint x="1.8" y="0.01" z="1.0" w="1"/>
-        <controlpoint x="1.8" y="0.01" z="0.2" w="1" />
-        <controlpoint x="2.6" y="0.01" z="0.2" w="1" />
-        <controlpoint x="2.2" y="0.01" z="1.0" w="1" />
-        <controlpoint x="2.2" y="0.01" z="0.6" w="1" />
-        <controlpoint x="2.6" y="0.01" z="0.6" w="1" />
+        <controlpoint x="1.8" y="0.01" z="1.0" />
+        <controlpoint x="1.8" y="0.01" z="0.2" />
+        <controlpoint x="2.6" y="0.01" z="0.2" />
+        <controlpoint x="2.2" y="0.01" z="1.0" />
+        <controlpoint x="2.2" y="0.01" z="0.6" />
+        <controlpoint x="2.6" y="0.01" z="0.6" />
       </patch>
     </primitive>
 
@@ -429,7 +429,7 @@
       <transformation>
       </transformation>
 
-     
+
 
       <materials>
         <material id="primer_material" />
@@ -549,13 +549,13 @@
     <component id="car">
       <transformation>
       </transformation>
-    
+
       <animation>
         <animationref id="car_straight1" />
         <animationref id="car_curve1" />
         <animationref id="car_straight2" />
         <animationref id="car_curve2" />
-      </animation> 
+      </animation>
 
       <materials>
         <material id="inherit" />
