@@ -369,7 +369,7 @@ MySceneGraph.prototype.parseAnimationTags = function (elems) {
                     var xx = this.reader.getFloat(children[j], "xx", true);
                     var yy = this.reader.getFloat(children[j], "yy", true);
                     var zz = this.reader.getFloat(children[j], "zz", true);
-                    controlPoints.push(xx, yy, zz);
+                    controlPoints.push([xx, yy, zz]);
                 }
                 else
                     throw "Invalid linear animation child tag found: '" + children[j].tagName + "'.";
@@ -475,13 +475,13 @@ MySceneGraph.prototype.parsePrimitiveTags = function (elems) {
                 throw "Invalid number of " + primitive.tagName + " child tags found. Expected 3 children.";
 
             var tagNames = ["c1", "c2", "cs"];
-            var cx = [];
+            var colors = [];
             for (var j = 0, nnodes2 = tagNames.length; j < nnodes2; j++)
               if (primitive.children[j].tagName == tagNames[j])
-                cx[j] = this.getFloatsRGBA(primitive.children[j]);
+                colors[j] = this.getFloatsRGBA(primitive.children[j]);
               else
                 throw "Invalid chessboard child found: '" + primitive.children[j].tagName + "'. Expected '" + tagNames[j] + "'.";
-            //this.scene.addPrimitive(id, new MyBoard(this.scene, du, dv, textureref, su, sv, cx[0], cx[1], cx[2]));
+            //this.scene.addPrimitive(id, new MyBoard(this.scene, du, dv, textureref, su, sv, colors));
         }
         else
             throw "Invalid primitive element found: '" + primitive.tagName + "'.";

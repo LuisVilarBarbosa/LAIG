@@ -6,7 +6,7 @@ function LinearAnimation(controlpoints, span) {
     Animation.call(this);
     if (controlpoints == null)   // include 'undefined'
         throw new Error("The control points should be instantiated.");
-    if (controlpoints.length < 6)   // 6 = 2 points with 3 coordinates
+    if (controlpoints.length < 2)
         console.warn("The number of control points should be, at least, 2. The animation will not take effect.");
     if (span == null)   // include 'undefined'
         throw new Error("The animation time should be instantiated.");
@@ -17,17 +17,17 @@ function LinearAnimation(controlpoints, span) {
     this.span = span;   /* in seconds */
 
     var distance = 0;
-    for (var i = 3; i < this.controlpoints.length; i += 3)
-        distance += this.calculateLineLength(i - 3, i);
+    for (var i = 1; i < this.controlpoints.length; i++)
+        distance += this.calculateLineLength(this.controlpoints[i - 1], this.controlpoints[i]);
     this.velocity = distance / this.span;
     this.transform = mat4.create();
 };
 
 /* sqrt((x2-x1)^2 + (y2-y1)^2 + (z2-z1)^2) */
-LinearAnimation.prototype.calculateLineLength = function (point1XIndex, point2XIndex) {
+LinearAnimation.prototype.calculateLineLength = function (point1, point2) {
     var sum = 0;
     for (var i = 0, delta; i < 3; i++) {
-        delta = this.controlpoints[point2XIndex + i] - this.controlpoints[point1XIndex + i];
+        delta = Math.abs(point2[i] - point1[i]);
         sum += delta * delta;
     }
     return Math.sqrt(sum);
@@ -48,7 +48,7 @@ LinearAnimation.prototype.calculateYAngle = function (vector1, vector2) {
 }
 
 LinearAnimation.prototype.calculateGeometricTransformation = function (currTime) {
-    if (this.controlpoints.length < 6)  /* static animation -> 6 = 2 points with 3 coordinates */
+    if (this.controlpoints.length < 2)  /* static animation */
         return;
 
     this.firstTime = this.firstTime || currTime;
@@ -58,15 +58,17 @@ LinearAnimation.prototype.calculateGeometricTransformation = function (currTime)
     if (deltaTime <= this.span) {
         var newTotalDistanceDone = this.velocity * deltaTime;
 
-        /* calculate what is the actual pair of control points ('i' will be the second control point) */
-        var actualLineLength, i = 3, distanceCompletedLines = 0, stop = false;
+        /* Calculate what is the actual pair of control points ('i' will be the second control point)
+            and add the translations already shown. Translates to the first control point in the first
+            iteration (when deltaTime = 0). */
+        var actualLineLength, i = 1, distanceCompletedLines = 0, stop = false;
         while (!stop) {
-            actualLineLength = this.calculateLineLength(i - 3, i);
+            actualLineLength = this.calculateLineLength(this.controlpoints[i - 1], this.controlpoints[i]);
             if (distanceCompletedLines + actualLineLength <= newTotalDistanceDone) {
                 distanceCompletedLines += actualLineLength;
                 for (var j = 0; j < 3; j++)
-                    translation[j] += (this.controlpoints[i + j] - this.controlpoints[i - 3 + j]);
-                i += 3;
+                    translation[j] += (this.controlpoints[i][j] - this.controlpoints[i - 1][j]);
+                i++;
             }
             else stop = true;
         }
@@ -77,11 +79,9 @@ LinearAnimation.prototype.calculateGeometricTransformation = function (currTime)
 
         /* calculate the line point where the object must be placed */
         for (var j = 0; j < 3; j++)
-            translation[j] += (this.controlpoints[i + j] - this.controlpoints[i - 3 + j]) * lineDeltaTime / lineTime;
+            translation[j] += (this.controlpoints[i][j] - this.controlpoints[i - 1][j]) * lineDeltaTime / lineTime;
     } else {
-        var lastControlPoint = this.controlpoints.length - 3;
-        for (var i = 0; i < 3; i++)
-            translation[i] = [this.controlpoints[lastControlPoint + i]];
+        translation = this.controlpoints[this.controlpoints.length - 1];
         this.done = true;
     }
 
