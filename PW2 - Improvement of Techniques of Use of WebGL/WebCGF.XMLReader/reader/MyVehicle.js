@@ -327,7 +327,9 @@ MyVehicle.prototype.init_objects = function () {
 MyVehicle.prototype.display = function () {
     
 this.scene.pushMatrix();
+    this.scene.rotate(90*Math.PI/180, 0, 1, 0);
     this.scene.scale(0.04, 0.04, 0.04);
+
 
     this.scene.pushMatrix();
         this.scene.scale(1.4, 1, 1);

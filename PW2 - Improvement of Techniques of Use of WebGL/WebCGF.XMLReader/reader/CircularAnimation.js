@@ -35,11 +35,11 @@ CircularAnimation.prototype.calculateGeometricTransformation = function (currTim
         var newTotalAngleDone = this.angVelocity * deltaTime;
         mat4.translate(this.transform, this.transform, this.center);
         mat4.rotate(this.transform, this.transform, this.startang + newTotalAngleDone, [0, 1, 0]);
-        mat4.translate(this.transform, this.transform, [this.radius, 0, this.radius]);
+        mat4.translate(this.transform, this.transform, [0, 0, this.radius]);
     } else {
         mat4.translate(this.transform, this.transform, this.center);
         mat4.rotate(this.transform, this.transform, this.startang + this.rotang, [0, 1, 0]);
-        mat4.translate(this.transform, this.transform, [this.radius, 0, this.radius]);
+        mat4.translate(this.transform, this.transform, [0, 0, this.radius]);
         this.done = true;
     }
 }

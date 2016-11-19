@@ -255,11 +255,11 @@
 
     <animation id="car_curve1" span="5" type="circular"
                centerx="2.6" centery="0.09" centerz="3"
-               radius="0.4" startang="225" rotang="180" />
+               radius="0.6" startang="-90" rotang="180" />
 
     <animation id="car_curve2" span="5" type="circular"
                centerx="2.6" centery="0.09" centerz="1"
-               radius="0.4" startang="45" rotang="180" />
+               radius="0.6" startang="90" rotang="180" />
 
   </animations>
 
@@ -348,7 +348,7 @@
                      (dimensões potências de 2)       -->
       <!--   - a posição da casa selecionada (su,sv) -->
       <!--   - as três cores a utilizar              -->
-      <chessboard du="8" dv="8" textureref="wood" su="0" sv="5">
+      <chessboard du="8" dv="8" textureref="wood" su="5" sv="5">
         <c1 r="1" g="1" b="0" a="1" />
         <c2 r="1" g="0.6" b="0" a="1" />
         <cs r="1" g="0" b="0" a="1" />
