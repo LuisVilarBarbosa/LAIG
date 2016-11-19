@@ -481,7 +481,7 @@ MySceneGraph.prototype.parsePrimitiveTags = function (elems) {
                 colors[j] = this.getFloatsRGBA(primitive.children[j]);
               else
                 throw "Invalid chessboard child found: '" + primitive.children[j].tagName + "'. Expected '" + tagNames[j] + "'.";
-            //this.scene.addPrimitive(id, new MyBoard(this.scene, du, dv, textureref, su, sv, colors));
+            this.scene.addPrimitive(id, new MyBoard(this.scene, du, dv, textureref, su, sv, colors));
         }
         else
             throw "Invalid primitive element found: '" + primitive.tagName + "'.";
