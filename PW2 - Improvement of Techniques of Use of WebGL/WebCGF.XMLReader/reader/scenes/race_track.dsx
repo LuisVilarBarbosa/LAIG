@@ -261,6 +261,39 @@
                centerx="2.6" centery="0.09" centerz="1"
                radius="0.6" startang="90" rotang="180" />
 
+    <animation id="car_fly_1" span="3.0" type="linear">
+      <controlpoint xx="2" yy="0.09" zz="1" />
+      <controlpoint xx="2" yy="0.6" zz="3" />
+    </animation>
+
+    <animation id="car_fly_2" span="3" type="circular"
+               centerx="1.2" centery="0.6" centerz="3"
+               radius="0.8" startang="90" rotang="-180" />
+
+    <animation id="car_fly_3" span="3.0" type="linear">
+      <controlpoint xx="0.4" yy="0.6" zz="3" />
+      <controlpoint xx="0.4" yy="0.6" zz="1" />
+    </animation>
+
+    <animation id="car_fly_4" span="2" type="circular"
+               centerx="1" centery="0.6" centerz="1"
+               radius="0.6" startang="270" rotang="-90" />
+
+    <animation id="car_fly_5" span="4.0" type="linear">
+      <controlpoint xx="1" yy="0.6" zz="0.4" />
+      <controlpoint xx="2.6" yy="0.6" zz="0.4" />
+    </animation>
+
+    <animation id="car_fly_6" span="2" type="circular"
+               centerx="2.6" centery="0.6" centerz="1"
+               radius="0.6" startang="180" rotang="-90" />
+
+    <animation id="car_land" span="6.0" type="linear">
+      <controlpoint xx="3.2" yy="0.6" zz="1" />
+      <controlpoint xx="3.2" yy="0.09" zz="2" />
+      <controlpoint xx="3.2" yy="0.09" zz="2.6" />
+    </animation>
+
   </animations>
 
 
@@ -404,22 +437,57 @@
         <componentref id="floor" />
         <componentref id="wall_1" />
         <componentref id="wall_2" />
-        <componentref id="table" />
+        <componentref id="table1" />
         <componentref id="lamp" />
         <componentref id="poster" />
         <componentref id="car" />
         <componentref id="race_track" />
-        <componentref id="chess_board" />
-
-
-        <!-- <componentref id="rubiks" /> -->
+        <componentref id="board1" />
+        <componentref id="table2" />
+        <componentref id="board2" />
       </children>
     </component>
 
-    <!-- CHESSBOARD -->
-    <component id="chess_board">
+    <!-- CHESSBOARD2 -->
+    <component id="board2">
       <transformation>
-        <translate x="1" y="1.11" z="1" />
+        <translate x="1" y="1.11" z="2.0" />
+        <scale x="0.6" y="1" z="0.6" />
+        <rotate axis="x" angle="-90" />
+      </transformation>
+
+      <materials>
+        <material id="inherit" />
+      </materials>
+
+      <texture id="inherit" />
+
+      <children>
+        <primitiveref id="chessboard" />
+      </children>
+    </component>
+
+    <!-- TABLE2 -->
+    <component id="table2">
+      <transformation>
+        <translate x="0" y="0" z="1.3" />
+      </transformation>
+
+      <materials>
+        <material id="inherit" />
+      </materials>
+
+      <texture id="inherit" />
+
+      <children>
+        <componentref id="table1" />
+      </children>
+    </component>
+
+    <!-- CHESSBOARD1 -->
+    <component id="board1">
+      <transformation>
+        <translate x="1" y="1.11" z="0.7" />
         <scale x="0.6" y="1" z="0.6" />
         <rotate axis="x" angle="-90" />
       </transformation>
@@ -567,8 +635,15 @@
       <animation>
         <animationref id="car_straight1" />
         <animationref id="car_curve1" />
-        <animationref id="car_straight2" />
+        <animationref id="car_straight2" /> 
         <animationref id="car_curve2" />
+        <animationref id="car_fly_1" />
+        <animationref id="car_fly_2" />
+        <animationref id="car_fly_3" />
+        <animationref id="car_fly_4" />
+        <animationref id="car_fly_5" />
+        <animationref id="car_fly_6" />
+        <animationref id="car_land" />
       </animation>
 
       <materials>
@@ -582,10 +657,10 @@
       </children>
     </component>
 
-    <!-- TABLE -->
-    <component id="table">
+    <!-- TABLE1 -->
+    <component id="table1">
       <transformation>
-        <translate x="0.5" y="0" z="0.5" />
+        <translate x="0.5" y="0" z="0.2" />
       </transformation>
 
       <materials>
