@@ -315,6 +315,7 @@
       </chessboard>
 </primitive>
       <primitive id="chessboard2">
+        <chessboard du="16" dv="32" textureref="metal" su="8" sv="25">
           <c1 r="0" g="1" b="0" a="1" />
           <c2 r="0" g="0" b="1" a="1" />
           <cs r="1" g="0" b="1" a="1" />
