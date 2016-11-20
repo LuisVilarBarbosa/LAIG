@@ -213,13 +213,13 @@ XMLscene.prototype.processGraph = function (nodeId) {
         material.setTexture(texture);
         material.apply();
 
-        this.multMatrix(node.mat);
-
         var animationId = node.getAnimation();
         if (animationId != null) {
             var animation = this.animations[animationId];
             this.multMatrix(animation.getGeometricTransformation());
         }
+
+        this.multMatrix(node.mat);
 
         for (var i = 0; i < node.primitives.length; i++) {
             var primitive = this.primitives[node.primitives[i]];
