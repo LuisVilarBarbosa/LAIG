@@ -12,11 +12,10 @@ varying vec2 vTextureCoord;
 void main()
 {
 	vec3 offset = vec3(0.0, 0.0, 0.0);
-	ivec2 f = ivec2(floor(aTextureCoord * dim));
-	ivec2 mod = f - 2 * (f / 2);	// mod(f, 2)
+	vec2 f = floor(aTextureCoord * dim);
 
-	if(f == ivec2(sel))
-		offset.z = 0.1;
+	if(f.s >= sel.s && f.t >= sel.t && f.s <= sel.s + 1.0 && f.t <= sel.t + 1.0)
+		offset.z = 0.025;
 
 	gl_Position = uPMatrix * uMVMatrix * vec4(aVertexPosition + offset, 1.0);
 	vTextureCoord = aTextureCoord;

@@ -13,16 +13,14 @@ varying vec2 vTextureCoord;
 
 void main()
 {
-	ivec2 f = ivec2(floor(vTextureCoord * dim));
-	ivec2 mod = f - 2 * (f / 2);	// mod(f, 2)
-	vec4 color;
+	vec2 f = floor(vTextureCoord * dim);
+	ivec2 modF = ivec2(mod(f, 2.0));
+	vec4 color = c2;
 
-	if(f == ivec2(sel))
+	if(ivec2(f) == ivec2(sel))
 		color = cs;
-	else if ((mod == ivec2(0, 0)) || (mod == ivec2(1, 1)))
+	else if ((modF == ivec2(0, 0)) || (modF == ivec2(1, 1)))
 		color = c1;
-	else
-		color = c2;
 
 	gl_FragColor = color * texture2D(uSampler, vTextureCoord);
 }
