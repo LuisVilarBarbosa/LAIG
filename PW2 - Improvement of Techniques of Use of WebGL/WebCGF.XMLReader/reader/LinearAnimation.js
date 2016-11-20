@@ -38,41 +38,49 @@ LinearAnimation.prototype.calculateYAngle = function (point1, point2) {
 }
 
 LinearAnimation.prototype.calculateGeometricTransformation = function (currTime) {
-    if (this.controlPoints.length < 2 || this.done === true)  /* static animation or animation done */
+    if (this.done === true)  /* animation done - last transformation already saved */
         return;
 
     this.firstTime = this.firstTime || currTime;
     var deltaTime = (currTime - this.firstTime) / 1000;   /* in seconds */
-    var translation = [0, 0, 0], yRotationAngle;
+    var translation = [0, 0, 0], yRotationAngle = 0;
 
-    if (deltaTime <= this.span) {
-        var newTotalDistanceDone = this.velocity * deltaTime;
+    if (this.controlPoints.length >= 2) {
+        if (deltaTime <= this.span) {
+            var newTotalDistanceDone = this.velocity * deltaTime;
 
-        /* calculate what is the actual pair of control points ('i' will be the second control point) */
-        var actualLineLength, i = 1, distanceCompletedLines = 0;
-        for (var stop = false; !stop;) {
-            actualLineLength = this.calculateLineLength(this.controlPoints[i - 1], this.controlPoints[i]);
-            if (distanceCompletedLines + actualLineLength <= newTotalDistanceDone) {
-                distanceCompletedLines += actualLineLength;
-                i++;
+            /* calculate what is the actual pair of control points ('i' will be the second control point) */
+            var actualLineLength, i = 1, distanceCompletedLines = 0;
+            for (var stop = false; !stop;) {
+                actualLineLength = this.calculateLineLength(this.controlPoints[i - 1], this.controlPoints[i]);
+                if (distanceCompletedLines + actualLineLength <= newTotalDistanceDone) {
+                    distanceCompletedLines += actualLineLength;
+                    i++;
+                }
+                else stop = true;
             }
-            else stop = true;
+
+            var lineDistanceDone = newTotalDistanceDone - distanceCompletedLines;
+            var lineDeltaTime = lineDistanceDone * this.velocity;
+            var lineTime = actualLineLength * this.velocity;
+
+            /* calculate the line point where the object must be placed */
+            for (var j = 0, ratio = lineDeltaTime / lineTime; j < 3; j++)
+                translation[j] = this.controlPoints[i - 1][j] + (this.controlPoints[i][j] - this.controlPoints[i - 1][j]) * ratio;
+            yRotationAngle = -this.calculateYAngle(this.controlPoints[i - 1], this.controlPoints[i]);
+        } else {
+            var lastIndex = this.controlPoints.length - 1;
+            translation = this.controlPoints[lastIndex];
+            yRotationAngle = -this.calculateYAngle(this.controlPoints[lastIndex - 1], this.controlPoints[lastIndex]);
         }
-
-        var lineDistanceDone = newTotalDistanceDone - distanceCompletedLines;
-        var lineDeltaTime = lineDistanceDone * this.velocity;
-        var lineTime = actualLineLength * this.velocity;
-
-        /* calculate the line point where the object must be placed */
-        for (var j = 0, ratio = lineDeltaTime / lineTime; j < 3; j++)
-            translation[j] = this.controlPoints[i - 1][j] + (this.controlPoints[i][j] - this.controlPoints[i - 1][j]) * ratio;
-        yRotationAngle = -this.calculateYAngle(this.controlPoints[i - 1], this.controlPoints[i]);
-    } else {
-        var lastIndex = this.controlPoints.length - 1;
-        translation = this.controlPoints[lastIndex];
-        yRotationAngle = -this.calculateYAngle(this.controlPoints[lastIndex - 1], this.controlPoints[lastIndex]);
-        this.done = true;
     }
+    else if (this.controlPoints.length == 1)
+        translation = this.controlPoints[0];
+    /* else if (this.controlPoints.length == 0)
+        translation = [0, 0, 0]; */
+
+    if (deltaTime > this.span)
+        this.done = true;
 
     /* generate transformation matrix */
     this.transform = mat4.create();
