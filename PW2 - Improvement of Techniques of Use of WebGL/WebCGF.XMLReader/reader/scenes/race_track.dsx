@@ -113,20 +113,15 @@
     <!-- objetos respetivos podem a violar esta regra.         -->
     <!-- Nao necessario aplicar fatores de escala em  -->
     <!-- quadricas (esfera, ciclindro...) -->
-    <texture id="cork" file="./images/cork.jpg" length_s="1" length_t="1" />
-    <texture id="fabric" file="./images/fabric.jpg" length_s="1" length_t="1" />
     <texture id="wood" file="./images/wood.jpg" length_s="1" length_t="1" />
     <texture id="metal" file="./images/metal.jpg" length_s="1" length_t="1" />
     <texture id="floor_wood" file="./images/floor_wood.jpg" length_s="0.25" length_t="0.25" />
     <texture id="white_wall" file="./images/white_wall.jpg" length_s="1" length_t="1" />
-    <texture id="sprinkles" file="./images/sprinkles.png" length_s="1" length_t="1" />
     <texture id="lampshade" file="./images/lampshade.jpg" length_s="1" length_t="1" />
-    <texture id="rubiks_texture" file="./images/rubiks_cube.png" length_s="1" length_t="1" />
     <texture id="galaxy" file="./images/galaxy.jpg" length_s="1" length_t="1" />
-    <texture id="aluminium" file="./images/aluminium.jpg" length_s="1" length_t="1" />
-    <texture id="soccer_ball" file="./images/soccer_ball.png" length_s="2.73" length_t="3" />
     <texture id="track_texture" file="./images/track.jpg" length_s="1" length_t="1" />
     <texture id="track_texture2" file="./images/track2.jpg" length_s="1" length_t="1" />
+    <texture id="oak" file="./images/oak_rectangle.jpg" length_s="1" length_t="1" />
   </textures>
 
 
@@ -134,7 +129,6 @@
 
     <!-- Deve existir um ou mais blocos "material" -->
     <!-- Os identificadores "id" nao podem ser repetidos -->
-
     <material id="primer_material" >
       <emission r="0" g="0" b="0" a="1" />
       <ambient r="0.85" g="0.85" b="0.85" a="1" />
@@ -158,70 +152,15 @@
       <specular r="0.87" g="0.72" b="0.52" a="1" />
       <shininess value="5" />
     </material>
-
-    <material id="donut_material" >
-      <emission r="0" g="0" b="0" a="1" />
-      <ambient r="1" g="0.71" b="0.75" a="1" />
-      <diffuse r="1" g="0.71" b="0.75" a="1" />
-      <specular r="1" g="0.71" b="0.75" a="1" />
-      <shininess value="15" />
-    </material>
-
-    <material id="marron_material" >
-      <emission r="0" g="0" b="0" a="1" />
-      <ambient r="0.545" g="0.27" b="0.074" a="1" />
-      <diffuse r="0.545" g="0.27" b="0.074" a="1" />
-      <specular r="0.545" g="0.27" b="0.074" a="1" />
-      <shininess value="15" />
-    </material>
-
-    <material id="green_material" >
-      <emission r="0" g="0" b="0" a="1" />
-      <ambient r="0.73" g="0.89" b="0.039" a="1" />
-      <diffuse r="0.73" g="0.89" b="0.039" a="1" />
-      <specular r="0.73" g="0.89" b="0.039" a="1" />
-      <shininess value="15" />
-    </material>
-
   </materials>
 
 
   <transformations>
-
-    <!-- Deve existir um ou mais blocos "transformation" -->
-    <!-- Os identificadores "id" nao podem ser repetidos -->
-    <transformation id="rotate_90y">
-      <!-- instrucoes a usar sem limite nem ordem -->
-      <!-- deve existir pelo menos uma transformacao -->
-      <rotate axis="y" angle="90" />
-    </transformation>
-
     <transformation id="enlarge_2x">
       <!-- instrucoes a usar sem limite nem ordem -->
       <!-- deve existir pelo menos uma transformacao -->
       <scale x="2" y="2" z="2" />
     </transformation>
-
-    <transformation id="translate_y_5">
-      <!-- instrucoes a usar sem limite nem ordem -->
-      <!-- deve existir pelo menos uma transformacao -->
-      <translate x="0" y="5" z="0" />
-    </transformation>
-
-    <transformation id="translate_rotate_and_scale">
-      <!-- instrucoes a usar sem limite nem ordem -->
-      <!-- deve existir pelo menos uma transformacao -->
-      <scale x="2" y="2" z="2" />
-      <rotate axis="y" angle="90" />
-      <translate x="0" y="5" z="0" />
-    </transformation>
-
-    <transformation id="identity">
-      <!-- instrucoes a usar sem limite nem ordem -->
-      <!-- deve existir pelo menos uma transformacao -->
-      <translate x="0" y="0" z="0" />
-    </transformation>
-
   </transformations>
 
   <!-- novo bloco de animacao -->
@@ -231,18 +170,6 @@
     <!-- demorar. Nesta versão do formato DSX, type pode ter -->
     <!-- o valor "linear" ou "circular"; na animacao circular -->
     <!-- os angulos sao expressos em graus  -->
-    <animation id="table_move" span="10.0" type="linear">
-      <controlpoint xx="0" yy="0" zz="0" />
-      <controlpoint xx="1" yy="0" zz="0" />
-      <controlpoint xx="1" yy="1" zz="0" />
-    </animation>
-
-    <animation id="cube_rotation" span="20" type="circular"
-               centerx="10" centery="10" centerz="10"
-               radius="5" startang="40" rotang="20" />
-
-
-
     <animation id="car_straight1" span="5.0" type="linear">
       <controlpoint xx="2" yy="0.09" zz="1" />
       <controlpoint xx="2" yy="0.09" zz="3" />
@@ -381,11 +308,17 @@
                      (dimensões potências de 2)       -->
       <!--   - a posição da casa selecionada (su,sv) -->
       <!--   - as três cores a utilizar              -->
-      <chessboard du="8" dv="8" textureref="wood" su="5" sv="5">
-        <c1 r="1" g="1" b="0" a="1" />
-        <c2 r="1" g="0.6" b="0" a="1" />
-        <cs r="1" g="0" b="0" a="1" />
+      <chessboard du="8" dv="8" textureref="oak" su="3" sv="2">
+        <c1 r="1" g="0.867" b="0.678" a="1" />
+        <c2 r="0.545" g="0.270" b="0.074" a="1" />
+        <cs r="0.8" g="0.3" b="0" a="1" />
       </chessboard>
+</primitive>
+      <primitive id="chessboard2">
+          <c1 r="0" g="1" b="0" a="1" />
+          <c2 r="0" g="0" b="1" a="1" />
+          <cs r="1" g="0" b="1" a="1" />
+        </chessboard>
     </primitive>
 
   </primitives>
@@ -452,7 +385,8 @@
     <component id="board2">
       <transformation>
         <translate x="1" y="1.11" z="2.0" />
-        <scale x="0.6" y="1" z="0.6" />
+        <scale x="0.9" y="1" z="0.9" />
+        <rotate axis="y" angle="-90" />
         <rotate axis="x" angle="-90" />
       </transformation>
 
@@ -463,7 +397,7 @@
       <texture id="inherit" />
 
       <children>
-        <primitiveref id="chessboard" />
+        <primitiveref id="chessboard2" />
       </children>
     </component>
 
@@ -489,6 +423,7 @@
       <transformation>
         <translate x="1" y="1.11" z="0.7" />
         <scale x="0.6" y="1" z="0.6" />
+        <rotate axis="y" angle="-90" />
         <rotate axis="x" angle="-90" />
       </transformation>
 
