@@ -269,8 +269,10 @@ XMLscene.prototype.updateAux = function (currTime, nodeId) {
     if (animationId != null) {
         var animation = this.animations[animationId];
         animation.calculateGeometricTransformation(currTime);
-        if (animation.done)
+        if (animation.done) {
             node.nextAnimation();
+            this.animations[node.getAnimation()].calculateGeometricTransformation(currTime);
+        }
     }
 
     for (var i = 0; i < node.children.length; i++)
