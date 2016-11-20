@@ -5,6 +5,9 @@
 function MyBoard(scene, du, dv, textureref, su, sv, colors) {
     CGFobject.call(this, scene);
 
+    if (!(su == -1 && sv == -1) && !(su >= 0 && su < du && sv >= 0 && sv < dv))
+        throw this.constructor.name + ": Invalid 'su' or 'sv' ((-1, -1) if not in use or coordinates inside the bounds of the board).";
+
     if (colors.length != 3)
         throw this.constructor.name + ": Invalid number of colors, expected 3.";
 
