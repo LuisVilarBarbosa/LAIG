@@ -29,7 +29,7 @@ function MyBoard(scene, du, dv, textureref, su, sv, colors) {
 
     this.shader = new CGFshader(this.scene.gl, "shaders/board-vertex.glsl", "shaders/board-fragment.glsl");
     this.shader.setUniformsValues({
-        dim: [this.du, this.dv], vSampler: 1,
+        dim: [this.du, this.dv], uSampler: 1,
         sel: [this.su, this.sv], c1: this.c1, c2: this.c2, cs: this.cs
     });
 };
