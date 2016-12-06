@@ -33,56 +33,6 @@ board([
 	[' ', ' ', u2, u2, n2, u2, u2, ' ', ' ']
 	]).
 
-small_board([
-	[u1, u1, n1, u1, u1],
-	[sp, u1, u1, u1, sp],
-	[sp, sp, u1, sp, sp],
-	[sp, sp, u2, sp, sp],
-	[sp, u2, u2, u2, sp],
-	[u2, u2, n2, u2, u2]
-	]).
-	
-jump_board([
-	[n1],
-	[u1],
-	[u2],
-	[sp],
-	[n2]
-	]).
-
-bad_board([
-	[' ', ' ', u1, u1, n1, u1, u1],
-	[' ',  sp, sp, u1, u1, u1, sp],
-	[ sp,  sp, sp, sp, u1, sp],
-	[ sp,  sp, sp, sp, u2, sp, sp],
-	[' ',  sp, sp, u2, u2, u2, sp],
-	[' ', ' ', u2, u2, n2, u2, u2]
-	]).
-
-intermediate_board([
-	[' ', ' ', sp, sp, sp, u1, sp, ' ', ' '],
-	[' ',  sp, u1, u1, n1, u1, sp,  sp, ' '],
-	[ sp,  sp, sp, sp, u1, sp, sp,  sp,  sp],
-	[ sp,  u1, sp, sp, sp, sp, sp,  u1,  sp],
-	[ sp,  sp, sp, sp, u1, sp, sp,  sp,  sp],
-	[ sp,  sp, sp, sp, sp, sp, sp,  sp,  sp],
-	[ sp,  sp, sp, u2, u2, sp, sp,  sp,  sp],
-	[' ',  sp, sp, u2, n2, u2, sp,  sp, ' '],
-	[' ', ' ', u2, u2, sp, u2, u2, ' ', ' ']
-	]).
-
-final_board([
-	[' ', ' ', sp, sp, sp, sp, sp, ' ', ' '],
-	[' ',  u1, sp, sp, sp, u1, sp,  sp, ' '],
-	[ sp,  sp, u1, sp, u1, n1, sp,  sp,  sp],
-	[ sp,  sp, sp, u1, n2, u1, sp,  sp,  sp],
-	[ sp,  sp, sp, sp, u1, sp, sp,  sp,  sp],
-	[ sp,  sp, u2, u1, sp, sp, sp,  u2,  sp],
-	[ sp,  sp, u2, sp, sp, sp, sp,  sp,  sp],
-	[' ',  sp, u2, u2, sp, sp, u2,  sp, ' '],
-	[' ', ' ', sp, u2, sp, u2, sp, ' ', ' ']
-	]).
-
 /* State */
 state(_Player, _Board).
 
