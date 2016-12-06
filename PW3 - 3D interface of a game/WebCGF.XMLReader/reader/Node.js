@@ -9,6 +9,8 @@ function Node() {
     this.mat = null;    // transformation matrix
     this.children = [];
     this.primitives = [];
+    this.visibles = [];
+    this.selectables = [];
     this.animations = [];
     this.animationIndex = -1;
 };
@@ -38,8 +40,10 @@ Node.prototype.pushChild = function (nodeId) {
     this.children.push(nodeId);
 }
 
-Node.prototype.pushPrimitive = function (nodeId) {
+Node.prototype.pushPrimitive = function (nodeId, visible, selectable) {
     this.primitives.push(nodeId);
+    this.visibles.push(visible);
+    this.selectables.push(selectable);
 }
 
 Node.prototype.getSize = function () {

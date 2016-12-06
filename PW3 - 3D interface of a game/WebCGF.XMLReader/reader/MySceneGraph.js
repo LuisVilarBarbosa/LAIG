@@ -121,6 +121,11 @@ MySceneGraph.prototype.verifyGraphAux = function (nodeId, ids) {    // emulates 
             var primitive = this.scene.primitives[node.primitives[i]];
             if (primitive === undefined)
                 throw "'" + node.primitives[i] + "' isn't declared in the 'primitives' element.";
+            if (typeof (node.visibles[i]) !== "boolean")
+                throw this.constructor.name + ": Expected 'visible' with type 'boolean', but found type '" + typeof (node.visibles[i]) + "'.";
+            if (typeof (node.selectables[i]) !== "boolean")
+                throw this.constructor.name + ": Expected 'selectable' with type 'boolean', but found type '" + typeof (node.selectables[i]) + "'.";
+
         }
         for (var i = 0; i < node.children.length; i++)
             this.verifyGraphAux(node.children[i], ids);
@@ -550,8 +555,12 @@ MySceneGraph.prototype.parseComponentTags = function (elems) {
             for (var j = 0, nnodes2 = componentrefElems.length; j < nnodes2; j++)
                 node.pushChild(this.reader.getString(componentrefElems[j], "id", true));
 
-            for (var j = 0, nnodes2 = primitiverefElems.length; j < nnodes2; j++)
-                node.pushPrimitive(this.reader.getString(primitiverefElems[j], "id", true));
+            for (var j = 0, nnodes2 = primitiverefElems.length; j < nnodes2; j++) {
+                var primitive = this.reader.getString(primitiverefElems[j], "id", true);
+                var visible = this.reader.getBoolean(primitiverefElems[j], "visible", true);
+                var selectable = this.reader.getBoolean(primitiverefElems[j], "selectable", true);
+                node.pushPrimitive(primitive, visible, selectable);
+            }
         }
 
         this.scene.addNode(id, node);

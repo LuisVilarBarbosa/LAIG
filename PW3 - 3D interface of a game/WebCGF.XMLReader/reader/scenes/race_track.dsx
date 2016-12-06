@@ -398,7 +398,7 @@
       <texture id="inherit" />
 
       <children>
-        <primitiveref id="chessboard2" />
+        <primitiveref id="chessboard2" visible="1" selectable="0" />
       </children>
     </component>
 
@@ -435,7 +435,7 @@
       <texture id="wood" />
 
       <children>
-        <primitiveref id="chessboard" />
+        <primitiveref id="chessboard" visible="1" selectable="0" />
       </children>
     </component>
 
@@ -473,7 +473,7 @@
       <texture id="track_texture2" />
 
       <children>
-        <primitiveref id="curve" />
+        <primitiveref id="curve" visible="1" selectable="0" />
       </children>
     </component>
 
@@ -490,7 +490,7 @@
       <texture id="track_texture2" />
 
       <children>
-        <primitiveref id="curve" />
+        <primitiveref id="curve" visible="1" selectable="0" />
       </children>
     </component>
 
@@ -505,7 +505,7 @@
       <texture id="track_texture2" />
 
       <children>
-        <primitiveref id="curve" />
+        <primitiveref id="curve" visible="1" selectable="0" />
       </children>
     </component>
 
@@ -523,7 +523,7 @@
       <texture id="track_texture2" />
 
       <children>
-        <primitiveref id="curve" />
+        <primitiveref id="curve" visible="1" selectable="0" />
       </children>
     </component>
 
@@ -541,7 +541,7 @@
       <texture id="track_texture" />
 
       <children>
-        <primitiveref id="straight" />
+        <primitiveref id="straight" visible="1" selectable="0" />
       </children>
     </component>
 
@@ -559,7 +559,7 @@
       <texture id="track_texture" />
 
       <children>
-        <primitiveref id="straight" />
+        <primitiveref id="straight" visible="1" selectable="0" />
       </children>
     </component>
 
@@ -589,7 +589,7 @@
       <texture id="none" />
 
       <children>
-        <primitiveref id="vehicle" />
+        <primitiveref id="vehicle" visible="1" selectable="0" />
       </children>
     </component>
 
@@ -664,7 +664,7 @@
       <texture id="inherit" />
 
       <children>
-        <primitiveref id="rectangle" />
+        <primitiveref id="rectangle" visible="1" selectable="0" />
       </children>
     </component>
 
@@ -681,7 +681,7 @@
       <texture id="inherit" />
 
       <children>
-        <primitiveref id="rectangle" />
+        <primitiveref id="rectangle" visible="1" selectable="0" />
       </children>
     </component>
 
@@ -698,7 +698,7 @@
       <texture id="inherit" />
 
       <children>
-        <primitiveref id="rectangle" />
+        <primitiveref id="rectangle" visible="1" selectable="0" />
       </children>
     </component>
 
@@ -715,7 +715,7 @@
       <texture id="inherit" />
 
       <children>
-        <primitiveref id="rectangle" />
+        <primitiveref id="rectangle" visible="1" selectable="0" />
       </children>
     </component>
 
@@ -732,7 +732,7 @@
       <texture id="inherit" />
 
       <children>
-        <primitiveref id="rectangle" />
+        <primitiveref id="rectangle" visible="1" selectable="0" />
       </children>
     </component>
 
@@ -749,7 +749,7 @@
       <texture id="inherit" />
 
       <children>
-        <primitiveref id="rectangle" />
+        <primitiveref id="rectangle" visible="1" selectable="0" />
       </children>
     </component>
 
@@ -767,7 +767,7 @@
       <texture id="metal" />
 
       <children>
-        <primitiveref id="cylinder" />
+        <primitiveref id="cylinder" visible="1" selectable="0" />
       </children>
     </component>
 
@@ -851,7 +851,7 @@
       <texture id="floor_wood" />
 
       <children>
-        <primitiveref id="rectangle" />
+        <primitiveref id="rectangle" visible="1" selectable="0" />
       </children>
     </component>
 
@@ -870,7 +870,7 @@
       <texture id="white_wall" />
 
       <children>
-        <primitiveref id="rectangle" />
+        <primitiveref id="rectangle" visible="1" selectable="0" />
       </children>
     </component>
 
@@ -941,7 +941,7 @@
       <texture id="metal" />
 
       <children>
-        <primitiveref id="cylinder" />
+        <primitiveref id="cylinder" visible="1" selectable="0" />
       </children>
     </component>
 
@@ -958,7 +958,7 @@
       <texture id="wood" />
 
       <children>
-        <primitiveref id="cylinder" />
+        <primitiveref id="cylinder" visible="1" selectable="0" />
       </children>
     </component>
 
@@ -976,7 +976,7 @@
       <texture id="lampshade" />
 
       <children>
-        <primitiveref id="conical_frustum" />
+        <primitiveref id="conical_frustum" visible="1" selectable="0" />
       </children>
     </component>
 
@@ -993,7 +993,7 @@
       <texture id="galaxy" />
 
       <children>
-        <primitiveref id="rectangle" />
+        <primitiveref id="rectangle" visible="1" selectable="0" />
       </children>
     </component>
 
