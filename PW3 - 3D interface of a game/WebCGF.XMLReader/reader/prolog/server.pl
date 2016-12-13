@@ -108,20 +108,23 @@ print_header_line(_).
 parse_input(handshake, handshake).
 parse_input(burst_move(c, Level, Player, Board), NewBoard) :-
 	translate_board(Board, TranslatedBoard),
-	burst_move(Player, Level, TranslatedBoard, NewBoard).
+	burst_move(Player, Level, TranslatedBoard, NewTranslatedBoard),
+	translate_board(NewTranslatedBoard, NewBoard).
 parse_input(rule(h, Move, Player, X, Y, Board), NewBoard) :-
 	translate_board(Board, TranslatedBoard),
-	rule(Move, Player, X, Y, TranslatedBoard, NewBoard).
+	rule(Move, Player, X, Y, TranslatedBoard, NewTranslatedBoard),
+	translate_board(NewTranslatedBoard, NewBoard).
 parse_input(quit, goodbye).
 
 /* Translates */
-translate(0, sp).
-translate(1, n1).
-translate(2, u1).
-translate(3, n2).
-translate(4, u2).
-translate(5, ' ').
-translate(A, B) :- translate(B, A).
+translation(0, sp).
+translation(1, n1).
+translation(2, u1).
+translation(3, n2).
+translation(4, u2).
+translation(5, ' ').
+translate(A, B) :- translation(A, B).
+translate(A, B) :- translation(B, A).
 
 /* Translator */
 translate_board(Board, TranslatedBoard) :-
