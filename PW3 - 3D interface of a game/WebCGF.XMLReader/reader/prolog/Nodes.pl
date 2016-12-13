@@ -12,19 +12,11 @@ A -> player 1 node -> n1
 B -> player 1 unit -> u1
 S -> player 2 node -> n2
 T -> player 2 unit -> u2
- */
+*/
 
 /* Players */
 player(p1).
 player(p2).
-
-/* Translates */
-translate(sp, 'O').
-translate(n1, 'A').
-translate(u1, 'B').
-translate(n2, 'S').
-translate(u2, 'T').
-translate(X, X).
 
 /* Checks if the Mode is valid, c or h */
 check_game_mode(Mode) :-
