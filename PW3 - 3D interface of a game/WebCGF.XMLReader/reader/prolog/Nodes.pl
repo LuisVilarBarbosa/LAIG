@@ -2,9 +2,6 @@
 :- use_module(library(random)).
 :- use_module(server).
 
-:- dynamic player/1.
-:- dynamic state/2.
-
 /*
 Game legend:
 - -> road
@@ -21,88 +18,6 @@ T -> player 2 unit -> u2
 player(p1).
 player(p2).
 
-/* Boards */
-board([
-	[' ', ' ', u1, u1, n1, u1, u1, ' ', ' '],
-	[' ',  sp, sp, u1, u1, u1, sp,  sp, ' '],
-	[ sp,  sp, sp, sp, u1, sp, sp,  sp,  sp],
-	[ sp,  sp, sp, sp, sp, sp, sp,  sp,  sp],
-	[ sp,  sp, sp, sp, sp, sp, sp,  sp,  sp],
-	[ sp,  sp, sp, sp, sp, sp, sp,  sp,  sp],
-	[ sp,  sp, sp, sp, u2, sp, sp,  sp,  sp],
-	[' ',  sp, sp, u2, u2, u2, sp,  sp, ' '],
-	[' ', ' ', u2, u2, n2, u2, u2, ' ', ' ']
-	]).
-
-/* State */
-state(_Player, _Board).
-
-/* Display (if the number of rows or columns is higher than 9 the indexes can be wrongly placed) */
-display_board(Board) :-
-	nth1(1, Board, Row),
-	length(Row, Length_x),
-	write('  '),
-	display_board_cols_indexes(1, Length_x),
-	nl,
-	display_board_rows(Board, Board, 1),
-	nl,
-	nl.
-
-/* Display the columns indexes */
-display_board_cols_indexes(Index, Max_index) :-
-	Index =< Max_index,
-	format('~d ', [Index]),
-	Index2 is Index + 1,
-	display_board_cols_indexes(Index2, Max_index).
-display_board_cols_indexes(Index, Max_index) :- Index > Max_index.
-
-/* Display of the board's rows */
-display_board_rows([Row | []], _Board, Index) :-
-	display_board_middle_bottom_row(Row),
-	nl,
-	format('~d ', [Index]),
-	display_board_row_pieces(Row).
-display_board_rows([Row | Other_rows], Board, Index) :-	/* Display board up half */
-	length(Board, All_board_length),
-	length(Other_rows, Left_board_length),
-	Left_board_length1 is Left_board_length + 1,
-	Half_board_length is All_board_length >> 1,		/* integer division by 2 */
-	Left_board_length1 > Half_board_length,
-	format('~d ', [Index]),
-	display_board_row_pieces(Row), 
-	nl, 
-	write('  '),
-	display_board_middle_up_row(Row),
-	nl,
-	Index2 is Index + 1,
-	display_board_rows(Other_rows, Board, Index2).
-display_board_rows([Row | Other_rows], Board, Index) :-	/* Display board middle */
-	length(Board, All_board_length),
-	length(Other_rows, Left_board_length),
-	Left_board_length1 is Left_board_length + 1,
-	Half_board_length is All_board_length >> 1,		/* integer division by 2 */
-	Left_board_length1 == Half_board_length,
-	format('~d ', [Index]),
-	display_board_row_pieces(Row),
-	nl,
-	write('  '),
-	Index2 is Index + 1,
-	display_board_rows(Other_rows, Board, Index2).
-display_board_rows([Row | Other_rows], Board, Index) :-	/* Display board bottom half */
-	length(Board, All_board_length),
-	length(Other_rows, Left_board_length),
-	Left_board_length1 is Left_board_length + 1,
-	Half_board_length is All_board_length >> 1,		/* integer division by 2 */
-	Left_board_length1 < Half_board_length,
-	display_board_middle_bottom_row(Row),
-	nl, 
-	format('~d ', [Index]),
-	display_board_row_pieces(Row), 
-	nl,
-	write('  '),
-	Index2 is Index + 1,
-	display_board_rows(Other_rows, Board, Index2).
-
 /* Translates */
 translate(sp, 'O').
 translate(n1, 'A').
@@ -111,78 +26,11 @@ translate(n2, 'S').
 translate(u2, 'T').
 translate(X, X).
 
-/* Display the rows of the board with pieces */
-display_board_row_pieces([Piece | []]) :-
-	translate(Piece, TPiece),
-	write(TPiece).
-display_board_row_pieces([' ' | Other_pieces]) :-
-	write('  '),
-	display_board_row_pieces(Other_pieces).
-display_board_row_pieces([Piece | [' ' | _]]) :-
-	translate(Piece, TPiece),
-	write(TPiece).
-display_board_row_pieces([Piece | Other_pieces]) :-
-	translate(Piece, TPiece),
-	write(TPiece),
-	write('-'),
-	display_board_row_pieces(Other_pieces).
-
-/* Display the rows of the board without pieces */
-display_board_middle_up_row([_Piece | []]) :-
-	write('|').
-display_board_middle_up_row([Piece | [' ' | _]]) :-
-	Piece \== ' ',
-	write('|X|\\').
-display_board_middle_up_row([' ' | [Other_piece | Other_pieces]]) :-
-	Other_piece \== ' ',
-	write(' /'),
-	display_board_middle_up_row(Other_pieces).
-display_board_middle_up_row([' ' | Other_pieces]) :-
-	write('  '),
-	display_board_middle_up_row(Other_pieces).
-display_board_middle_up_row([_Piece | Other_pieces]) :-
-	write('|X'),
-	display_board_middle_up_row(Other_pieces).
-
-display_board_middle_bottom_row([_Piece | []]) :-
-	write('|').
-display_board_middle_bottom_row([Piece | [' ' | _]]) :-
-	Piece \== ' ',
-	write('|X|/').
-display_board_middle_bottom_row([' ' | [Other_piece | Other_pieces]]) :-
-	Other_piece \== ' ',
-	write(' \\'),
-	display_board_middle_bottom_row(Other_pieces).
-display_board_middle_bottom_row([' ' | Other_pieces]) :-
-	write('  '),
-	display_board_middle_bottom_row(Other_pieces).
-display_board_middle_bottom_row([_Piece | Other_pieces]) :-
-	write('|X'),
-	display_board_middle_bottom_row(Other_pieces).
-
-/* Game logic */
-game(Mode, Level) :-
-	check_game_mode(Mode),
-	check_game_level(Level),
-	board(Board), /* defines the board to be played */
-	(verify_board_dimensions(Board);
-	(format('Invalid board dimensions.~N', []), fail)),
-	retract(state(_, _)),
-	assert(state(p1, Board)),	/* the youngest player begins the game */
-	repeat,
-		state(Player, _),
-		format('Player: ~s~N', Player),
-		play(Mode, Level),
-		verify_game_over,
-	state(Current_player, _),
-	next_player(Current_player, Winner),	/* 'play' changed the current player to the next, it is necessary to recover the prior player */
-	show_results(Winner).
-
-/* Checks if the Mode is valid, cc, ch or hh */
+/* Checks if the Mode is valid, c or h */
 check_game_mode(Mode) :-
 	(
-		(Mode = cc; Mode = ch; Mode = hh);
-		(write('Wrong game mode. Please check if you typed correctly the Mode of the Game.\nIt can be: cc, ch or hh.\n'), fail)
+		(Mode = c; Mode = h);
+		(write('Wrong game mode. Please check if you typed correctly the Mode of the Game.\nIt can be: c or h.\n'), fail)
 	),
 	!.
 
@@ -204,70 +52,6 @@ verify_board_dimensions_aux([Row | Other_rows], Length) :-
 	length(Row, Length),
 	verify_board_dimensions_aux(Other_rows, Length).
 verify_board_dimensions_aux([], _Length).
-
-/* Play computer-computer (one set of moves) */
-play(cc, Level) :-
-	retract(state(Player, Actual_board)),
-	burst_move(Player, Level, Actual_board, Best_board),
-	display_board(Best_board),
-	next_player(Player, Next),
-	assert(state(Next, Best_board)),
-	!.
-
-/* Play human-human (one set of moves) */
-play(hh, _Level) :-
-	state(_, Board),
-	display_board(Board),
-	format('Possible moves:~n1-move up~n2-move down~n3-move left~n4-move right~n5-jump enemy unit up~n6-jump enemy unit down~n7-jump enemy unit left~n8-jump enemy unit right~nWhich piece do you want to move?~n', []),
-	repeat,
-		write('X: '),
-		read(X),
-		write('Y: '),
-		read(Y),
-		write('Option: '),
-		read(Choice),
-		state(Player, Old_board),
-		get_piece(Old_board, X, Y, Piece),
-		play_hh_iteration(X, Y, Choice),
-		((Player = p1, Piece = n1); (Player = p2, Piece = n2)),	/* termination condition */
-	retract(state(Player, New_board)),
-	next_player(Player, Next),
-	assert(state(Next, New_board)),
-	!.
-
-/* Play computer-human (one set of moves for each) */
-play(ch, Level) :-
-	state(p1, _Board),
-	play(cc, Level),
-	!.
-play(ch, Level) :-
-	state(p2, _Board),
-	play(hh, Level),
-	!.
-
-/* Play human-human (just one move) */
-play_hh_iteration(X, Y, Choice) :-
-	retract(state(Player, Actual_board)),
-	format('Chose (~d,~d) to move ', [X,Y]),
-	(
-		(
-			(
-				(Choice = 1, rule(move_up, Player, X, Y, Actual_board, New_board), X2 is X, Y2 is Y - 1);
-				(Choice = 2, rule(move_down, Player, X, Y, Actual_board, New_board), X2 is X, Y2 is Y + 1);
-				(Choice = 3, rule(move_left, Player, X, Y, Actual_board, New_board), X2 is X - 1, Y2 is Y);
-				(Choice = 4, rule(move_right, Player, X, Y, Actual_board, New_board), X2 is X + 1, Y2 is Y);
-				(Choice = 5, rule(jump_up_enemy_unit, Player, X, Y, Actual_board, New_board), X2 is X, Y2 is Y - 2);
-				(Choice = 6, rule(jump_down_enemy_unit, Player, X, Y, Actual_board, New_board), X2 is X, Y2 is Y + 2);
-				(Choice = 7, rule(jump_left_enemy_unit, Player, X, Y, Actual_board, New_board), X2 is X - 2, Y2 is Y);
-				(Choice = 8, rule(jump_right_enemy_unit, Player, X, Y, Actual_board, New_board), X2 is X + 2, Y2 is Y)
-			),
-			format('to (~d,~d).~n~n', [X2,Y2])
-		);
-		(New_board = Actual_board, write('but was unable to apply the specified rule.\nTry again.\n\n'))
-	),
-	display_board(New_board),
-	assert(state(Player, New_board)),
-	!.
 
 /* Signal functions */
 
@@ -332,9 +116,9 @@ check_signal_diagonal(Piece_x, Piece_y, Node_x, Node_y, Signal_direction) :-
 check_enemies_interrupting_signal(Board, Player, Piece_x, Piece_y, Node_x, Node_y, Signal_direction) :-
 	(
 		(
-			(Signal_direction = up; Signal_direction = down), 
+			(Signal_direction = up; Signal_direction = down),
 			check_enemies_interrupting_signal_vertical(Board, Player, Piece_x, Piece_y, Node_x, Node_y, Signal_direction)
-		);	
+		);
 		(
 			(Signal_direction = left; Signal_direction = right),
 			check_enemies_interrupting_signal_horizontal(Board, Player, Piece_x, Piece_y, Node_x, Node_y, Signal_direction)
@@ -366,8 +150,8 @@ check_enemies_interrupting_signal_vertical(Board, Player, Piece_x, Piece_y, Othe
 		(Signal_direction = down, Other_piece_y2 is Other_piece_y + 1)
 	),
 	check_enemies_interrupting_signal_vertical(Board, Player, Piece_x, Piece_y, Other_piece_x, Other_piece_y2, Signal_direction).
-		
-/* Check if the signal from a Node is being blocked by an enemy unit through a conduit */	
+
+/* Check if the signal from a Node is being blocked by an enemy unit through a conduit */
 check_enemies_interrupting_signal_diagonal(Board, Player, Piece_x, Piece_y, Other_piece_x, Other_piece_y, Signal_direction) :-
 	Piece_x =\= Other_piece_x,
 	Piece_y =\= Other_piece_y,
@@ -387,7 +171,7 @@ rule(move_up, Player, Piece_orig_x, Piece_orig_y, Board, New_board) :-
 	Piece_new_y is Piece_orig_y - 1,
 	rule_aux(Player, Piece_orig_x, Piece_orig_y, Piece_orig_x, Piece_new_y, Board, New_board).
 
-/* Move down */	
+/* Move down */
 rule(move_down, Player, Piece_orig_x, Piece_orig_y, Board, New_board) :-
 	Piece_new_y is Piece_orig_y + 1,
 	rule_aux(Player, Piece_orig_x, Piece_orig_y, Piece_orig_x, Piece_new_y, Board, New_board).
@@ -472,10 +256,10 @@ verify_piece_player(Board, Player, Piece_x, Piece_y, Piece) :-
 	get_piece(Board, Piece_x, Piece_y, Piece),
 	((Player = p1, (Piece = u1; Piece = n1)); (Player = p2, (Piece = u2; Piece = n2))).
 
-/* Check if the Piece is an Enemy of the Player (only Unit) */	
+/* Check if the Piece is an Enemy of the Player (only Unit) */
 verify_enemy_unit_player(Board, Player, Enemy_x, Enemy_y) :-
 	get_piece(Board, Enemy_x, Enemy_y, Piece),
-	((Player = p1, Piece = u2); (Player = p2, Piece = u1)).	
+	((Player = p1, Piece = u2); (Player = p2, Piece = u1)).
 
 /* Calculate a set of possible moves (greedy at each move) */
 burst_move(Player, Level, Board, Best) :-
@@ -623,8 +407,7 @@ global_check_signal_aux_2(Board, Player, X, Y, Temp_quantity, Quantity) :-
 global_check_signal_aux_2(_, _, 0, _, Quantity, Quantity).
 
 /* Verify if the Board inside 'state' is completly played */
-verify_game_over :-
-	state(_Player, Board),
+verify_game_over(Board) :-
 	get_piece(Board, X, Y, Node),
 	verify_blocked(Board, Node, X, Y).
 
@@ -642,12 +425,6 @@ verify_blocked_left(Board, Enemy_piece, X, Y) :- X2 is X - 1, (X2 < 1; (nth1(Y, 
 verify_blocked_right(Board, Enemy_piece, X, Y) :- X2 is X + 1, (nth1(Y, Board, Row), length(Row, Length_x), (X2 > Length_x; nth1(X2, Row, Enemy_piece))).
 verify_blocked_up(Board, Enemy_piece, X, Y) :- Y2 is Y - 1, (Y2 < 1; (nth1(Y2, Board, Row), nth1(X, Row, Enemy_piece))).
 verify_blocked_down(Board, Enemy_piece, X, Y) :- Y2 is Y + 1, length(Board, Length_y), (Y2 > Length_y; (nth1(Y2, Board, Row), nth1(X, Row, Enemy_piece))).
-
-/* Find the other player */
-next_player(Player, Next) :- player(Player), player(Next), Player \= Next.
-
-/* Show the winner */
-show_results(Winner) :- format('~NWinner: ~s~N', Winner).
 
 /* Change a piece of the Board, remaking it row by row */
 /* If 'Y' is invalid, the same list will be returned */
