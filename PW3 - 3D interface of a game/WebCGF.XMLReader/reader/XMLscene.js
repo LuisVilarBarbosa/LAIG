@@ -49,6 +49,7 @@ XMLscene.prototype.init = function (application) {
 
     this.updatePeriod = 25; /* millis */
     this.setUpdatePeriod(this.updatePeriod);
+    this.game = new NodesGame();
 };
 
 XMLscene.prototype.initLights = function () {
@@ -259,6 +260,8 @@ XMLscene.prototype.nextMaterial = function (nodeId) {
 XMLscene.prototype.update = function (currTime) {
     if (this.graph.loadedOk)
         this.updateAux(currTime, this.rootNodeId);
+
+    this.game.makeMove("c");
 }
 
 // Variables access is like in 'processGraph', so it is already simulated.
