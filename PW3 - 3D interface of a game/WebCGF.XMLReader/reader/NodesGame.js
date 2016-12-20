@@ -88,11 +88,14 @@ NodesGame.prototype.sendToProlog = function (mode /*cc, ch or hh*/, level /*easy
     else if(mode == "hh" || (mode == "ch" && this.player == "p2"))
       requestString = "rule(h," + move + "," + player + "," + x + "," + y + "," + JSON.stringify(board) + ")";
 
-    getPrologRequest(requestString, this.receiveFromProlog);
+    var this_t = this;
+    getPrologRequest(requestString, function (data) {this_t.receiveFromProlog(data)});
 }
 
 NodesGame.prototype.receiveFromProlog = function (data) {
-    // this.setBoard(data.target.response); // doesn't recognise 'this', apparently, due to asynchronous access
-    console.warn("Game board not updated due to implementation problem not solved.");
-    console.log("Received board:" + data.target.response);
+    var response = data.target.response;
+    if (response != "Bad Request" && response != "Syntax Error")
+      this.setBoard(response);
+    else
+      console.error("Not a board received.");
 }
