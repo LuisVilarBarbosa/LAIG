@@ -28,6 +28,9 @@ MyInterface.prototype.init = function (application) {
     this.spotLights = this.gui.addFolder("Spot lights");
     this.spotLights.open();
 
+    this.gui.add(this.scene, 'mode', {cc: 0, ch: 1, hh: 2});
+    this.gui.add(this.scene, 'level', {easy: 0, hard: 1});
+
     return true;
 };
 

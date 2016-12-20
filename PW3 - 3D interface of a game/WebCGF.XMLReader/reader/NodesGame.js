@@ -3,7 +3,7 @@
  * @constructor
  */
 function NodesGame() {
-    this.mode = "c";
+    this.mode = "cc";
     this.level = "hard";
     this.player = "p1";
 
@@ -22,7 +22,7 @@ function NodesGame() {
 };
 
 NodesGame.prototype.setMode = function (mode) {
-    if (mode == "c" || mode == "h")
+    if (mode == "cc" || mode == "ch" || mode == "hh")
       this.mode = mode;
     else
       console.error("Invalid game mode indicated. Not set.");
@@ -39,10 +39,10 @@ NodesGame.prototype.setBoard = function (board) {
     this.board = board;
 }
 
-NodesGame.prototype.makeMove = function (mode, from_x, from_y, to_x, to_y) {
+NodesGame.prototype.makeMove = function (from_x, from_y, to_x, to_y) {
     var move;
 
-    if (mode == "h") {
+    if (this.mode == "hh" || (this.mode == "ch" && this.player == "p2")) {
       if (from_x == to_x && from_y - 1 == to_y)
         move = "move_up";
       else if (from_x == to_x && from_y + 1 == to_y)
@@ -81,12 +81,12 @@ NodesGame.prototype.changePlayer = function () {
       console.error("Unexpected change to the player happened: " + this.player);
 }
 
-NodesGame.prototype.sendToProlog = function (mode /*c or h*/, level /*easy or hard*/, player /*p1 or p2*/, board, move, x, y) {
+NodesGame.prototype.sendToProlog = function (mode /*cc, ch or hh*/, level /*easy or hard*/, player /*p1 or p2*/, board, move, x, y) {
     var requestString;
-    if(mode == "c")
-      requestString = "burst_move(" + mode + "," + level + "," + player + "," + JSON.stringify(board) + ")";
-    else if(mode == "h")
-      requestString = "rule(" + mode + "," + move + "," + player + "," + x + "," + y + "," + JSON.stringify(board) + ")";
+    if(mode == "cc" || (mode == "ch" && this.player == "p1"))
+      requestString = "burst_move(c," + level + "," + player + "," + JSON.stringify(board) + ")";
+    else if(mode == "hh" || (mode == "ch" && this.player == "p2"))
+      requestString = "rule(h," + move + "," + player + "," + x + "," + y + "," + JSON.stringify(board) + ")";
 
     getPrologRequest(requestString, this.receiveFromProlog);
 }

@@ -50,6 +50,11 @@ XMLscene.prototype.init = function (application) {
     this.updatePeriod = 25; /* millis */
     this.setUpdatePeriod(this.updatePeriod);
     this.game = new NodesGame();
+
+    this.modes = ["cc", "ch", "hh"];
+    this.mode = 0;
+    this.levels = ["easy", "hard"];
+    this.level = 1;
 };
 
 XMLscene.prototype.initLights = function () {
@@ -261,7 +266,9 @@ XMLscene.prototype.update = function (currTime) {
     if (this.graph.loadedOk)
         this.updateAux(currTime, this.rootNodeId);
 
-    this.game.makeMove("c");
+    this.game.setMode(this.modes[this.mode]);
+    this.game.setLevel(this.levels[this.level]);
+    this.game.makeMove();
 }
 
 // Variables access is like in 'processGraph', so it is already simulated.
@@ -280,4 +287,12 @@ XMLscene.prototype.updateAux = function (currTime, nodeId) {
 
     for (var i = 0; i < node.children.length; i++)
         this.updateAux(currTime, node.children[i]);
+}
+
+XMLscene.prototype.setGameMode = function (mode) {
+    this.game.setMode(mode);
+}
+
+XMLscene.prototype.setGameLevel = function (level) {
+    this.game.setLevel(level);
 }
