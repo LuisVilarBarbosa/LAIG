@@ -321,13 +321,14 @@
         <c2 r="0.545" g="0.270" b="0.074" a="1" />
         <cs r="0.8" g="0.3" b="0" a="1" />
       </chessboard>
-</primitive>
-      <primitive id="chessboard2">
-        <chessboard du="16" dv="32" textureref="metal" su="8" sv="25">
-          <c1 r="0" g="1" b="0" a="1" />
-          <c2 r="0" g="0" b="1" a="1" />
-          <cs r="1" g="0" b="1" a="1" />
-        </chessboard>
+    </primitive>
+
+    <primitive id="chessboard2">
+      <chessboard du="16" dv="32" textureref="metal" su="8" sv="25">
+        <c1 r="0" g="1" b="0" a="1" />
+        <c2 r="0" g="0" b="1" a="1" />
+        <cs r="1" g="0" b="1" a="1" />
+      </chessboard>
     </primitive>
 
   </primitives>
@@ -583,7 +584,7 @@
       <animation>
         <animationref id="car_straight1" />
         <animationref id="car_curve1" />
-        <animationref id="car_straight2" /> 
+        <animationref id="car_straight2" />
         <animationref id="car_curve2" />
         <animationref id="car_fly_1" />
         <animationref id="car_fly_2" />

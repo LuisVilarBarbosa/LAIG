@@ -28,7 +28,7 @@ function CircularAnimation(span, center, radius, startang, rotang) {
 /* Rotation in the Y axis (planes parallel to ZX) */
 CircularAnimation.prototype.calculateGeometricTransformation = function (currTime) {
     if (this.done === true)
-      return;
+        return;
 
     this.firstTime = this.firstTime || currTime;
     var deltaTime = (currTime - this.firstTime) / 1000;   /* in seconds */
@@ -45,8 +45,8 @@ CircularAnimation.prototype.calculateGeometricTransformation = function (currTim
         mat4.translate(this.transform, this.transform, [0, 0, this.radius]);
         this.done = true;
     }
-    if(this.rotang < 0)
-        mat4.rotate(this.transform, this.transform, 180*this.degToRad, [0, 1, 0]);
+    if (this.rotang < 0)
+        mat4.rotate(this.transform, this.transform, 180 * this.degToRad, [0, 1, 0]);
 }
 
 CircularAnimation.prototype.getGeometricTransformation = function () {

@@ -24,7 +24,7 @@ function ScalarAnimation(span, scale) {
 
 ScalarAnimation.prototype.calculateGeometricTransformation = function (currTime) {
     if (this.done === true)
-      return;
+        return;
 
     this.firstTime = this.firstTime || currTime;
     var deltaTime = (currTime - this.firstTime) / 1000;   /* in seconds */
