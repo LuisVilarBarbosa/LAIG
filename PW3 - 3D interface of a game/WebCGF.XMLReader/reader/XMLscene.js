@@ -266,6 +266,7 @@ XMLscene.prototype.update = function (currTime) {
     if (this.graph.loadedOk)
         this.updateAux(currTime, this.rootNodeId);
 
+    this.myInterface.updateTimer();
     this.game.setMode(this.modes[this.mode]);
     this.game.setLevel(this.levels[this.level]);
     this.game.makeMove();
