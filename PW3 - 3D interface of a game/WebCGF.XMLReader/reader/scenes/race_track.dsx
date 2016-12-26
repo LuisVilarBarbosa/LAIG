@@ -221,6 +221,14 @@
       <controlpoint xx="3.2" yy="0.09" zz="2.6" />
     </animation>
 
+    <animation id="key_images" span="10.0" type="key_images"
+           startang="0" rotang="180"
+           scalex="1" scaley="0.1" scalez="1">
+      <controlpoint xx="0" yy="0" zz="0" />
+      <controlpoint xx="1" yy="0" zz="0" />
+      <controlpoint xx="2" yy="0" zz="0" />
+    </animation>
+
   </animations>
 
 
@@ -344,6 +352,10 @@
         <!-- <rotate axis="cc" angle="ff" /> -->
         <!-- <scale x="ff" y="ff" z="ff" /> -->
       </transformation>
+
+      <animation>
+        <animationref id="key_images" />
+      </animation>
 
       <!-- declaracao obrigatoria de pelo menos um material; -->
       <!-- o material id="inherit", mantem (herda) material do "pai" -->

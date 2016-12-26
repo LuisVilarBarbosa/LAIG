@@ -388,6 +388,36 @@ MySceneGraph.prototype.parseAnimationTags = function (elems) {
             var rotang = this.reader.getFloat(elems[i], "rotang", true);
             this.scene.addAnimation(id, new CircularAnimation(span, center, radius, startang, rotang));
         }
+        else if (type == "scalar") {
+            var scalex = this.reader.getFloat(elems[i], "scalex", true);
+            var scaley = this.reader.getFloat(elems[i], "scaley", true);
+            var scalez = this.reader.getFloat(elems[i], "scalez", true);
+            var scale = [scalex, scaley, scalez];
+            this.scene.addAnimation(id, new ScalarAnimation(span, scale));
+        }
+        else if (type == "key_images") {
+            var startang = this.reader.getFloat(elems[i], "startang", true);
+            var rotang = this.reader.getFloat(elems[i], "rotang", true);
+            var scalex = this.reader.getFloat(elems[i], "scalex", true);
+            var scaley = this.reader.getFloat(elems[i], "scaley", true);
+            var scalez = this.reader.getFloat(elems[i], "scalez", true);
+            var scale = [scalex, scaley, scalez];
+
+            var children = elems[i].children;
+            var controlPoints = [];
+            for (var j = 0, nnodes2 = children.length; j < nnodes2; j++) {
+                if (children[j].tagName == "controlpoint") {
+                    var xx = this.reader.getFloat(children[j], "xx", true);
+                    var yy = this.reader.getFloat(children[j], "yy", true);
+                    var zz = this.reader.getFloat(children[j], "zz", true);
+                    controlPoints.push([xx, yy, zz]);
+                }
+                else
+                    throw "Invalid animation by key images child tag found: '" + children[j].tagName + "'.";
+            }
+
+            this.scene.addAnimation(id, new AnimationByKeyImages(span, controlPoints, startang, rotang, scale));
+        }
         else
             throw "Invalid animation type found: '" + type + "'.";
     }
