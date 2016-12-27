@@ -2,7 +2,9 @@
  * NodesGame
  * @constructor
  */
-function NodesGame() {
+function NodesGame(scene) {
+	this.scene = scene;
+	
     this.mode = "cc";
     this.level = "hard";
     this.player = "p1";
@@ -19,7 +21,61 @@ function NodesGame() {
       [5,0,0,4,4,4,0,0,5],
       [5,5,4,4,3,4,4,5,5]
     ];
+	
+	this.board = new MyNodesBoard(this.scene);
+	this.player1 = new MyPlayer(this.scene, 1);
+	this.player2 = new MyPlayer(this.scene, 2);
+	this.active_player = 1;
+	
+	
 };
+
+
+NodesGame.prototype.pickingHandler = function (customId) {
+    if(customId < 100 && this.scene.picking_buffer != 0){
+		console.log("Tile: " + customId);
+		console.log("Ver:" + (Math.ceil(customId / 9) % 10) + "  " + "Hor:" + (((customId - 1) % 9)+1));
+		var hor = ((customId - 1) % 9)+1;
+		var ver = Math.ceil(customId / 9) % 10;
+		if(this.active_player == 1){
+			if(this.scene.picking_buffer % 10 == 8){
+				this.player1.nodePos [0] = hor * 0.1;
+				this.player1.nodePos [1] = 1 - ver * 0.1;
+				this.active_player = 2;
+			}else{
+				this.player1.unitsPos[this.scene.picking_buffer-(100 + this.active_player*10)][0] = hor * 0.1;
+				this.player1.unitsPos[this.scene.picking_buffer-(100 + this.active_player*10)][1] = 1 - ver * 0.1;
+			}
+		}else{
+			if(this.scene.picking_buffer % 10 == 8){
+				this.player2.nodePos [0] = hor * 0.1;
+				this.player2.nodePos [1] = 1 - ver * 0.1;
+				this.active_player = 1;
+			}else{
+				this.player2.unitsPos[this.scene.picking_buffer-(100 + this.active_player*10)][0] = hor * 0.1;
+				this.player2.unitsPos[this.scene.picking_buffer-(100 + this.active_player*10)][1] = 1 - ver * 0.1;
+			}
+		}
+		this.scene.picking_buffer = 0;
+	}else if(customId >=100){
+		var player = Math.floor(customId / 10) % 10;
+		if(player == this.active_player){
+			this.scene.picking_buffer = customId;
+			console.log("Piece: " + customId);
+		}
+	}
+}
+
+NodesGame.prototype.display = function () {
+	this.scene.pushMatrix();
+		this.scene.translate(0, 0, 3.05);
+		this.scene.rotate(-Math.PI/2, 1, 0, 0);
+		
+		this.board.display();
+		this.player1.display();
+		this.player2.display();
+	this.scene.popMatrix();
+}
 
 NodesGame.prototype.setMode = function (mode) {
     if (mode == "cc" || mode == "ch" || mode == "hh")
@@ -82,14 +138,14 @@ NodesGame.prototype.changePlayer = function () {
 }
 
 NodesGame.prototype.sendToProlog = function (mode /*cc, ch or hh*/, level /*easy or hard*/, player /*p1 or p2*/, board, move, x, y) {
-    var requestString;
+    /*var requestString;
     if(mode == "cc" || (mode == "ch" && this.player == "p1"))
       requestString = "burst_move(c," + level + "," + player + "," + JSON.stringify(board) + ")";
     else if(mode == "hh" || (mode == "ch" && this.player == "p2"))
       requestString = "rule(h," + move + "," + player + "," + x + "," + y + "," + JSON.stringify(board) + ")";
 
     var this_t = this;
-    getPrologRequest(requestString, function (data) {this_t.receiveFromProlog(data)});
+    getPrologRequest(requestString, function (data) {this_t.receiveFromProlog(data)});*/
 }
 
 NodesGame.prototype.receiveFromProlog = function (data) {

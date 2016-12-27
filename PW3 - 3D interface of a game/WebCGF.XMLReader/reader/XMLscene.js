@@ -32,6 +32,37 @@ XMLscene.prototype.init = function (application) {
     this.defaultAppearance.setDiffuse(0.2, 0.4, 0.8, 1.0);
     this.defaultAppearance.setSpecular(0.2, 0.4, 0.8, 1.0);
     this.defaultAppearance.setShininess(10.0);
+	
+	this.green = new CGFappearance(this);
+    this.green.setAmbient(0, 0.39, 0, 1);
+    this.green.setDiffuse(0, 0.39, 0, 1);
+    this.green.setSpecular(0, 0.39, 0, 1);
+    this.green.setShininess(10.0);
+	
+	this.red = new CGFappearance(this);
+    this.red.setAmbient(0.4, 0, 0, 1);
+    this.red.setDiffuse(0.4, 0, 0, 1);
+    this.red.setSpecular(0.4, 0, 0, 1);
+    this.red.setShininess(10.0);
+	
+	this.blue = new CGFappearance(this);
+    this.blue.setAmbient(0, 0, 0.6, 1);
+    this.blue.setDiffuse(0, 0, 0.6, 1);
+    this.blue.setSpecular(0, 0, 0.6, 1);
+    this.blue.setShininess(10.0);
+	
+	this.yellow = new CGFappearance(this);
+    this.yellow.setAmbient(0.7, 0.7, 0, 1);
+    this.yellow.setDiffuse(0.7, 0.7, 0, 1);
+    this.yellow.setSpecular(0.7, 0.7, 0, 1);
+    this.yellow.setShininess(10.0);
+	
+	this.nova = new CGFappearance(this);
+    this.nova.setAmbient(0.8, 0.8, 0.8, 1);
+    this.nova.setDiffuse(0.8, 0.8, 0.8, 1);
+    this.nova.setSpecular(0.8, 0.8, 0.8, 1);
+    this.nova.setShininess(10.0);
+	this.nova.loadTexture('images/nodes_board.PNG');
 
     this.rootNodeId = null;
     this.perspectives = [];
@@ -49,13 +80,37 @@ XMLscene.prototype.init = function (application) {
 
     this.updatePeriod = 25; /* millis */
     this.setUpdatePeriod(this.updatePeriod);
-    this.game = new NodesGame();
+    this.game = new NodesGame(this);
 
     this.modes = ["cc", "ch", "hh"];
     this.mode = 0;
     this.levels = ["easy", "hard"];
     this.level = 1;
+	
+	this.setPickEnabled(true);
+	this.picking_buffer = 0;
 };
+
+
+XMLscene.prototype.logPicking = function ()
+{
+	
+	if (this.pickMode == false) {
+		if (this.pickResults != null && this.pickResults.length > 0) {
+			for (var i=0; i< this.pickResults.length; i++) {
+				var obj = this.pickResults[i][0];
+				
+				if (obj)
+				{
+					var customId = this.pickResults[i][1];
+					this.game.pickingHandler(customId);
+					
+				}
+			}
+			this.pickResults.splice(0,this.pickResults.length);
+		}		
+	}
+}
 
 XMLscene.prototype.initLights = function () {
 
@@ -81,6 +136,10 @@ XMLscene.prototype.onGraphLoaded = function () {
 };
 
 XMLscene.prototype.display = function () {
+	this.logPicking();
+	this.clearPickRegistration();
+	
+	
     // ---- BEGIN Background, camera and axis setup
 
     // Clear image and depth buffer everytime we update the scene
@@ -108,8 +167,10 @@ XMLscene.prototype.display = function () {
         for (var i = 0, length = this.lights.length; i < length; i++)
             this.lights[i].update();    // lights are being enabled and disabled directly by the interface
 
-        this.processGraph(this.rootNodeId);
+        //this.processGraph(this.rootNodeId);
     };
+	
+	this.game.display();
 };
 
 XMLscene.prototype.setRootNodeId = function (nodeId) {
