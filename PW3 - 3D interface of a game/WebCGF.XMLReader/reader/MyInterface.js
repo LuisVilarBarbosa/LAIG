@@ -30,8 +30,9 @@ MyInterface.prototype.init = function (application) {
 
     this.gui.add(this.scene, 'mode', { cc: 0, ch: 1, hh: 2 });
     this.gui.add(this.scene, 'level', { easy: 0, hard: 1 });
-    this.timer = 0;
-    this.gui.add(this, 'timer').listen();
+    this.gui.add(this.scene.game, 'timer').listen();
+    this.gui.add(this.scene.game, 'scorer').listen();
+    this.gui.add(this.scene.game, 'maxMoveTime', 0, 300);
 
     return true;
 };
@@ -62,10 +63,3 @@ MyInterface.prototype.processKeyboard = function (event) {
     else if (event.keyCode == 109 || event.keyCode == 77) // 'm' || 'M'
         this.scene.nextMaterial();
 };
-
-MyInterface.prototype.updateTimer = function () {
-    this.firstTime = this.firstTime || Date.now();
-    var currentTime = Date.now();
-    var deltaTime = currentTime - this.firstTime;
-    this.timer = deltaTime / 1000;
-}

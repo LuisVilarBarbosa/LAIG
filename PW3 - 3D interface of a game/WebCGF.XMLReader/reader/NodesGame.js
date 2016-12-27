@@ -21,6 +21,10 @@ function NodesGame(scene) {
       [5,0,0,4,4,4,0,0,5],
       [5,5,4,4,3,4,4,5,5]
     ];
+
+    this.setTimer(0);
+    this.setScorer(0, 0);
+    this.setMaxMoveTime(300);
 	
 	this.board = new MyNodesBoard(this.scene);
 	this.player1 = new MyPlayer(this.scene, 1);
@@ -154,4 +158,23 @@ NodesGame.prototype.receiveFromProlog = function (data) {
       this.setBoard(response);
     else
       console.error("Not a board received.");
+}
+
+NodesGame.prototype.setTimer = function (time) {
+    this.timer = time;
+}
+
+NodesGame.prototype.setScorer = function (p1Score, p2Score) {
+    this.scorer = p1Score + " / " + p2Score;
+}
+
+NodesGame.prototype.setMaxMoveTime = function (time) {  // maximum time to make a move
+    this.maxMoveTime = time;
+}
+
+NodesGame.prototype.update = function (currTime) {
+    this.firstTime = this.firstTime || currTime;
+    var deltaTime = (currTime - this.firstTime) / 1000;
+    this.setTimer(deltaTime);
+    this.setScorer(0, this.timer);  // should receive the score of each player
 }
