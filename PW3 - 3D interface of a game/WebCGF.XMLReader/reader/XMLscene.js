@@ -80,8 +80,10 @@ XMLscene.prototype.init = function (application) {
 
     this.updatePeriod = 25; /* millis */
     this.setUpdatePeriod(this.updatePeriod);
-    this.game = new NodesGame(this);
 
+    this.changesToNextView = 0;  // number of changes to the next view
+
+    this.game = new NodesGame(this);
     this.modes = ["cc", "ch", "hh"];
     this.mode = 0;
     this.levels = ["easy", "hard"];
@@ -307,9 +309,7 @@ XMLscene.prototype.processGraph = function (nodeId) {
 }
 
 XMLscene.prototype.nextView = function () {
-    this.actualPerspectivesIdsIndex = (this.actualPerspectivesIdsIndex + 1) % this.perspectivesIds.length;
-    this.camera = this.perspectives[this.perspectivesIds[this.actualPerspectivesIdsIndex]];
-    this.myInterface.setActiveCamera(this.camera);
+    this.changesToNextView++;
 }
 
 XMLscene.prototype.nextMaterial = function (nodeId) {
@@ -331,6 +331,8 @@ XMLscene.prototype.update = function (currTime) {
     this.game.setMode(this.modes[this.mode]);
     this.game.setLevel(this.levels[this.level]);
     this.game.makeMove();
+
+    this.updateView(currTime);
 }
 
 // Variables access is like in 'processGraph', so it is already simulated.
@@ -349,6 +351,42 @@ XMLscene.prototype.updateAux = function (currTime, nodeId) {
 
     for (var i = 0; i < node.children.length; i++)
         this.updateAux(currTime, node.children[i]);
+}
+
+XMLscene.prototype.updateView = function (currTime) {
+    if (this.changesToNextView > 0) {
+        var transitionTime = 1000;
+
+        this.firstTime = this.firstTime || currTime;
+        var deltaTime = currTime - this.firstTime;
+        var ratio = deltaTime / transitionTime;
+        if (ratio > 1) ratio = 1;
+
+        if (this.origPerspective == null || this.nextPerspective == null) {
+            this.origPerspective = this.perspectives[this.perspectivesIds[this.actualPerspectivesIdsIndex]];
+            this.nextPerspectivesIdsIndex = (this.actualPerspectivesIdsIndex + 1) % this.perspectivesIds.length;
+            this.nextPerspective = this.perspectives[this.perspectivesIds[this.nextPerspectivesIdsIndex]];
+        }
+        
+        var angle = this.origPerspective.fov + (this.nextPerspective.fov - this.origPerspective.fov) * ratio;
+        var near = this.origPerspective.near + (this.nextPerspective.near - this.origPerspective.near) * ratio;
+        var far = this.origPerspective.far + (this.nextPerspective.far - this.origPerspective.far) * ratio;
+        var from = [], to = [];
+        for (var i = 0; i < 3; i++) {
+            from.push(this.origPerspective.position[i] + (this.nextPerspective.position[i] - this.origPerspective.position[i]) * ratio);
+            to.push(this.origPerspective.target[i] + (this.nextPerspective.target[i] - this.origPerspective.target[i]) * ratio);
+        }
+        this.camera = new CGFcamera(angle, near, far, from, to);
+        this.myInterface.setActiveCamera(this.camera);
+
+        if (ratio == 1) {
+            this.changesToNextView--;
+            this.firstTime = null;
+            this.origPerspective = null;
+            this.actualPerspectivesIdsIndex = this.nextPerspectivesIdsIndex;
+            this.nextPerspective = null;
+        }
+    }
 }
 
 XMLscene.prototype.setGameMode = function (mode) {
