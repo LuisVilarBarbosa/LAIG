@@ -330,7 +330,6 @@ XMLscene.prototype.update = function (currTime) {
     this.game.update(currTime);
     this.game.setMode(this.modes[this.mode]);
     this.game.setLevel(this.levels[this.level]);
-    this.game.makeMove();
 
     this.updateView(currTime);
 }

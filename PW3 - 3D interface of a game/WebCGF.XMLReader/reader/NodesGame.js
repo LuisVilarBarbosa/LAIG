@@ -10,7 +10,7 @@ function NodesGame(scene) {
     this.player = "p1";
 
     // to see the meaning of each value, consult the 'server.pl' file
-    this.board = [
+    this.logicBoard = [
       [5,5,2,2,1,2,2,5,5],
       [5,0,0,2,2,2,0,0,5],
       [0,0,0,0,2,0,0,0,0],
@@ -95,8 +95,8 @@ NodesGame.prototype.setLevel = function (level) {
     console.error("Invalid game level indicated. Not set.");
 }
 
-NodesGame.prototype.setBoard = function (board) {
-    this.board = board;
+NodesGame.prototype.setLogicBoard = function (logicBoard) {
+    this.logicBoard = logicBoard;
 }
 
 NodesGame.prototype.makeMove = function (from_x, from_y, to_x, to_y) {
@@ -125,7 +125,7 @@ NodesGame.prototype.makeMove = function (from_x, from_y, to_x, to_y) {
       }
     }
 
-    this.sendToProlog(this.mode, this.level, this.player, this.board);
+    this.sendToProlog(this.mode, this.level, this.player, this.logicBoard);
     // It would be good if we could wait for the answer and verify that, because the move can be not possible.
     // If the move was not possible, we should indicate that using console.log().
 
@@ -142,20 +142,20 @@ NodesGame.prototype.changePlayer = function () {
 }
 
 NodesGame.prototype.sendToProlog = function (mode /*cc, ch or hh*/, level /*easy or hard*/, player /*p1 or p2*/, board, move, x, y) {
-    /*var requestString;
+    var requestString;
     if(mode == "cc" || (mode == "ch" && this.player == "p1"))
       requestString = "burst_move(c," + level + "," + player + "," + JSON.stringify(board) + ")";
     else if(mode == "hh" || (mode == "ch" && this.player == "p2"))
       requestString = "rule(h," + move + "," + player + "," + x + "," + y + "," + JSON.stringify(board) + ")";
 
     var this_t = this;
-    getPrologRequest(requestString, function (data) {this_t.receiveFromProlog(data)});*/
+    getPrologRequest(requestString, function (data) {this_t.receiveFromProlog(data)});
 }
 
 NodesGame.prototype.receiveFromProlog = function (data) {
-    var response = data.target.response;
+    var response = JSON.parse(data.target.response);
     if (response != "Bad Request" && response != "Syntax Error")
-      this.setBoard(response);
+        this.setLogicBoard(response);
     else
       console.error("Not a board received.");
 }
@@ -177,4 +177,5 @@ NodesGame.prototype.update = function (currTime) {
     var deltaTime = (currTime - this.firstTime) / 1000;
     this.setTimer(deltaTime);
     this.setScorer(0, this.timer);  // should receive the score of each player
+    this.makeMove();    // to be removed
 }
