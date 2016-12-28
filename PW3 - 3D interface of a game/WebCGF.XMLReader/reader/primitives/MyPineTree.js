@@ -49,7 +49,7 @@ MyPineTree.prototype.display = function () {
 	
 	this.green.apply();
 	var angle = Math.PI * 2 / 8;
-	for(var i = 0; i < 8; i++){
+	for(var i = 0; i < 4; i++){
 		for(var k = 0; k < this.stacks; k++){
 			this.scene.pushMatrix();
 				this.scene.rotate(angle * i, 0, 1, 0);

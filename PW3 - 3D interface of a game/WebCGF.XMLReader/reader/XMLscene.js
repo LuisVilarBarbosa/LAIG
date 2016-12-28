@@ -91,6 +91,8 @@ XMLscene.prototype.init = function (application) {
 	
 	this.setPickEnabled(true);
 	this.picking_buffer = 0;
+	
+	this.snow_scene = new MySnowScene(this);
 };
 
 
@@ -173,6 +175,7 @@ XMLscene.prototype.display = function () {
     };
 	
 	this.game.display();
+	this.snow_scene.display();
 };
 
 XMLscene.prototype.setRootNodeId = function (nodeId) {
