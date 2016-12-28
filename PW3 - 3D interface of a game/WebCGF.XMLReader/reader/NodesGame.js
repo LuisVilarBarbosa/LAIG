@@ -32,6 +32,7 @@ function NodesGame(scene) {
 	this.active_player = 1;
 	
 	this.history = [];  // to undo and movie
+	
 };
 
 NodesGame.prototype.pickingMove = function (picking_id, player, xf, yf) {
@@ -91,6 +92,28 @@ NodesGame.prototype.movePieceInLogicBoard = function (picking_id, player, xf, yf
 		this.logicBoard[yf-1][xf-1] = 2;
 	}
 	this.logicBoard[yi][xi] = 0;
+}
+
+NodesGame.prototype.movePieceInGraphicBoard = function (player, hor, ver, picking_buffer) {
+	if(player == 1){
+		if(picking_buffer % 10 == 8){
+			this.player1.nodePos [0] = hor * 0.1;
+			this.player1.nodePos [1] = 1 - ver * 0.1;
+			this.active_player = 2;
+		}else{
+			this.player1.unitsPos[picking_buffer-(100 + player*10)][0] = hor * 0.1;
+			this.player1.unitsPos[picking_buffer-(100 + player*10)][1] = 1 - ver * 0.1;
+		}
+	}else{
+		if(picking_buffer % 10 == 8){
+			this.player2.nodePos [0] = hor * 0.1;
+			this.player2.nodePos [1] = 1 - ver * 0.1;
+			this.active_player = 1;
+		}else{
+			this.player2.unitsPos[picking_buffer-(100 + player*10)][0] = hor * 0.1;
+			this.player2.unitsPos[picking_buffer-(100 + player*10)][1] = 1 - ver * 0.1;
+		}
+	}
 }
 
 NodesGame.prototype.pickingHandler = function (customId) {
