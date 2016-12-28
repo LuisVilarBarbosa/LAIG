@@ -31,7 +31,7 @@ function NodesGame(scene) {
 	this.player2 = new MyPlayer(this.scene, 2);
 	this.active_player = 1;
 	
-	
+	this.history = [];  // to undo and movie
 };
 
 NodesGame.prototype.movePieceInLogicBoard = function (picking_id, player, xf, yf) {
@@ -186,10 +186,12 @@ NodesGame.prototype.sendToProlog = function (mode /*cc, ch or hh*/, level /*easy
 
 NodesGame.prototype.receiveFromProlog = function (data) {
     var response = JSON.parse(data.target.response);
-    if (response != "Bad Request" && response != "Syntax Error")
+    if (response != "Bad Request" && response != "Syntax Error") {
+        this.history.push(this.detectDifference(this.logicBoard, response));
         this.setLogicBoard(response);
+    }
     else
-      console.error("Not a board received.");
+        console.error("Not a board received.");
 }
 
 NodesGame.prototype.setTimer = function (time) {
@@ -210,4 +212,27 @@ NodesGame.prototype.update = function (currTime) {
     this.setTimer(deltaTime);
     this.setScorer(0, this.timer);  // should receive the score of each player
     this.makeMove();    // to be removed
+}
+
+NodesGame.prototype.detectDifference = function (oldBoard, newBoard) {
+    var changes = [];
+    var yLength = oldBoard.length;
+    if (yLength != newBoard.length)
+        console.warn(this.constructor.name + ": Expected boards with the same size in y.");
+
+    for (var y = 0; y < yLength; y++) {
+        var xLength = oldBoard[y].length;
+        if (xLength != newBoard[y].length)
+            console.warn(this.constructor.name + ": Expected boards with the same size in x.");
+
+        for (var x = 0; x < xLength; x++)
+            if (oldBoard[y][x] != newBoard[y][x]) {
+                if (newBoard[y][x] == 0 /* empty cell */)
+                    changes["oldPos"] = [x, y];
+                else
+                    changes["newPos"] = [x, y];
+            }
+    }
+
+    return changes;
 }
