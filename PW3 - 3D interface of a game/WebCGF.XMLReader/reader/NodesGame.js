@@ -34,6 +34,36 @@ function NodesGame(scene) {
 	this.history = [];  // to undo and movie
 };
 
+NodesGame.prototype.pickingMove = function (picking_id, player, xf, yf) {
+	var xi = 0;
+	var yi = 0;
+	if(picking_id % 10 == 8){
+		if(player == 1){
+			xi = Math.round(this.player1.nodePos[0] * 10);
+			yi = 10 - Math.round(this.player1.nodePos[1] * 10);
+			this.logicBoard[yf-1][xf-1] = 3;
+		}else{
+			xi = Math.round(this.player2.nodePos[0] * 10);
+			yi = 10 - Math.round(this.player2.nodePos[1] * 10);
+			this.logicBoard[yf-1][xf-1] = 1;
+		}
+	}else{
+		if(player == 1){
+			xi = Math.round(this.player1.unitsPos[picking_id-(100 + player*10)][0] * 10);
+			yi = 10 - Math.round(this.player1.unitsPos[picking_id-(100 + player*10)][1] * 10);
+		}else{
+			xi = Math.round(this.player2.unitsPos[picking_id-(100 + player*10)][0] * 10);
+			yi = 10 - Math.round(this.player2.unitsPos[picking_id-(100 + player*10)][1] * 10);
+		}
+	}
+	
+	console.log("Coordenada X inicial: " + xi);
+	console.log("Coordenada Y inicial: " + yi);
+	console.log("Coordenada X final: " + xf);
+	console.log("Coordenada X final: " + yf);
+	
+}
+
 NodesGame.prototype.movePieceInLogicBoard = function (picking_id, player, xf, yf) {
 	var xi = 0;
 	var yi = 0;
@@ -48,7 +78,6 @@ NodesGame.prototype.movePieceInLogicBoard = function (picking_id, player, xf, yf
 			this.logicBoard[yf-1][xf-1] = 1;
 		}
 		this.logicBoard[yi][xi] = 0;
-		console.table(this.logicBoard);
 		return;
 	}
 	
@@ -62,7 +91,6 @@ NodesGame.prototype.movePieceInLogicBoard = function (picking_id, player, xf, yf
 		this.logicBoard[yf-1][xf-1] = 2;
 	}
 	this.logicBoard[yi][xi] = 0;
-	console.table(this.logicBoard);
 }
 
 NodesGame.prototype.pickingHandler = function (customId) {
@@ -73,6 +101,7 @@ NodesGame.prototype.pickingHandler = function (customId) {
 		var ver = Math.ceil(customId / 9) % 10;
 		if(this.active_player == 1){
 			this.movePieceInLogicBoard(this.scene.picking_buffer, 1, hor, ver);
+			this.pickingMove(this.scene.picking_buffer, 1, hor, ver);
 			if(this.scene.picking_buffer % 10 == 8){
 				this.player1.nodePos [0] = hor * 0.1;
 				this.player1.nodePos [1] = 1 - ver * 0.1;
@@ -83,6 +112,7 @@ NodesGame.prototype.pickingHandler = function (customId) {
 			}
 		}else{
 			this.movePieceInLogicBoard(this.scene.picking_buffer, 2, hor, ver);
+			this.pickingMove(this.scene.picking_buffer, 2, hor, ver);
 			if(this.scene.picking_buffer % 10 == 8){
 				this.player2.nodePos [0] = hor * 0.1;
 				this.player2.nodePos [1] = 1 - ver * 0.1;
