@@ -139,7 +139,7 @@ NodesGame.prototype.changePlayer = function () {
         console.error("Unexpected change to the player happened: " + this.active_player);
 }
 
-NodesGame.prototype.sendToProlog = function (mode /*cc, ch or hh*/, level /*easy or hard*/, player /*p1 or p2*/, board, move, x, y) {
+NodesGame.prototype.sendToProlog = function (mode /*cc, ch or hh*/, level /*easy or hard*/, player /*1 or 2*/, board, move, x, y) {
     var requestString;
     if (mode == "cc" || (mode == "ch" && player == 1))
       requestString = "burst_move(c," + level + ",p" + player + "," + JSON.stringify(board) + ")";
