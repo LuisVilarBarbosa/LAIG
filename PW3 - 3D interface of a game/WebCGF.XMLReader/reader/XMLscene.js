@@ -88,8 +88,6 @@ XMLscene.prototype.init = function (application) {
     this.mode = 0;
     this.levels = ["easy", "hard"];
     this.level = 1;
-	
-	this.snow_scene = new MySnowScene(this);
 };
 
 
@@ -172,7 +170,6 @@ XMLscene.prototype.display = function () {
     };
 	
 	this.game.display();
-	this.snow_scene.display();
 };
 
 XMLscene.prototype.setRootNodeId = function (nodeId) {

@@ -8,6 +8,7 @@ function NodesGame(scene) {
     this.mode = "cc";
     this.level = "hard";
     this.player = "p1";
+	this.selectScene = 0;
 
     // to see the meaning of each value, consult the 'server.pl' file
     this.logicBoard = [
@@ -33,6 +34,10 @@ function NodesGame(scene) {
 	this.picking_buffer = 0;
 	
 	this.history = [];  // to undo and movie
+	
+	this.scenes = [];
+	this.scenes.push(new MySnowScene(this.scene));
+	this.scenes.push(new MyEgyptScene(this.scene));
 	
 };
 
@@ -61,6 +66,16 @@ NodesGame.prototype.display = function () {
 		for (var i = 0; i < this.players.length; i++)
 		    this.players[i].display();
 	this.scene.popMatrix();
+	
+	this.sceneDisplay();
+}
+
+NodesGame.prototype.sceneDisplay = function () {
+    if(this.selectScene == 0)
+		return;
+	else{
+		this.scenes[this.selectScene - 1].display();
+	}
 }
 
 NodesGame.prototype.setMode = function (mode) {
