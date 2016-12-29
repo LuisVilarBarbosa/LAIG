@@ -27,132 +27,29 @@ function NodesGame(scene) {
     this.setMaxMoveTime(300);
 	
 	this.board = new MyNodesBoard(this.scene);
-	this.player1 = new MyPlayer(this.scene, 1);
-	this.player2 = new MyPlayer(this.scene, 2);
+	this.players = [new MyPlayer(this.scene, 1, this.logicBoard), new MyPlayer(this.scene, 2, this.logicBoard)];
 	this.active_player = 1;
+
+	this.picking_buffer = 0;
 	
 	this.history = [];  // to undo and movie
 	
 };
 
-NodesGame.prototype.pickingMove = function (picking_id, player, xf, yf) {
-	var xi = 0;
-	var yi = 0;
-	if(picking_id % 10 == 8){
-		if(player == 1){
-			xi = Math.round(this.player1.nodePos[0] * 10);
-			yi = 10 - Math.round(this.player1.nodePos[1] * 10);
-			this.logicBoard[yf-1][xf-1] = 3;
-		}else{
-			xi = Math.round(this.player2.nodePos[0] * 10);
-			yi = 10 - Math.round(this.player2.nodePos[1] * 10);
-			this.logicBoard[yf-1][xf-1] = 1;
-		}
-	}else{
-		if(player == 1){
-			xi = Math.round(this.player1.unitsPos[picking_id-(100 + player*10)][0] * 10);
-			yi = 10 - Math.round(this.player1.unitsPos[picking_id-(100 + player*10)][1] * 10);
-		}else{
-			xi = Math.round(this.player2.unitsPos[picking_id-(100 + player*10)][0] * 10);
-			yi = 10 - Math.round(this.player2.unitsPos[picking_id-(100 + player*10)][1] * 10);
-		}
-	}
-	
-	console.log("Coordenada X inicial: " + xi);
-	console.log("Coordenada Y inicial: " + yi);
-	console.log("Coordenada X final: " + xf);
-	console.log("Coordenada X final: " + yf);
-	
-}
-
-NodesGame.prototype.movePieceInLogicBoard = function (picking_id, player, xf, yf) {
-	var xi = 0;
-	var yi = 0;
-	if(picking_id % 10 == 8){
-		if(player == 1){
-			xi = Math.round(this.player1.nodePos[0] * 10) - 1;
-			yi = 9 - Math.round(this.player1.nodePos[1] * 10);
-			this.logicBoard[yf-1][xf-1] = 3;
-		}else{
-			xi = Math.round(this.player2.nodePos[0] * 10) - 1;
-			yi = 9 - Math.round(this.player2.nodePos[1] * 10);
-			this.logicBoard[yf-1][xf-1] = 1;
-		}
-		this.logicBoard[yi][xi] = 0;
-		return;
-	}
-	
-	if(player == 1){
-		xi = Math.round(this.player1.unitsPos[picking_id-(100 + player*10)][0] * 10) - 1;
-		yi = 9 - Math.round(this.player1.unitsPos[picking_id-(100 + player*10)][1] * 10);
-		this.logicBoard[yf-1][xf-1] = 4;
-	}else{
-		xi = Math.round(this.player2.unitsPos[picking_id-(100 + player*10)][0] * 10) - 1;
-		yi = 9 - Math.round(this.player2.unitsPos[picking_id-(100 + player*10)][1] * 10);
-		this.logicBoard[yf-1][xf-1] = 2;
-	}
-	this.logicBoard[yi][xi] = 0;
-}
-
-NodesGame.prototype.movePieceInGraphicBoard = function (player, hor, ver, picking_buffer) {
-	if(player == 1){
-		if(picking_buffer % 10 == 8){
-			this.player1.nodePos [0] = hor * 0.1;
-			this.player1.nodePos [1] = 1 - ver * 0.1;
-			this.active_player = 2;
-		}else{
-			this.player1.unitsPos[picking_buffer-(100 + player*10)][0] = hor * 0.1;
-			this.player1.unitsPos[picking_buffer-(100 + player*10)][1] = 1 - ver * 0.1;
-		}
-	}else{
-		if(picking_buffer % 10 == 8){
-			this.player2.nodePos [0] = hor * 0.1;
-			this.player2.nodePos [1] = 1 - ver * 0.1;
-			this.active_player = 1;
-		}else{
-			this.player2.unitsPos[picking_buffer-(100 + player*10)][0] = hor * 0.1;
-			this.player2.unitsPos[picking_buffer-(100 + player*10)][1] = 1 - ver * 0.1;
-		}
-	}
+NodesGame.prototype.calculateLogicCoords = function (picking_id) {
+    var x = picking_id % 10;
+    var y = Math.trunc(picking_id / 10);
+	return [x, y];
 }
 
 NodesGame.prototype.pickingHandler = function (customId) {
-    if(customId < 100 && this.scene.picking_buffer != 0){
-		console.log("Tile: " + customId);
-		console.log("Ver:" + (Math.ceil(customId / 9) % 10) + "  " + "Hor:" + (((customId - 1) % 9)+1));
-		var hor = ((customId - 1) % 9)+1;
-		var ver = Math.ceil(customId / 9) % 10;
-		if(this.active_player == 1){
-			this.movePieceInLogicBoard(this.scene.picking_buffer, 1, hor, ver);
-			this.pickingMove(this.scene.picking_buffer, 1, hor, ver);
-			if(this.scene.picking_buffer % 10 == 8){
-				this.player1.nodePos [0] = hor * 0.1;
-				this.player1.nodePos [1] = 1 - ver * 0.1;
-				this.active_player = 2;
-			}else{
-				this.player1.unitsPos[this.scene.picking_buffer-(100 + this.active_player*10)][0] = hor * 0.1;
-				this.player1.unitsPos[this.scene.picking_buffer-(100 + this.active_player*10)][1] = 1 - ver * 0.1;
-			}
-		}else{
-			this.movePieceInLogicBoard(this.scene.picking_buffer, 2, hor, ver);
-			this.pickingMove(this.scene.picking_buffer, 2, hor, ver);
-			if(this.scene.picking_buffer % 10 == 8){
-				this.player2.nodePos [0] = hor * 0.1;
-				this.player2.nodePos [1] = 1 - ver * 0.1;
-				this.active_player = 1;
-			}else{
-				this.player2.unitsPos[this.scene.picking_buffer-(100 + this.active_player*10)][0] = hor * 0.1;
-				this.player2.unitsPos[this.scene.picking_buffer-(100 + this.active_player*10)][1] = 1 - ver * 0.1;
-			}
-		}
-		this.scene.picking_buffer = 0;
-	}else if(customId >=100){
-		var player = Math.floor(customId / 10) % 10;
-		if(player == this.active_player){
-			this.scene.picking_buffer = customId;
-			console.log("Piece: " + customId);
-		}
-	}
+    if (this.picking_buffer != 0) {
+        var logicCoords1 = this.calculateLogicCoords(this.picking_buffer);
+        var logicCoords2 = this.calculateLogicCoords(customId);
+        this.tryMove(logicCoords1, logicCoords2);
+        this.picking_buffer = 0;
+    } else
+        this.picking_buffer = customId;
 }
 
 NodesGame.prototype.display = function () {
@@ -161,8 +58,8 @@ NodesGame.prototype.display = function () {
 		this.scene.rotate(-Math.PI/2, 1, 0, 0);
 		
 		this.board.display();
-		this.player1.display();
-		this.player2.display();
+		for (var i = 0; i < this.players.length; i++)
+		    this.players[i].display();
 	this.scene.popMatrix();
 }
 
@@ -184,8 +81,14 @@ NodesGame.prototype.setLogicBoard = function (logicBoard) {
     this.logicBoard = logicBoard;
 }
 
-NodesGame.prototype.makeMove = function (from_x, from_y, to_x, to_y) {
+NodesGame.prototype.tryMove = function (from, to) {
     var move;
+    var from_x = from[0];
+    var from_y = from[1];
+    var to_x = to[0];
+    var to_y = to[1];
+    console.log(from);
+    console.log(to);
 
     if (this.mode == "hh" || (this.mode == "ch" && this.player == "p2")) {
       if (from_x == to_x && from_y - 1 == to_y)
@@ -240,8 +143,10 @@ NodesGame.prototype.sendToProlog = function (mode /*cc, ch or hh*/, level /*easy
 NodesGame.prototype.receiveFromProlog = function (data) {
     var response = JSON.parse(data.target.response);
     if (response != "Bad Request" && response != "Syntax Error") {
-        this.history.push(this.detectDifference(this.logicBoard, response));
+        var difference = this.detectDifference(this.logicBoard, response);
+        this.history.push(difference);
         this.setLogicBoard(response);
+        this.players[this.active_player].updatePieces(this.logicBoard);
     }
     else
         console.error("Not a board received.");
@@ -264,7 +169,6 @@ NodesGame.prototype.update = function (currTime) {
     var deltaTime = (currTime - this.firstTime) / 1000;
     this.setTimer(deltaTime);
     this.setScorer(0, this.timer);  // should receive the score of each player
-    this.makeMove();    // to be removed
 }
 
 NodesGame.prototype.detectDifference = function (oldBoard, newBoard) {
