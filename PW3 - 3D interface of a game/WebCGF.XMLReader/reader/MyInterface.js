@@ -32,7 +32,7 @@ MyInterface.prototype.init = function (application) {
     this.gui.add(this.scene, 'level', { easy: 0, hard: 1 });
     this.gui.add(this.scene.game, 'timer').listen();
     this.gui.add(this.scene.game, 'scorer').listen();
-    this.gui.add(this.scene.game, 'maxMoveTime', 0, 300);
+    this.gui.add(this.scene.game, 'maxMoveTime', 1, 300);
 	this.gui.add(this.scene.game, 'selectScene', { none: 0, snow: 1, sand: 2, space:3 });
 
     return true;
