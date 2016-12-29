@@ -85,7 +85,7 @@ XMLscene.prototype.init = function (application) {
 
     this.game = new NodesGame(this);
     this.modes = ["cc", "ch", "hh"];
-    this.mode = 0;
+    this.mode = 2;
     this.levels = ["easy", "hard"];
     this.level = 1;
 };
