@@ -20,6 +20,7 @@ serialInclude(['../lib/CGF.js', 'XMLscene.js', 'MySceneGraph.js', 'Node.js', 'pr
     'NodesGame.js', 'animations/ScalarAnimation.js', 'animations/AnimationByKeyImages.js', 'primitives/MyNodesBoard.js',
 	'primitives/MyTile.js', 'primitives/MyNodePiece.js', 'MyPlayer.js', 'primitives/MyPineTree.js' ,
 	'primitives/MySnowman.js', 'MySnowScene.js' , 'primitives/MyPyramid.js' , 'primitives/MyPalmTree.js' , 'MyEgyptScene.js' ,
+	'MyOuterSpaceScene.js' ,
 
 main = function () {
     // Standard application, scene and interface setup
