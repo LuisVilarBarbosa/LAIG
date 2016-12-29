@@ -7,7 +7,6 @@ function NodesGame(scene) {
 	
     this.mode = "cc";
     this.level = "hard";
-    this.player = "p1";
 
     // to see the meaning of each value, consult the 'server.pl' file
     this.logicBoard = [
@@ -46,7 +45,7 @@ NodesGame.prototype.pickingHandler = function (customId) {
     if (this.picking_buffer != 0) {
         var logicCoords1 = this.calculateLogicCoords(this.picking_buffer);
         var logicCoords2 = this.calculateLogicCoords(customId);
-        this.tryMove(logicCoords1, logicCoords2);
+        this.tryMove(logicCoords1[0], logicCoords1[1], logicCoords2[0], logicCoords2[1]);
         this.picking_buffer = 0;
     } else
         this.picking_buffer = customId;
@@ -81,14 +80,8 @@ NodesGame.prototype.setLogicBoard = function (logicBoard) {
     this.logicBoard = logicBoard;
 }
 
-NodesGame.prototype.tryMove = function (from, to) {
+NodesGame.prototype.tryMove = function (from_x, from_y, to_x, to_y) {
     var move;
-    var from_x = from[0];
-    var from_y = from[1];
-    var to_x = to[0];
-    var to_y = to[1];
-    console.log(from);
-    console.log(to);
 
     if (this.mode == "hh" || (this.mode == "ch" && this.player == "p2")) {
       if (from_x == to_x && from_y - 1 == to_y)
@@ -113,7 +106,7 @@ NodesGame.prototype.tryMove = function (from, to) {
       }
     }
 
-    this.sendToProlog(this.mode, this.level, this.player, this.logicBoard);
+    this.sendToProlog(this.mode, this.level, this.active_player, this.logicBoard, move, from_x, from_y);
     // It would be good if we could wait for the answer and verify that, because the move can be not possible.
     // If the move was not possible, we should indicate that using console.log().
 
@@ -121,35 +114,36 @@ NodesGame.prototype.tryMove = function (from, to) {
 }
 
 NodesGame.prototype.changePlayer = function () {
-    if (this.player == "p1")
-      this.player = "p2";
-    else if (this.player == "p2")
-      this.player = "p1";
+    if (this.active_player == 1)
+        this.active_player = 2;
+    else if (this.active_player == 2)
+        this.active_player = 1;
     else
-      console.error("Unexpected change to the player happened: " + this.player);
+        console.error("Unexpected change to the player happened: " + this.active_player);
 }
 
 NodesGame.prototype.sendToProlog = function (mode /*cc, ch or hh*/, level /*easy or hard*/, player /*p1 or p2*/, board, move, x, y) {
     var requestString;
-    if(mode == "cc" || (mode == "ch" && this.player == "p1"))
-      requestString = "burst_move(c," + level + "," + player + "," + JSON.stringify(board) + ")";
-    else if(mode == "hh" || (mode == "ch" && this.player == "p2"))
-      requestString = "rule(h," + move + "," + player + "," + x + "," + y + "," + JSON.stringify(board) + ")";
+    if (mode == "cc" || (mode == "ch" && player == 1))
+      requestString = "burst_move(c," + level + ",p" + player + "," + JSON.stringify(board) + ")";
+    else if (mode == "hh" || (mode == "ch" && player == 2))
+      requestString = "rule(h," + move + ",p" + player + "," + x + "," + y + "," + JSON.stringify(board) + ")";
 
     var this_t = this;
     getPrologRequest(requestString, function (data) {this_t.receiveFromProlog(data)});
 }
 
 NodesGame.prototype.receiveFromProlog = function (data) {
-    var response = JSON.parse(data.target.response);
-    if (response != "Bad Request" && response != "Syntax Error") {
+    var response = data.target.response;
+    if (response != "Invalid Move" && response != "Bad Request" && response != "Syntax Error") {
+        response = JSON.parse(response);
         var difference = this.detectDifference(this.logicBoard, response);
         this.history.push(difference);
         this.setLogicBoard(response);
-        this.players[this.active_player].updatePieces(this.logicBoard);
+        this.players[this.active_player - 1].updatePieces(this.logicBoard);
     }
     else
-        console.error("Not a board received.");
+        console.error("Not a board received: " + response);
 }
 
 NodesGame.prototype.setTimer = function (time) {
