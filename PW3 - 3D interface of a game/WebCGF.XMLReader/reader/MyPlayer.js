@@ -29,13 +29,13 @@ MyPlayer.prototype.initPieces = function (logicBoard) {
 
 MyPlayer.prototype.updatePieces = function (logicBoard) {
     this.unitsPos = [];
+    var gz = 0;
     var yLength = logicBoard.length;
     for (var y = 0; y < yLength; y++) {
+        var gy = (y + 1) / 10;
         var xLength = logicBoard[y].length;
         for (var x = 0; x < xLength; x++) {
             var gx = (x + 1) / 10;
-            var gy = (y + 1) / 10;
-            var gz = 0;
 
             if (this.player_number == 1) {
                 if (logicBoard[y][x] == 1)
@@ -79,18 +79,18 @@ MyPlayer.prototype.display = function () {
     }
 	
 	if (this.scene.game.picking_buffer == this.calculatePickingId(this.nodePos))
-		if(this.player_number == 1)
-				this.scene.green.apply();
-			else
-				this.scene.yellow.apply();
-		else
-			if(this.player_number == 1)
-				this.scene.red.apply();
-			else
-				this.scene.blue.apply();
+	    if (this.player_number == 1)
+	        this.scene.green.apply();
+	    else
+	        this.scene.yellow.apply();
+	else
+	    if (this.player_number == 1)
+	        this.scene.red.apply();
+	    else
+	        this.scene.blue.apply();
 			
 	this.scene.pushMatrix();
-	this.scene.registerForPick(this.calculatePickingId(this.nodePos), this.node);
+	    this.scene.registerForPick(this.calculatePickingId(this.nodePos), this.node);
 		this.scene.translate(this.nodePos[0] * 3, this.nodePos[1] * 3, this.nodePos[2] * 3);
 		this.node.display();
 	this.scene.popMatrix();
