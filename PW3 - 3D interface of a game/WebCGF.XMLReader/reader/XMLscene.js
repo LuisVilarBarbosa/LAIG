@@ -89,8 +89,6 @@ XMLscene.prototype.init = function (application) {
     this.levels = ["easy", "hard"];
     this.level = 1;
 	
-	this.setPickEnabled(true);
-	
 	this.snow_scene = new MySnowScene(this);
 };
 

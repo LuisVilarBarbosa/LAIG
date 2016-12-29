@@ -169,6 +169,19 @@ NodesGame.prototype.update = function (currTime) {
     var deltaTime = (currTime - this.firstTime) / 1000;
     this.setTimer(deltaTime);
     this.setScorer(0, this.timer);  // should receive the score of each player
+
+    this.updatePickingMode();
+}
+
+NodesGame.prototype.updatePickingMode = function () {
+    if (this.mode == "cc")
+        this.scene.setPickEnabled(false);
+    else if (this.mode == "hh")
+        this.scene.setPickEnabled(true);
+    else if (this.mode == "ch" && this.active_player == 1)
+        this.scene.setPickEnabled(false);
+    else if (this.mode == "ch" && this.active_player == 2)
+        this.scene.setPickEnabled(true);
 }
 
 NodesGame.prototype.detectDifference = function (oldBoard, newBoard) {
