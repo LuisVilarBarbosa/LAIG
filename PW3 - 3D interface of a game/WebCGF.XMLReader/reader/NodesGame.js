@@ -38,6 +38,7 @@ function NodesGame(scene) {
 	this.scenes = [];
 	this.scenes.push(new MySnowScene(this.scene));
 	this.scenes.push(new MyEgyptScene(this.scene));
+	this.scenes.push(new MyOuterSpaceScene(this.scene));
 	
 };
 
