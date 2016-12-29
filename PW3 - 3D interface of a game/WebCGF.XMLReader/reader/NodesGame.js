@@ -182,6 +182,13 @@ NodesGame.prototype.update = function (currTime) {
     this.setScorer(0, this.timer);  // should receive the score of each player
 
     this.updatePickingMode();
+
+    // limit player game time
+    if (deltaTime > this.maxMoveTime) {
+        this.firstTime = currTime;
+        this.setTimer(0);
+        this.changePlayer();
+    }
 }
 
 NodesGame.prototype.updatePickingMode = function () {
