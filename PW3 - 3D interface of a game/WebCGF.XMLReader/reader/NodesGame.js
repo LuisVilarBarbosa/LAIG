@@ -39,7 +39,6 @@ function NodesGame(scene) {
 	this.scenes.push(new MySnowScene(this.scene));
 	this.scenes.push(new MyEgyptScene(this.scene));
 	this.scenes.push(new MyOuterSpaceScene(this.scene));
-	
 };
 
 NodesGame.prototype.calculateLogicCoords = function (picking_id) {
@@ -72,11 +71,8 @@ NodesGame.prototype.display = function () {
 }
 
 NodesGame.prototype.sceneDisplay = function () {
-    if(this.selectScene == 0)
-		return;
-	else{
+    if(this.selectScene != 0)
 		this.scenes[this.selectScene - 1].display();
-	}
 }
 
 NodesGame.prototype.setMode = function (mode) {
