@@ -36,6 +36,7 @@ function NodesGame(scene) {
 	this.history = [];  // to undo and movie
 	this.message = "p" + this.active_player;
 	this.reset = false;
+	this.movie = false;
 	
 	this.scenes = [];
 	this.scenes.push(new MySnowScene(this.scene));
@@ -152,7 +153,8 @@ NodesGame.prototype.receiveFromProlog = function (data) {
     if (response != "Invalid move (wrong piece?)" && response != "Bad Request" && response != "Syntax Error") {
         response = JSON.parse(response);
         var difference = this.detectDifference(this.logicBoard, response);
-        this.history.push(difference);
+        if(!this.movie)
+            this.history.push(difference);
         this.updateBoard(response);
     }
     else {
@@ -200,6 +202,24 @@ NodesGame.prototype.update = function (currTime) {
         this.updateBoard(this.initialLogicBoard);
         this.reset = false;
     }
+
+    if (this.movie) {
+        this.moviePoint = this.moviePoint || 0;
+        if (this.moviePoint >= this.history.length) {
+            this.movie = false;
+            this.moviePoint = 0;
+        }
+        else {
+            if (this.moviePoint == 0)
+                this.updateBoard(this.initialLogicBoard);
+            if (!this.waitingProlog) {
+                var xy1 = this.history[this.moviePoint]["oldPos"];
+                var xy2 = this.history[this.moviePoint]["newPos"];
+                this.tryMove(xy1[0], xy1[1], xy2[0], xy2[1]);
+                this.moviePoint++;
+            }
+        }
+    }
 }
 
 NodesGame.prototype.updatePickingMode = function () {
@@ -227,9 +247,9 @@ NodesGame.prototype.detectDifference = function (oldBoard, newBoard) {
         for (var x = 0; x < xLength; x++)
             if (oldBoard[y][x] != newBoard[y][x]) {
                 if (newBoard[y][x] == 0 /* empty cell */)
-                    changes["oldPos"] = [x, y];
+                    changes["oldPos"] = [x + 1, y + 1];
                 else
-                    changes["newPos"] = [x, y];
+                    changes["newPos"] = [x + 1, y + 1];
             }
     }
 
