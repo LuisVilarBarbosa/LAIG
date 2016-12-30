@@ -35,6 +35,7 @@ MyInterface.prototype.init = function (application) {
     this.gui.add(this.scene.game, 'maxMoveTime', 1, 300);
     this.gui.add(this.scene.game, 'selectScene', { none: 0, snow: 1, sand: 2, space: 3 });
     this.gui.add(this.scene.game, 'message').listen();
+    this.gui.add(this.scene.game, 'undo').listen();
     this.gui.add(this.scene.game, 'reset').listen();
     this.gui.add(this.scene.game, 'movie').listen();
 

@@ -35,6 +35,7 @@ function NodesGame(scene) {
 	this.waitingProlog = false;
 	this.history = [];  // to undo and movie
 	this.message = "p" + this.active_player;
+	this.undo = false;
 	this.reset = false;
 	this.movie = false;
 	
@@ -198,6 +199,18 @@ NodesGame.prototype.update = function (currTime) {
         this.changePlayer();
     }
 
+    if (this.undo) {
+        if (this.history.length > 0) {
+            var difference = this.history[this.history.length - 1];
+            this.history.pop();
+            var xy1 = difference["oldPos"];
+            var xy2 = difference["newPos"];
+            this.moveLogicBoardPiece(xy2, xy1);
+            this.updateBoard(this.logicBoard);
+        }
+        this.undo = false;
+    }
+
     if (this.reset) {
         this.updateBoard(this.initialLogicBoard);
         this.reset = false;
@@ -254,4 +267,10 @@ NodesGame.prototype.detectDifference = function (oldBoard, newBoard) {
     }
 
     return changes;
+}
+
+NodesGame.prototype.moveLogicBoardPiece = function (from, to) {
+    var piece = this.logicBoard[from[1]][from[0]];
+    this.logicBoard[from[1]][from[0]] = 0;  // empty cell
+    this.logicBoard[to[1]][to[0]] = piece;
 }
