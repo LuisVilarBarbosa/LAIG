@@ -9,7 +9,6 @@ function NodesGame(scene) {
     this.level = "hard";
 	this.selectScene = 0;
 
-
     // to see the meaning of each value, consult the 'server.pl' file
     this.initialLogicBoard = [
       [5,5,2,2,1,2,2,5,5],
@@ -24,9 +23,9 @@ function NodesGame(scene) {
     ];
     this.logicBoard = this.initialLogicBoard;
 
-    this.setTimer(0);
+    this.timer = 0;
     this.setScorer(0, 0);
-    this.setMaxMoveTime(300);
+    this.maxMoveTime = 300;  // maximum time to make a move
 	
 	this.board = new MyNodesBoard(this.scene);
 	this.players = [new MyPlayer(this.scene, 1, this.logicBoard), new MyPlayer(this.scene, 2, this.logicBoard)];
@@ -39,10 +38,7 @@ function NodesGame(scene) {
 	this.reset = false;
 	this.movie = false;
 	
-	this.scenes = [];
-	this.scenes.push(new MySnowScene(this.scene));
-	this.scenes.push(new MyEgyptScene(this.scene));
-	this.scenes.push(new MyOuterSpaceScene(this.scene));
+	this.scenes = [new MySnowScene(this.scene), new MyEgyptScene(this.scene), new MyOuterSpaceScene(this.scene)];
 };
 
 NodesGame.prototype.calculateLogicCoords = function (picking_id) {
@@ -71,12 +67,8 @@ NodesGame.prototype.display = function () {
 		    this.players[i].display();
 	this.scene.popMatrix();
 	
-	this.sceneDisplay();
-}
-
-NodesGame.prototype.sceneDisplay = function () {
-    if(this.selectScene != 0)
-		this.scenes[this.selectScene - 1].display();
+	if (this.selectScene != 0)
+	    this.scenes[this.selectScene - 1].display();
 }
 
 NodesGame.prototype.setMode = function (mode) {
@@ -91,10 +83,6 @@ NodesGame.prototype.setLevel = function (level) {
     this.level = level;
   else
     console.error("Invalid game level indicated. Not set.");
-}
-
-NodesGame.prototype.setLogicBoard = function (logicBoard) {
-    this.logicBoard = logicBoard;
 }
 
 NodesGame.prototype.tryMove = function (from_x, from_y, to_x, to_y) {
@@ -139,6 +127,7 @@ NodesGame.prototype.changePlayer = function () {
 
 NodesGame.prototype.sendToProlog = function (mode /*cc, ch or hh*/, level /*easy or hard*/, player /*1 or 2*/, board, move, x, y) {
     this.waitingProlog = true;
+
     var requestString;
     if (mode == "cc" || (mode == "ch" && player == 1))
       requestString = "burst_move(c," + level + ",p" + player + "," + JSON.stringify(board) + ")";
@@ -154,9 +143,8 @@ NodesGame.prototype.receiveFromProlog = function (data) {
     if (response != "Invalid move (wrong piece?)" && response != "Bad Request" && response != "Syntax Error") {
         response = JSON.parse(response);
         var difference = this.detectDifference(this.logicBoard, response);
-        if(!this.movie)
-            this.history.push(difference);
-        this.updateBoard(response);
+        this.history.push(difference);
+        this.updateBoards(response);
     }
     else {
         this.message = response + " : p" + this.active_player;
@@ -166,28 +154,20 @@ NodesGame.prototype.receiveFromProlog = function (data) {
     this.waitingProlog = false;
 }
 
-NodesGame.prototype.updateBoard = function (logicBoard) {
-    this.setLogicBoard(logicBoard);
+NodesGame.prototype.updateBoards = function (logicBoard) {
+    this.logicBoard = logicBoard;
     for (var i = 0; i < this.players.length; i++)
         this.players[i].updatePieces(this.logicBoard);
-}
-
-NodesGame.prototype.setTimer = function (time) {
-    this.timer = time;
 }
 
 NodesGame.prototype.setScorer = function (p1Score, p2Score) {
     this.scorer = p1Score + " / " + p2Score;
 }
 
-NodesGame.prototype.setMaxMoveTime = function (time) {  // maximum time to make a move
-    this.maxMoveTime = time;
-}
-
 NodesGame.prototype.update = function (currTime) {
     this.firstTime = this.firstTime || currTime;
     var deltaTime = (currTime - this.firstTime) / 1000;
-    this.setTimer(deltaTime);
+    this.timer = deltaTime;
     this.setScorer(0, this.timer);  // should receive the score of each player
 
     this.updatePickingMode();
@@ -195,7 +175,7 @@ NodesGame.prototype.update = function (currTime) {
     // limit player game time
     if (deltaTime > this.maxMoveTime && !this.waitingProlog) {
         this.firstTime = currTime;
-        this.setTimer(0);
+        this.timer = 0;
         this.changePlayer();
     }
 
@@ -205,14 +185,13 @@ NodesGame.prototype.update = function (currTime) {
             this.history.pop();
             var xy1 = difference["oldPos"];
             var xy2 = difference["newPos"];
-            this.moveLogicBoardPiece(xy2, xy1);
-            this.updateBoard(this.logicBoard);
+            this.movePiece(xy2, xy1);
         }
         this.undo = false;
     }
 
     if (this.reset) {
-        this.updateBoard(this.initialLogicBoard);
+        this.updateBoards(this.initialLogicBoard);
         this.reset = false;
     }
 
@@ -224,11 +203,11 @@ NodesGame.prototype.update = function (currTime) {
         }
         else {
             if (this.moviePoint == 0)
-                this.updateBoard(this.initialLogicBoard);
+                this.updateBoards(this.initialLogicBoard);
             if (!this.waitingProlog) {
                 var xy1 = this.history[this.moviePoint]["oldPos"];
                 var xy2 = this.history[this.moviePoint]["newPos"];
-                this.tryMove(xy1[0], xy1[1], xy2[0], xy2[1]);
+                this.movePiece(xy1, xy2);
                 this.moviePoint++;
             }
         }
@@ -269,8 +248,9 @@ NodesGame.prototype.detectDifference = function (oldBoard, newBoard) {
     return changes;
 }
 
-NodesGame.prototype.moveLogicBoardPiece = function (from, to) {
+NodesGame.prototype.movePiece = function (from, to) {
     var piece = this.logicBoard[from[1]][from[0]];
-    this.logicBoard[from[1]][from[0]] = 0;  // empty cell
-    this.logicBoard[to[1]][to[0]] = piece;
+    this.logicBoard[from[1] - 1][from[0] - 1] = 0;  // empty cell
+    this.logicBoard[to[1] - 1][to[0] - 1] = piece;
+    this.updateBoards(this.logicBoard);
 }
