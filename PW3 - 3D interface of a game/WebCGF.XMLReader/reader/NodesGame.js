@@ -142,30 +142,32 @@ NodesGame.prototype.sendToProlog = function (requestString) {
 }
 
 NodesGame.prototype.receiveFromProlog = function (data) {
-    var response = data.target.response;
+    this.applyMove(data.target.response);
+    this.waitingProlog = false;
+}
+
+// This function simulates, if necessary, what the Prolog 'burstMove' predicate was doing
+NodesGame.prototype.applyMove = function (response) {
     if (response != "Invalid move (wrong piece?)" && response != "Bad Request" && response != "Syntax Error") {
         response = JSON.parse(response);
         var difference = this.detectDifference(this.logicBoard, response);
-        // in a computer move he can return no move causing problems with the return of 'detectDifference' (see prolog 'burstMove')
+        // In a computer move he can return no move causing problems with the return of 'detectDifference' (see prolog 'burstMove').
+        // This is caused because no better board was generated, so the same was returned.
         if (difference["oldPos"] === undefined || difference["newPos"] === undefined)
             this.changePlayer();
         else {
             this.history.push(difference);
             this.updateBoards(response);
-
-            var newPos = difference["newPos"];
-            var changedPiece = this.logicBoard[newPos[1] - 1][newPos[0] - 1];
+            var changedPiece = this.getPiece(difference["newPos"]);
             if (changedPiece == 1 || changedPiece == 3) // nodes
                 this.changePlayer();    // end of player set of moves
         }
-        this.setMessage();
+        this.setMessage();  // update player
     }
     else {
         this.setMessage(response);
         console.log("Not a board received: " + response);
     }
-
-    this.waitingProlog = false;
 }
 
 NodesGame.prototype.updateBoards = function (logicBoard) {
@@ -273,4 +275,10 @@ NodesGame.prototype.movePiece = function (from, to) {
     this.logicBoard[from_y][from_x] = 0;  // empty cell
     this.logicBoard[to_y][to_x] = piece;
     this.updateBoards(this.logicBoard);
+}
+
+NodesGame.prototype.getPiece = function (pos) {
+    var pos_x = pos - 1;
+    var pos_y = pos[1] - 1;
+    return this.logicBoard[pos_y][pos_x];
 }
