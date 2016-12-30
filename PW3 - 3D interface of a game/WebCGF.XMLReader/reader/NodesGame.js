@@ -28,7 +28,7 @@ function NodesGame(scene) {
 	
 	this.scenes = [new MySnowScene(this.scene), new MyEgyptScene(this.scene), new MyOuterSpaceScene(this.scene)];
 
-	this.mode = "hh";
+	this.mode = "hh";   // in the "ch" mode, the computer is considered the player 1 and the human is considered the player 2
 	this.level = "hard";
 	this.timer = 0;
 	this.player1Score = 0;
