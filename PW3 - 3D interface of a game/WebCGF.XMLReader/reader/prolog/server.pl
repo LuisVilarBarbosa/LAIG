@@ -115,7 +115,7 @@ parse_input(rule(h, Move, Player, X, Y, Board), NewBoard) :-
 	rule(Move, Player, X, Y, TranslatedBoard, NewTranslatedBoard),
 	translate_board(NewTranslatedBoard, NewBoard).
 parse_input(quit, goodbye).
-parse_input(_, 'Invalid Move').
+parse_input(_, 'Invalid Move (wrong piece?)').
 
 /* Translates */
 translation(0, sp).
