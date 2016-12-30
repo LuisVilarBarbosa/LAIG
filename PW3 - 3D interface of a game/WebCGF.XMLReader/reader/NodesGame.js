@@ -94,33 +94,36 @@ NodesGame.prototype.setMessage = function (m) {
 }
 
 NodesGame.prototype.tryMove = function (from_x, from_y, to_x, to_y) {
-    var move;
+    var requestString, move;
 
-    if (this.mode == "hh" || (this.mode == "ch" && this.active_player == 2)) {
-      if (from_x == to_x && from_y - 1 == to_y)
-        move = "move_up";
-      else if (from_x == to_x && from_y + 1 == to_y)
-        move = "move_down";
-      else if (from_x - 1 == to_x && from_y == to_y)
-        move = "move_left";
-      else if (from_x + 1 == to_x && from_y == to_y)
-        move = "move_right";
-      else if (from_x == to_x && from_y - 2 == to_y)
-        move = "jump_up_enemy_unit";
-      else if (from_x == to_x && from_y + 2 == to_y)
-        move = "jump_down_enemy_unit";
-      else if (from_x - 2 == to_x && from_y == to_y)
-        move = "jump_left_enemy_unit";
-      else if (from_x + 2 == to_x && from_y == to_y)
-        move = "jump_right_enemy_unit";
-      else {
-        this.setMessage("Invalid move");
-        return;
-      }
+    if (this.mode == "cc" || (this.mode == "ch" && this.active_player == 1))
+        requestString = "burst_move(c," + this.level + ",p" + this.active_player + "," + JSON.stringify(this.logicBoard) + ")";
+    else if (this.mode == "hh" || (this.mode == "ch" && this.active_player == 2)) {
+        if (from_x == to_x && from_y - 1 == to_y)
+            move = "move_up";
+        else if (from_x == to_x && from_y + 1 == to_y)
+            move = "move_down";
+        else if (from_x - 1 == to_x && from_y == to_y)
+            move = "move_left";
+        else if (from_x + 1 == to_x && from_y == to_y)
+            move = "move_right";
+        else if (from_x == to_x && from_y - 2 == to_y)
+            move = "jump_up_enemy_unit";
+        else if (from_x == to_x && from_y + 2 == to_y)
+            move = "jump_down_enemy_unit";
+        else if (from_x - 2 == to_x && from_y == to_y)
+            move = "jump_left_enemy_unit";
+        else if (from_x + 2 == to_x && from_y == to_y)
+            move = "jump_right_enemy_unit";
+        else {
+            this.setMessage("Invalid move");
+            return;
+        }
+        requestString = "rule(h," + move + ",p" + this.active_player + "," + from_x + "," + from_y + "," + JSON.stringify(this.logicBoard) + ")";
     }
 
     // The move can still be not possible, but that will be verified by the Prolog and indicated to 'receiveFromProlog'.
-    this.sendToProlog(this.mode, this.level, this.active_player, this.logicBoard, move, from_x, from_y);
+    this.sendToProlog(requestString);
 }
 
 NodesGame.prototype.changePlayer = function () {
@@ -128,15 +131,8 @@ NodesGame.prototype.changePlayer = function () {
     this.setMessage();
 }
 
-NodesGame.prototype.sendToProlog = function (mode /*cc, ch or hh*/, level /*easy or hard*/, player /*1 or 2*/, board, move, x, y) {
+NodesGame.prototype.sendToProlog = function (requestString) {
     this.waitingProlog = true;
-
-    var requestString;
-    if (mode == "cc" || (mode == "ch" && player == 1))
-      requestString = "burst_move(c," + level + ",p" + player + "," + JSON.stringify(board) + ")";
-    else if (mode == "hh" || (mode == "ch" && player == 2))
-      requestString = "rule(h," + move + ",p" + player + "," + x + "," + y + "," + JSON.stringify(board) + ")";
-
     var this_t = this;
     getPrologRequest(requestString, function (data) {this_t.receiveFromProlog(data)});
 }
