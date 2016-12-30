@@ -143,8 +143,18 @@ NodesGame.prototype.receiveFromProlog = function (data) {
     if (response != "Invalid move (wrong piece?)" && response != "Bad Request" && response != "Syntax Error") {
         response = JSON.parse(response);
         var difference = this.detectDifference(this.logicBoard, response);
-        this.history.push(difference);
-        this.updateBoards(response);
+        // in a computer move he can return no move causing problems with the return of 'detectDifference' (see prolog 'burstMove')
+        if (difference["oldPos"] === undefined || difference["newPos"] === undefined)
+            this.changePlayer();
+        else {
+            this.history.push(difference);
+            this.updateBoards(response);
+
+            var newPos = difference["newPos"];
+            var changedPiece = this.logicBoard[newPos[1] - 1][newPos[0] - 1];
+            if (changedPiece == 1 || changedPiece == 3) // nodes
+                this.changePlayer();    // end of player set of moves
+        }
     }
     else {
         this.message = response + " : p" + this.active_player;
@@ -178,6 +188,9 @@ NodesGame.prototype.update = function (currTime) {
         this.timer = 0;
         this.changePlayer();
     }
+
+    if (!this.waitingProlog && (this.mode == "cc" || this.mode == "ch" && this.active_player == 1))
+        this.tryMove(); // computer move
 
     if (this.undo) {
         if (this.history.length > 0) {

@@ -262,11 +262,12 @@ burst_move(Player, Level, Board, Best) :-
 		best_move(Player, Level, Board, X, Y, New_board),
 		(
 			(New_board = [], Best = Board);	/* it is not possible to create a better Board */
-			(
-				(Piece_to_move = n1; Piece_to_move = n2),
-				Best = New_board
-			);
-			burst_move(Player, Level, New_board, Best)
+%			(
+%				(Piece_to_move = n1; Piece_to_move = n2),
+%				Best = New_board
+%			);
+%			burst_move(Player, Level, New_board, Best)
+			Best = New_board
 		)
 	),
 	!.
