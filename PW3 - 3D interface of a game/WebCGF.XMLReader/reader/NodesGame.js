@@ -180,7 +180,7 @@ NodesGame.prototype.update = function (currTime) {
     this.firstTime = this.firstTime || currTime;
     var deltaTime = (currTime - this.firstTime) / 1000;
     this.timer = deltaTime;
-    this.setScorer(0, this.timer);  // should receive the score of each player
+    this.setScorer(this.player1Score, this.player2Score);
 
     this.updatePickingMode();
 
@@ -208,29 +208,14 @@ NodesGame.prototype.update = function (currTime) {
     if (this.reset) {
         this.firstTime = currTime;
         this.timer = 0;
-        if (this.active_player == 2)
+        while (this.active_player != 1)
             this.changePlayer();
         this.updateBoards(this.initialLogicBoard);
         this.reset = false;
     }
 
-    if (this.movie) {
-        this.moviePoint = this.moviePoint || 0;
-        if (this.moviePoint >= this.history.length) {
-            this.movie = false;
-            this.moviePoint = 0;
-        }
-        else {
-            if (this.moviePoint == 0)
-                this.updateBoards(this.initialLogicBoard);
-            if (!this.waitingProlog) {
-                var xy1 = this.history[this.moviePoint]["oldPos"];
-                var xy2 = this.history[this.moviePoint]["newPos"];
-                this.movePiece(xy1, xy2);
-                this.moviePoint++;
-            }
-        }
-    }
+    if (this.movie)
+        this.showMovie();
 }
 
 NodesGame.prototype.updatePickingMode = function () {
@@ -242,6 +227,22 @@ NodesGame.prototype.updatePickingMode = function () {
         this.scene.setPickEnabled(false);
     else if (this.mode == "ch" && this.active_player == 2)
         this.scene.setPickEnabled(true);
+}
+
+NodesGame.prototype.showMovie = function () {
+    this.moviePoint = this.moviePoint || 0;
+    if (this.moviePoint >= this.history.length) {
+        this.movie = false;
+        this.moviePoint = 0;
+    }
+    else if (!this.waitingProlog) {
+        if (this.moviePoint == 0)
+            this.updateBoards(this.initialLogicBoard);
+        var xy1 = this.history[this.moviePoint]["oldPos"];
+        var xy2 = this.history[this.moviePoint]["newPos"];
+        this.movePiece(xy1, xy2);
+        this.moviePoint++;
+    }
 }
 
 NodesGame.prototype.detectDifference = function (oldBoard, newBoard) {
