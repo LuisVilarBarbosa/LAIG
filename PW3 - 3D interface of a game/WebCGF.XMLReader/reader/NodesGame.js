@@ -11,7 +11,7 @@ function NodesGame(scene) {
 
 
     // to see the meaning of each value, consult the 'server.pl' file
-    this.logicBoard = [
+    this.initialLogicBoard = [
       [5,5,2,2,1,2,2,5,5],
       [5,0,0,2,2,2,0,0,5],
       [0,0,0,0,2,0,0,0,0],
@@ -22,6 +22,7 @@ function NodesGame(scene) {
       [5,0,0,4,4,4,0,0,5],
       [5,5,4,4,3,4,4,5,5]
     ];
+    this.logicBoard = this.initialLogicBoard;
 
     this.setTimer(0);
     this.setScorer(0, 0);
@@ -34,6 +35,7 @@ function NodesGame(scene) {
 	this.waitingProlog = false;
 	this.history = [];  // to undo and movie
 	this.message = "p" + this.active_player;
+	this.reset = false;
 	
 	this.scenes = [];
 	this.scenes.push(new MySnowScene(this.scene));
@@ -151,8 +153,7 @@ NodesGame.prototype.receiveFromProlog = function (data) {
         response = JSON.parse(response);
         var difference = this.detectDifference(this.logicBoard, response);
         this.history.push(difference);
-        this.setLogicBoard(response);
-        this.players[this.active_player - 1].updatePieces(this.logicBoard);
+        this.updateBoard(response);
     }
     else {
         this.message = response + " : p" + this.active_player;
@@ -160,6 +161,12 @@ NodesGame.prototype.receiveFromProlog = function (data) {
     }
 
     this.waitingProlog = false;
+}
+
+NodesGame.prototype.updateBoard = function (logicBoard) {
+    this.setLogicBoard(logicBoard);
+    for (var i = 0; i < this.players.length; i++)
+        this.players[i].updatePieces(this.logicBoard);
 }
 
 NodesGame.prototype.setTimer = function (time) {
@@ -187,6 +194,11 @@ NodesGame.prototype.update = function (currTime) {
         this.firstTime = currTime;
         this.setTimer(0);
         this.changePlayer();
+    }
+
+    if (this.reset) {
+        this.updateBoard(this.initialLogicBoard);
+        this.reset = false;
     }
 }
 
