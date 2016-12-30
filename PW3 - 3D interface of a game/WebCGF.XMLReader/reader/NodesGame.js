@@ -219,7 +219,9 @@ NodesGame.prototype.update = function (currTime) {
 }
 
 NodesGame.prototype.updatePickingMode = function () {
-    if (this.mode == "cc")
+    if (this.movie)
+        this.scene.setPickEnabled(false);
+    else if (this.mode == "cc")
         this.scene.setPickEnabled(false);
     else if (this.mode == "hh")
         this.scene.setPickEnabled(true);
