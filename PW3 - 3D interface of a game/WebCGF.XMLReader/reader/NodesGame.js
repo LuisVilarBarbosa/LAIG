@@ -155,9 +155,10 @@ NodesGame.prototype.receiveFromProlog = function (data) {
             if (changedPiece == 1 || changedPiece == 3) // nodes
                 this.changePlayer();    // end of player set of moves
         }
+        this.message = "p" + this.active_player;
     }
     else {
-        this.message = response + " : p" + this.active_player;
+        this.message = "p" + this.active_player + " : " + response;
         console.log("Not a board received: " + response);
     }
 
