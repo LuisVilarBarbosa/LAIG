@@ -72,6 +72,11 @@ NodesGame.prototype.display = function () {
 	    this.scenes[this.selectScene - 1].display();
 }
 
+NodesGame.prototype.changePlayer = function () {
+    this.active_player = this.active_player /*- 1 + 1*/ % this.players.length + 1;
+    this.setMessage();
+}
+
 NodesGame.prototype.setMode = function (mode) {
     if (mode == "cc" || mode == "ch" || mode == "hh")
       this.mode = mode;
@@ -124,11 +129,6 @@ NodesGame.prototype.tryMove = function (from_x, from_y, to_x, to_y) {
 
     // The move can still be not possible, but that will be verified by the Prolog and indicated to 'receiveFromProlog'.
     this.sendToProlog(requestString);
-}
-
-NodesGame.prototype.changePlayer = function () {
-    this.active_player = this.active_player /*- 1 + 1*/ % this.players.length + 1;
-    this.setMessage();
 }
 
 NodesGame.prototype.sendToProlog = function (requestString) {
