@@ -33,6 +33,7 @@ function NodesGame(scene) {
 	this.picking_buffer = 0;
 	this.waitingProlog = false;
 	this.history = [];  // to undo and movie
+	this.message = "p" + this.active_player;
 	
 	this.scenes = [];
 	this.scenes.push(new MySnowScene(this.scene));
@@ -113,7 +114,7 @@ NodesGame.prototype.tryMove = function (from_x, from_y, to_x, to_y) {
       else if (from_x + 2 == to_x && from_y == to_y)
         move = "jump_right_enemy_unit";
       else {
-        console.error("Invalid move.");
+        this.message = "Invalid move : p" + this.active_player;
         return;
       }
     }
@@ -130,6 +131,7 @@ NodesGame.prototype.changePlayer = function () {
         this.active_player = 1;
     else
         console.error("Unexpected change to the player happened: " + this.active_player);
+    this.message = "p" + this.active_player;
 }
 
 NodesGame.prototype.sendToProlog = function (mode /*cc, ch or hh*/, level /*easy or hard*/, player /*1 or 2*/, board, move, x, y) {
@@ -146,15 +148,17 @@ NodesGame.prototype.sendToProlog = function (mode /*cc, ch or hh*/, level /*easy
 
 NodesGame.prototype.receiveFromProlog = function (data) {
     var response = data.target.response;
-    if (response != "Invalid Move" && response != "Bad Request" && response != "Syntax Error") {
+    if (response != "Invalid move (wrong piece?)" && response != "Bad Request" && response != "Syntax Error") {
         response = JSON.parse(response);
         var difference = this.detectDifference(this.logicBoard, response);
         this.history.push(difference);
         this.setLogicBoard(response);
         this.players[this.active_player - 1].updatePieces(this.logicBoard);
     }
-    else
-        console.error("Not a board received: " + response);
+    else {
+        this.message = response + " : p" + this.active_player;
+        console.log("Not a board received: " + response);
+    }
 
     this.waitingProlog = false;
 }
