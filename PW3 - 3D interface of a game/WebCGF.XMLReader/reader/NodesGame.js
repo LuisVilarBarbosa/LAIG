@@ -31,8 +31,7 @@ function NodesGame(scene) {
 	this.mode = "hh";   // in the "ch" mode, the computer is considered the player 1 and the human is considered the player 2
 	this.level = "hard";
 	this.timer = 0;
-	this.player1Score = 0;
-	this.player2Score = 0;
+	this.scores = [0, 0];
 	this.setScorer();
 	this.maxMoveTime = 300;  // maximum time to make a move
 	this.selectScene = 0;
@@ -92,7 +91,7 @@ NodesGame.prototype.setLevel = function (level) {
 }
 
 NodesGame.prototype.setScorer = function () {
-    this.scorer = this.player1Score + " / " + this.player2Score;
+    this.scorer = this.scores[0] + " / " + this.scores[1];
 }
 
 NodesGame.prototype.setMessage = function (m) {
@@ -148,7 +147,11 @@ NodesGame.prototype.receiveFromProlog = function (data) {
 
 // This function simulates, if necessary, what the Prolog 'burstMove' predicate was doing
 NodesGame.prototype.applyMove = function (response) {
-    if (response != "Invalid move (wrong piece?)" && response != "Bad Request" && response != "Syntax Error") {
+    if (response == "yes" || response == "no") {    // verification of game over
+        if (response == "yes")
+            this.scores[this.active_player - 1]++;
+    }
+    else if (response != "Invalid move (wrong piece?)" && response != "Bad Request" && response != "Syntax Error") {    // board received
         response = JSON.parse(response);
         var difference = this.detectDifference(this.logicBoard, response);
         // In a computer move he can return no move causing problems with the return of 'detectDifference' (see prolog 'burstMove').
@@ -161,13 +164,17 @@ NodesGame.prototype.applyMove = function (response) {
             var changedPiece = this.getPiece(difference["newPos"]);
             if (changedPiece == 1 || changedPiece == 3) // nodes
                 this.changePlayer();    // end of player set of moves
+            this.verify_game_over();
         }
         this.setMessage();  // update player
     }
-    else {
+    else
         this.setMessage(response);
-        console.log("Not a board received: " + response);
-    }
+}
+
+NodesGame.prototype.verify_game_over = function () {
+    var requestString = "verify_game_over(" + JSON.stringify(this.logicBoard) + ")";
+    this.sendToProlog(requestString);
 }
 
 NodesGame.prototype.updateBoards = function (logicBoard) {
@@ -180,7 +187,7 @@ NodesGame.prototype.update = function (currTime) {
     this.firstTime = this.firstTime || currTime;
     var deltaTime = (currTime - this.firstTime) / 1000;
     this.timer = deltaTime;
-    this.setScorer(this.player1Score, this.player2Score);
+    this.setScorer();
 
     this.updatePickingMode();
 
