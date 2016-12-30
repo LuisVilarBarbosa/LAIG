@@ -249,7 +249,7 @@ NodesGame.prototype.detectDifference = function (oldBoard, newBoard) {
 }
 
 NodesGame.prototype.movePiece = function (from, to) {
-    var piece = this.logicBoard[from[1]][from[0]];
+    var piece = this.logicBoard[from[1] - 1][from[0] - 1];
     this.logicBoard[from[1] - 1][from[0] - 1] = 0;  // empty cell
     this.logicBoard[to[1] - 1][to[0] - 1] = piece;
     this.updateBoards(this.logicBoard);
