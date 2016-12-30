@@ -31,7 +31,9 @@ function NodesGame(scene) {
 	this.mode = "hh";
 	this.level = "hard";
 	this.timer = 0;
-	this.setScorer(0, 0);
+	this.player1Score = 0;
+	this.player2Score = 0;
+	this.setScorer();
 	this.maxMoveTime = 300;  // maximum time to make a move
 	this.selectScene = 0;
 	this.setMessage();
@@ -172,8 +174,8 @@ NodesGame.prototype.updateBoards = function (logicBoard) {
         this.players[i].updatePieces(this.logicBoard);
 }
 
-NodesGame.prototype.setScorer = function (p1Score, p2Score) {
-    this.scorer = p1Score + " / " + p2Score;
+NodesGame.prototype.setScorer = function () {
+    this.scorer = this.player1Score + " / " + this.player2Score;
 }
 
 NodesGame.prototype.update = function (currTime) {
