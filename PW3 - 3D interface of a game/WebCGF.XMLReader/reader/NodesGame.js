@@ -191,6 +191,10 @@ NodesGame.prototype.update = function (currTime) {
     }
 
     if (this.reset) {
+        this.firstTime = currTime;
+        this.timer = 0;
+        if (this.active_player == 2)
+            this.changePlayer();
         this.updateBoards(this.initialLogicBoard);
         this.reset = false;
     }
