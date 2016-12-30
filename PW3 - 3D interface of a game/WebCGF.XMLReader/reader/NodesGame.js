@@ -91,6 +91,10 @@ NodesGame.prototype.setLevel = function (level) {
     console.error("Invalid game level indicated. Not set.");
 }
 
+NodesGame.prototype.setScorer = function () {
+    this.scorer = this.player1Score + " / " + this.player2Score;
+}
+
 NodesGame.prototype.setMessage = function (m) {
     if (m === undefined)
         this.message = "p" + this.active_player;
@@ -168,10 +172,6 @@ NodesGame.prototype.updateBoards = function (logicBoard) {
     this.logicBoard = logicBoard;
     for (var i = 0; i < this.players.length; i++)
         this.players[i].updatePieces(this.logicBoard);
-}
-
-NodesGame.prototype.setScorer = function () {
-    this.scorer = this.player1Score + " / " + this.player2Score;
 }
 
 NodesGame.prototype.update = function (currTime) {
