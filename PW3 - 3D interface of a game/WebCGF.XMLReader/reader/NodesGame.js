@@ -288,7 +288,7 @@ NodesGame.prototype.movePiece = function (from, to) {
 }
 
 NodesGame.prototype.getPiece = function (pos) {
-    var pos_x = pos - 1;
+    var pos_x = pos[0] - 1;
     var pos_y = pos[1] - 1;
     return this.logicBoard[pos_y][pos_x];
 }
