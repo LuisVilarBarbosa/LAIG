@@ -79,7 +79,7 @@ NodesGame.prototype.setMode = function (mode) {
     if (mode == "cc" || mode == "ch" || mode == "hh")
       this.mode = mode;
     else
-      console.error("Invalid game mode indicated. Not set.");
+        console.error("Invalid game mode indicated. Not set.");
 }
 
 NodesGame.prototype.setLevel = function (level) {
@@ -119,9 +119,8 @@ NodesGame.prototype.tryMove = function (from_x, from_y, to_x, to_y) {
       }
     }
 
+    // The move can still be not possible, but that will be verified by the Prolog and indicated to 'receiveFromProlog'.
     this.sendToProlog(this.mode, this.level, this.active_player, this.logicBoard, move, from_x, from_y);
-    // It would be good if we could wait for the answer and verify that, because the move can be not possible.
-    // If the move was not possible, we should indicate that using console.log().
 }
 
 NodesGame.prototype.changePlayer = function () {
