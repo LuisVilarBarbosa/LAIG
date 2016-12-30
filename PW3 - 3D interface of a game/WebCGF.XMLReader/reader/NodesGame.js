@@ -265,13 +265,16 @@ NodesGame.prototype.detectDifference = function (oldBoard, newBoard) {
                     changes["newPos"] = [x + 1, y + 1];
             }
     }
-
     return changes;
 }
 
 NodesGame.prototype.movePiece = function (from, to) {
-    var piece = this.logicBoard[from[1] - 1][from[0] - 1];
-    this.logicBoard[from[1] - 1][from[0] - 1] = 0;  // empty cell
-    this.logicBoard[to[1] - 1][to[0] - 1] = piece;
+    var from_x = from[0] - 1;
+    var from_y = from[1] - 1;
+    var to_x = to[0] - 1;
+    var to_y = to[1] - 1;
+    var piece = this.logicBoard[from_y][from_x];
+    this.logicBoard[from_y][from_x] = 0;  // empty cell
+    this.logicBoard[to_y][to_x] = piece;
     this.updateBoards(this.logicBoard);
 }
