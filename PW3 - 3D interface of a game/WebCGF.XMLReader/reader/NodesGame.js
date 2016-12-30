@@ -5,7 +5,7 @@
 function NodesGame(scene) {
 	this.scene = scene;
 	
-    this.mode = "cc";
+    this.mode = "hh";
     this.level = "hard";
 	this.selectScene = 0;
 
@@ -30,9 +30,8 @@ function NodesGame(scene) {
 	this.board = new MyNodesBoard(this.scene);
 	this.players = [new MyPlayer(this.scene, 1, this.logicBoard), new MyPlayer(this.scene, 2, this.logicBoard)];
 	this.active_player = 1;
-
 	this.picking_buffer = 0;
-	
+	this.waitingProlog = false;
 	this.history = [];  // to undo and movie
 	
 	this.scenes = [];
@@ -122,8 +121,6 @@ NodesGame.prototype.tryMove = function (from_x, from_y, to_x, to_y) {
     this.sendToProlog(this.mode, this.level, this.active_player, this.logicBoard, move, from_x, from_y);
     // It would be good if we could wait for the answer and verify that, because the move can be not possible.
     // If the move was not possible, we should indicate that using console.log().
-
-    this.changePlayer();
 }
 
 NodesGame.prototype.changePlayer = function () {
@@ -136,6 +133,7 @@ NodesGame.prototype.changePlayer = function () {
 }
 
 NodesGame.prototype.sendToProlog = function (mode /*cc, ch or hh*/, level /*easy or hard*/, player /*1 or 2*/, board, move, x, y) {
+    this.waitingProlog = true;
     var requestString;
     if (mode == "cc" || (mode == "ch" && player == 1))
       requestString = "burst_move(c," + level + ",p" + player + "," + JSON.stringify(board) + ")";
@@ -157,6 +155,8 @@ NodesGame.prototype.receiveFromProlog = function (data) {
     }
     else
         console.error("Not a board received: " + response);
+
+    this.waitingProlog = false;
 }
 
 NodesGame.prototype.setTimer = function (time) {
@@ -180,7 +180,7 @@ NodesGame.prototype.update = function (currTime) {
     this.updatePickingMode();
 
     // limit player game time
-    if (deltaTime > this.maxMoveTime) {
+    if (deltaTime > this.maxMoveTime && !this.waitingProlog) {
         this.firstTime = currTime;
         this.setTimer(0);
         this.changePlayer();
