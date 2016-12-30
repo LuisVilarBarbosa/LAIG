@@ -4,10 +4,6 @@
  */
 function NodesGame(scene) {
 	this.scene = scene;
-	
-    this.mode = "hh";
-    this.level = "hard";
-	this.selectScene = 0;
 
     // to see the meaning of each value, consult the 'server.pl' file
     this.initialLogicBoard = [
@@ -22,10 +18,6 @@ function NodesGame(scene) {
       [5,5,4,4,3,4,4,5,5]
     ];
     this.logicBoard = this.initialLogicBoard;
-
-    this.timer = 0;
-    this.setScorer(0, 0);
-    this.maxMoveTime = 300;  // maximum time to make a move
 	
 	this.board = new MyNodesBoard(this.scene);
 	this.players = [new MyPlayer(this.scene, 1, this.logicBoard), new MyPlayer(this.scene, 2, this.logicBoard)];
@@ -33,12 +25,19 @@ function NodesGame(scene) {
 	this.picking_buffer = 0;
 	this.waitingProlog = false;
 	this.history = [];  // to undo and movie
-	this.message = "p" + this.active_player;
+	
+	this.scenes = [new MySnowScene(this.scene), new MyEgyptScene(this.scene), new MyOuterSpaceScene(this.scene)];
+
+	this.mode = "hh";
+	this.level = "hard";
+	this.timer = 0;
+	this.setScorer(0, 0);
+	this.maxMoveTime = 300;  // maximum time to make a move
+	this.selectScene = 0;
+	this.setMessage();
 	this.undo = false;
 	this.reset = false;
 	this.movie = false;
-	
-	this.scenes = [new MySnowScene(this.scene), new MyEgyptScene(this.scene), new MyOuterSpaceScene(this.scene)];
 };
 
 NodesGame.prototype.calculateLogicCoords = function (picking_id) {
@@ -85,10 +84,17 @@ NodesGame.prototype.setLevel = function (level) {
     console.error("Invalid game level indicated. Not set.");
 }
 
+NodesGame.prototype.setMessage = function (m) {
+    if (m === undefined)
+        this.message = "p" + this.active_player;
+    else
+        this.message = "p" + this.active_player + " : " + m;
+}
+
 NodesGame.prototype.tryMove = function (from_x, from_y, to_x, to_y) {
     var move;
 
-    if (this.mode == "hh" || (this.mode == "ch" && this.player == "p2")) {
+    if (this.mode == "hh" || (this.mode == "ch" && this.active_player == 2)) {
       if (from_x == to_x && from_y - 1 == to_y)
         move = "move_up";
       else if (from_x == to_x && from_y + 1 == to_y)
@@ -106,7 +112,7 @@ NodesGame.prototype.tryMove = function (from_x, from_y, to_x, to_y) {
       else if (from_x + 2 == to_x && from_y == to_y)
         move = "jump_right_enemy_unit";
       else {
-        this.message = "Invalid move : p" + this.active_player;
+        this.setMessage("Invalid move");
         return;
       }
     }
@@ -116,13 +122,8 @@ NodesGame.prototype.tryMove = function (from_x, from_y, to_x, to_y) {
 }
 
 NodesGame.prototype.changePlayer = function () {
-    if (this.active_player == 1)
-        this.active_player = 2;
-    else if (this.active_player == 2)
-        this.active_player = 1;
-    else
-        console.error("Unexpected change to the player happened: " + this.active_player);
-    this.message = "p" + this.active_player;
+    this.active_player = this.active_player /*- 1 + 1*/ % this.players.length + 1;
+    this.setMessage();
 }
 
 NodesGame.prototype.sendToProlog = function (mode /*cc, ch or hh*/, level /*easy or hard*/, player /*1 or 2*/, board, move, x, y) {
@@ -155,10 +156,10 @@ NodesGame.prototype.receiveFromProlog = function (data) {
             if (changedPiece == 1 || changedPiece == 3) // nodes
                 this.changePlayer();    // end of player set of moves
         }
-        this.message = "p" + this.active_player;
+        this.setMessage();
     }
     else {
-        this.message = "p" + this.active_player + " : " + response;
+        this.setMessage(response);
         console.log("Not a board received: " + response);
     }
 
