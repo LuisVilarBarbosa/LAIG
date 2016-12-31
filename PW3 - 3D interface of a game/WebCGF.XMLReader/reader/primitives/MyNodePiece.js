@@ -16,7 +16,7 @@ function MyNodePiece(scene) {
 MyNodePiece.prototype = Object.create(CGFobject.prototype);
 MyNodePiece.prototype.constructor = MyNodePiece;
 
-MyNodePiece.prototype.display = function () {
+MyNodePiece.prototype.display = function (node_texture_material) {
 	this.scene.pushMatrix();
 		this.scene.scale(0.2, 0.2, 0.2);
 		
@@ -29,8 +29,9 @@ MyNodePiece.prototype.display = function () {
 			this.head.display();
 		this.scene.popMatrix();
 		
+
 		this.scene.pushMatrix();
-			this.base.display();
+		this.base.display(node_texture_material);
 		this.scene.popMatrix();
     this.scene.popMatrix();
 };

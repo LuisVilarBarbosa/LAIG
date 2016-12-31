@@ -87,19 +87,26 @@ MyPlayer.prototype.calculatePickingId = function (pos) {
 }
 
 MyPlayer.prototype.display = function () {
+	
     for (var i = 1; i <= this.units.length; i++) {
-
-		if(this.scene.game.picking_buffer == this.calculatePickingId(this.unitsPos[i - 1]))
-			if(this.player_number == 1)
+		var unit_texture_material;
+		if(this.scene.game.picking_buffer == this.calculatePickingId(this.unitsPos[i - 1])){
+			if(this.player_number == 1){
 				this.scene.green.apply();
-			else
+				unit_texture_material = this.scene.green_texture;
+			}else{
 				this.scene.yellow.apply();
-		else
-			if(this.player_number == 1)
+				unit_texture_material = this.scene.yellow_texture;
+			}
+		}else{
+			if(this.player_number == 1){
 				this.scene.red.apply();
-			else
+				unit_texture_material = this.scene.red_texture;
+			}else{
 				this.scene.blue.apply();
-
+				unit_texture_material = this.scene.blue_texture;
+			}
+		}
 		this.scene.pushMatrix();
 			this.scene.scale(3,3,1);
 			this.scene.registerForPick(this.calculatePickingId(this.unitsPos[i - 1]), this.units[i - 1]);
@@ -107,27 +114,34 @@ MyPlayer.prototype.display = function () {
 			    this.scene.multMatrix(this.animation.getGeometricTransformation());
             else
 			    this.scene.translate(this.unitsPos[i - 1][0], this.unitsPos[i - 1][1], this.unitsPos[i - 1][2]);
-			this.units[i - 1].display();
+			this.units[i - 1].display(unit_texture_material);
 		this.scene.popMatrix();
     }
 	
-	if (this.scene.game.picking_buffer == this.calculatePickingId(this.nodePos))
-	    if (this.player_number == 1)
-	        this.scene.green.apply();
-	    else
-	        this.scene.yellow.apply();
-	else
-	    if (this.player_number == 1)
-	        this.scene.red.apply();
-	    else
-	        this.scene.blue.apply();
-			
+	var node_texture_material;
+	if (this.scene.game.picking_buffer == this.calculatePickingId(this.nodePos)){
+		if(this.player_number == 1){
+			this.scene.green.apply();
+			node_texture_material = this.scene.green_texture;
+		}else{
+			this.scene.yellow.apply();
+			node_texture_material = this.scene.yellow_texture;
+		}
+	}else{
+		if(this.player_number == 1){
+			this.scene.red.apply();
+			node_texture_material = this.scene.red_texture;
+		}else{
+			this.scene.blue.apply();
+			node_texture_material = this.scene.blue_texture;
+		}
+	}
 	this.scene.pushMatrix();
 	    this.scene.registerForPick(this.calculatePickingId(this.nodePos), this.node);
 	    if (this.movingPiece == -1 && this.animation != null && !this.animation.done)
 	        this.scene.multMatrix(this.animation.getGeometricTransformation());
 	    else
 		    this.scene.translate(this.nodePos[0] * 3, this.nodePos[1] * 3, this.nodePos[2] * 3);
-		this.node.display();
+		this.node.display(node_texture_material);
 	this.scene.popMatrix();
 };

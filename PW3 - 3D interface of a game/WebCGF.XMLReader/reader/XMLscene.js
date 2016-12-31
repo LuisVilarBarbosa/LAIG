@@ -27,42 +27,7 @@ XMLscene.prototype.init = function (application) {
     this.axis = new CGFaxis(this);
     this.lightsIds = [];
 
-    this.defaultAppearance = new CGFappearance(this);
-    this.defaultAppearance.setAmbient(0.2, 0.4, 0.8, 1.0);
-    this.defaultAppearance.setDiffuse(0.2, 0.4, 0.8, 1.0);
-    this.defaultAppearance.setSpecular(0.2, 0.4, 0.8, 1.0);
-    this.defaultAppearance.setShininess(10.0);
-	
-	this.green = new CGFappearance(this);
-    this.green.setAmbient(0, 0.39, 0, 1);
-    this.green.setDiffuse(0, 0.39, 0, 1);
-    this.green.setSpecular(0, 0.39, 0, 1);
-    this.green.setShininess(10.0);
-	
-	this.red = new CGFappearance(this);
-    this.red.setAmbient(0.4, 0, 0, 1);
-    this.red.setDiffuse(0.4, 0, 0, 1);
-    this.red.setSpecular(0.4, 0, 0, 1);
-    this.red.setShininess(10.0);
-	
-	this.blue = new CGFappearance(this);
-    this.blue.setAmbient(0, 0, 0.6, 1);
-    this.blue.setDiffuse(0, 0, 0.6, 1);
-    this.blue.setSpecular(0, 0, 0.6, 1);
-    this.blue.setShininess(10.0);
-	
-	this.yellow = new CGFappearance(this);
-    this.yellow.setAmbient(0.7, 0.7, 0, 1);
-    this.yellow.setDiffuse(0.7, 0.7, 0, 1);
-    this.yellow.setSpecular(0.7, 0.7, 0, 1);
-    this.yellow.setShininess(10.0);
-	
-	this.nova = new CGFappearance(this);
-    this.nova.setAmbient(0.8, 0.8, 0.8, 1);
-    this.nova.setDiffuse(0.8, 0.8, 0.8, 1);
-    this.nova.setSpecular(0.8, 0.8, 0.8, 1);
-    this.nova.setShininess(10.0);
-	this.nova.loadTexture('images/nodes_board.PNG');
+    this.defineMaterials();
 
     this.rootNodeId = null;
     this.perspectives = [];
@@ -90,6 +55,72 @@ XMLscene.prototype.init = function (application) {
     this.level = 1;
 };
 
+XMLscene.prototype.defineMaterials = function () {
+    this.defaultAppearance = new CGFappearance(this);
+    this.defaultAppearance.setAmbient(0.2, 0.4, 0.8, 1.0);
+    this.defaultAppearance.setDiffuse(0.2, 0.4, 0.8, 1.0);
+    this.defaultAppearance.setSpecular(0.2, 0.4, 0.8, 1.0);
+    this.defaultAppearance.setShininess(10.0);
+	
+	this.green = new CGFappearance(this);
+    this.green.setAmbient(0, 0.39, 0, 1);
+    this.green.setDiffuse(0, 0.39, 0, 1);
+    this.green.setSpecular(0, 0.39, 0, 1);
+    this.green.setShininess(10.0);
+	
+	this.green_texture = new CGFappearance(this);
+    this.green_texture.setAmbient(0, 0.39, 0, 1);
+    this.green_texture.setDiffuse(0, 0.39, 0, 1);
+    this.green_texture.setSpecular(0, 0.39, 0, 1);
+    this.green_texture.setShininess(10.0);
+	this.green_texture.loadTexture('images/hexagon.png');
+	
+	this.red = new CGFappearance(this);
+    this.red.setAmbient(0.4, 0, 0, 1);
+    this.red.setDiffuse(0.4, 0, 0, 1);
+    this.red.setSpecular(0.4, 0, 0, 1);
+    this.red.setShininess(10.0);
+	
+	this.red_texture = new CGFappearance(this);
+    this.red_texture.setAmbient(0.4, 0, 0, 1);
+    this.red_texture.setDiffuse(0.4, 0, 0, 1);
+    this.red_texture.setSpecular(0.4, 0, 0, 1);
+    this.red_texture.setShininess(10.0);
+	this.red_texture.loadTexture('images/hexagon.png');
+	
+	this.blue = new CGFappearance(this);
+    this.blue.setAmbient(0, 0, 0.6, 1);
+    this.blue.setDiffuse(0, 0, 0.6, 1);
+    this.blue.setSpecular(0, 0, 0.6, 1);
+    this.blue.setShininess(10.0);
+	
+	this.blue_texture = new CGFappearance(this);
+    this.blue_texture.setAmbient(0, 0, 0.6, 1);
+    this.blue_texture.setDiffuse(0, 0, 0.6, 1);
+    this.blue_texture.setSpecular(0, 0, 0.6, 1);
+    this.blue_texture.setShininess(10.0);
+	this.blue_texture.loadTexture('images/hexagon.png');
+	
+	this.yellow = new CGFappearance(this);
+    this.yellow.setAmbient(0.7, 0.7, 0, 1);
+    this.yellow.setDiffuse(0.7, 0.7, 0, 1);
+    this.yellow.setSpecular(0.7, 0.7, 0, 1);
+    this.yellow.setShininess(10.0);
+	
+	this.yellow_texture = new CGFappearance(this);
+    this.yellow_texture.setAmbient(0.7, 0.7, 0, 1);
+    this.yellow_texture.setDiffuse(0.7, 0.7, 0, 1);
+    this.yellow_texture.setSpecular(0.7, 0.7, 0, 1);
+    this.yellow_texture.setShininess(10.0);
+	this.yellow_texture.loadTexture('images/hexagon.png');
+	
+	this.nova = new CGFappearance(this);
+    this.nova.setAmbient(0.8, 0.8, 0.8, 1);
+    this.nova.setDiffuse(0.8, 0.8, 0.8, 1);
+    this.nova.setSpecular(0.8, 0.8, 0.8, 1);
+    this.nova.setShininess(10.0);
+	this.nova.loadTexture('images/nodes_board.PNG');
+};
 
 XMLscene.prototype.logPicking = function ()
 {
