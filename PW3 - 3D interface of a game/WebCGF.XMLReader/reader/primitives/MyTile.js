@@ -64,7 +64,6 @@ MyTile.prototype.display = function () {
 
 
 MyTile.prototype.setTextureCoordinates = function () {
-    
 
 	this.nurbsObject.texCoords = [
   		this.minS, this.minT,

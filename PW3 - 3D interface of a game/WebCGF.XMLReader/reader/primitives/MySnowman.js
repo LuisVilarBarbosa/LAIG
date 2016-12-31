@@ -33,7 +33,6 @@ MySnowman.prototype.createAppearances = function () {
     this.black.setDiffuse(0.1, 0.1, 0.1, 1);
     this.black.setSpecular(0.1, 0.1, 0.1, 1);
     this.black.setShininess(10.0);
-
 };
 
 

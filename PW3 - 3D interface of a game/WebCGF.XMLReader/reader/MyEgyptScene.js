@@ -22,8 +22,6 @@ MyEgyptScene.prototype.createAppearances = function () {
     this.white_snow.setSpecular(0.9, 0.9, 0.9, 1);
     this.white_snow.setShininess(10.0);
 	this.white_snow.loadTexture("./images/sand.jpg");
-	
-	
 };
 
 

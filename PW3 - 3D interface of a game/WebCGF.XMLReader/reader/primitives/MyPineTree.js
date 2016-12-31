@@ -46,7 +46,6 @@ MyPineTree.prototype.display = function () {
 		this.trunk.display();
 	this.scene.popMatrix();
 	
-	
 	this.green.apply();
 	var angle = Math.PI * 2 / 8;
 	for(var i = 0; i < 4; i++){
@@ -59,6 +58,5 @@ MyPineTree.prototype.display = function () {
 			this.scene.popMatrix();
 		}
 	}
-	
 };
 

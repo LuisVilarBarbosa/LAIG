@@ -21,8 +21,6 @@ MyOuterSpaceScene.prototype.createAppearances = function () {
 	this.appe.setEmission(0.5, 0.5, 0.5, 1);
     this.appe.setShininess(10.0);
 	this.appe.loadTexture("./images/outer-space-stars.jpg");
-	
-	
 };
 
 

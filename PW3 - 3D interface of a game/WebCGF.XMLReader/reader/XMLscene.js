@@ -61,85 +61,81 @@ XMLscene.prototype.defineMaterials = function () {
     this.defaultAppearance.setDiffuse(0.2, 0.4, 0.8, 1.0);
     this.defaultAppearance.setSpecular(0.2, 0.4, 0.8, 1.0);
     this.defaultAppearance.setShininess(10.0);
-	
-	this.green = new CGFappearance(this);
+
+    this.green = new CGFappearance(this);
     this.green.setAmbient(0, 0.39, 0, 1);
     this.green.setDiffuse(0, 0.39, 0, 1);
     this.green.setSpecular(0, 0.39, 0, 1);
     this.green.setShininess(10.0);
-	
-	this.green_texture = new CGFappearance(this);
+
+    this.green_texture = new CGFappearance(this);
     this.green_texture.setAmbient(0, 0.39, 0, 1);
     this.green_texture.setDiffuse(0, 0.39, 0, 1);
     this.green_texture.setSpecular(0, 0.39, 0, 1);
     this.green_texture.setShininess(10.0);
-	this.green_texture.loadTexture('images/hexagon.png');
-	
-	this.red = new CGFappearance(this);
+    this.green_texture.loadTexture('images/hexagon.png');
+
+    this.red = new CGFappearance(this);
     this.red.setAmbient(0.4, 0, 0, 1);
     this.red.setDiffuse(0.4, 0, 0, 1);
     this.red.setSpecular(0.4, 0, 0, 1);
     this.red.setShininess(10.0);
-	
-	this.red_texture = new CGFappearance(this);
+
+    this.red_texture = new CGFappearance(this);
     this.red_texture.setAmbient(0.4, 0, 0, 1);
     this.red_texture.setDiffuse(0.4, 0, 0, 1);
     this.red_texture.setSpecular(0.4, 0, 0, 1);
     this.red_texture.setShininess(10.0);
-	this.red_texture.loadTexture('images/hexagon.png');
-	
-	this.blue = new CGFappearance(this);
+    this.red_texture.loadTexture('images/hexagon.png');
+
+    this.blue = new CGFappearance(this);
     this.blue.setAmbient(0, 0, 0.6, 1);
     this.blue.setDiffuse(0, 0, 0.6, 1);
     this.blue.setSpecular(0, 0, 0.6, 1);
     this.blue.setShininess(10.0);
-	
-	this.blue_texture = new CGFappearance(this);
+
+    this.blue_texture = new CGFappearance(this);
     this.blue_texture.setAmbient(0, 0, 0.6, 1);
     this.blue_texture.setDiffuse(0, 0, 0.6, 1);
     this.blue_texture.setSpecular(0, 0, 0.6, 1);
     this.blue_texture.setShininess(10.0);
-	this.blue_texture.loadTexture('images/hexagon.png');
-	
-	this.yellow = new CGFappearance(this);
+    this.blue_texture.loadTexture('images/hexagon.png');
+
+    this.yellow = new CGFappearance(this);
     this.yellow.setAmbient(0.7, 0.7, 0, 1);
     this.yellow.setDiffuse(0.7, 0.7, 0, 1);
     this.yellow.setSpecular(0.7, 0.7, 0, 1);
     this.yellow.setShininess(10.0);
-	
-	this.yellow_texture = new CGFappearance(this);
+
+    this.yellow_texture = new CGFappearance(this);
     this.yellow_texture.setAmbient(0.7, 0.7, 0, 1);
     this.yellow_texture.setDiffuse(0.7, 0.7, 0, 1);
     this.yellow_texture.setSpecular(0.7, 0.7, 0, 1);
     this.yellow_texture.setShininess(10.0);
-	this.yellow_texture.loadTexture('images/hexagon.png');
-	
-	this.nova = new CGFappearance(this);
+    this.yellow_texture.loadTexture('images/hexagon.png');
+
+    this.nova = new CGFappearance(this);
     this.nova.setAmbient(0.8, 0.8, 0.8, 1);
     this.nova.setDiffuse(0.8, 0.8, 0.8, 1);
     this.nova.setSpecular(0.8, 0.8, 0.8, 1);
     this.nova.setShininess(10.0);
-	this.nova.loadTexture('images/nodes_board.PNG');
+    this.nova.loadTexture('images/nodes_board.PNG');
 };
 
-XMLscene.prototype.logPicking = function ()
-{
-	
-	if (this.pickMode == false) {
-		if (this.pickResults != null && this.pickResults.length > 0) {
-			for (var i=0; i< this.pickResults.length; i++) {
-				var obj = this.pickResults[i][0];
-				
-				if (obj)
-				{
-					var customId = this.pickResults[i][1];
-					this.game.pickingHandler(customId);
-					
-				}
-			}
-			this.pickResults.splice(0,this.pickResults.length);
-		}		
-	}
+XMLscene.prototype.logPicking = function () {
+    if (this.pickMode == false) {
+        if (this.pickResults != null && this.pickResults.length > 0) {
+            for (var i = 0; i < this.pickResults.length; i++) {
+                var obj = this.pickResults[i][0];
+                if (obj) {
+                    var customId = this.pickResults[i][1];
+                    this.game.pickingHandler(customId);
+
+                }
+            }
+            this.pickResults.splice(0, this.pickResults.length);
+        }
+    }
 }
 
 XMLscene.prototype.initLights = function () {
@@ -166,10 +162,10 @@ XMLscene.prototype.onGraphLoaded = function () {
 };
 
 XMLscene.prototype.display = function () {
-	this.logPicking();
-	this.clearPickRegistration();
-	
-	
+    this.logPicking();
+    this.clearPickRegistration();
+
+
     // ---- BEGIN Background, camera and axis setup
 
     // Clear image and depth buffer everytime we update the scene
@@ -199,8 +195,8 @@ XMLscene.prototype.display = function () {
 
         //this.processGraph(this.rootNodeId);
     };
-	
-	this.game.display();
+
+    this.game.display();
 };
 
 XMLscene.prototype.setRootNodeId = function (nodeId) {
@@ -394,7 +390,7 @@ XMLscene.prototype.updateView = function (currTime) {
             this.nextPerspectivesIdsIndex = (this.actualPerspectivesIdsIndex + 1) % this.perspectivesIds.length;
             this.nextPerspective = this.perspectives[this.perspectivesIds[this.nextPerspectivesIdsIndex]];
         }
-        
+
         var angle = this.origPerspective.fov + (this.nextPerspective.fov - this.origPerspective.fov) * ratio;
         var near = this.origPerspective.near + (this.nextPerspective.near - this.origPerspective.near) * ratio;
         var far = this.origPerspective.far + (this.nextPerspective.far - this.origPerspective.far) * ratio;

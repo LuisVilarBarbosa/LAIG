@@ -10,7 +10,6 @@ function MyNodePiece(scene) {
 	this.middle = new MyCylinderWithTops(scene, 0.3, 0.1, 0.9, 6, 6, 1, 1);
 	this.head = new MySphere(scene, 0.2, 30, 30, 1, 1);
 	this.base = new MyCylinderWithTops(scene, 0.45, 0.4, 0.2, 6, 6, 1, 1);
-    
 };
 
 MyNodePiece.prototype = Object.create(CGFobject.prototype);
@@ -29,7 +28,6 @@ MyNodePiece.prototype.display = function (node_texture_material) {
 			this.head.display();
 		this.scene.popMatrix();
 		
-
 		this.scene.pushMatrix();
 		this.base.display(node_texture_material);
 		this.scene.popMatrix();
