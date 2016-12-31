@@ -55,7 +55,7 @@ MyPlayer.prototype.updatePieces = function (logicBoard) {
     }
 }
 
-MyPlayer.prototype.movePiece = function (from, to) {
+MyPlayer.prototype.applyAnimation = function (from, to) {
     var gx1 = from[0] / 10;
     var gx2 = to[0] / 10;
     var gy1 = (10 - from[1]) / 10;

@@ -306,7 +306,7 @@ NodesGame.prototype.movePiece = function (from, to) {
     this.logicBoard[from_y][from_x] = 0;  // empty cell
     this.logicBoard[to_y][to_x] = piece;
     this.updateBoards(this.logicBoard);
-    this.players[this.active_player - 1].movePiece(from, to);   // animated movement
+    this.players[this.active_player - 1].applyAnimation(from, to);   // animated movement
 }
 
 NodesGame.prototype.getPiece = function (pos) {
