@@ -23,7 +23,8 @@ function NodesGame(scene) {
 	this.players = [new MyPlayer(this.scene, 1, this.logicBoard), new MyPlayer(this.scene, 2, this.logicBoard)];
 	this.active_player = 1;
 	this.picking_buffer = 0;
-	this.waitingProlog = false;
+	this.waitingProlog = false; // while waiting, the game is stopped
+	this.waitingAnimation = false; // while waiting, the game is stopped
 	this.history = [];  // to undo and movie
 	
 	this.scenes = [new MySnowScene(this.scene), new MyEgyptScene(this.scene), new MyOuterSpaceScene(this.scene)];
@@ -160,7 +161,7 @@ NodesGame.prototype.applyMove = function (response) {
             this.changePlayer();
         else {
             this.history.push(difference);
-            this.updateBoards(response);
+            this.movePiece(difference["oldPos"], difference["newPos"]);
             var changedPiece = this.getPiece(difference["newPos"]);
             if (changedPiece == 1 || changedPiece == 3) // nodes
                 this.changePlayer();    // end of player set of moves
@@ -189,44 +190,53 @@ NodesGame.prototype.update = function (currTime) {
     this.timer = deltaTime;
     this.setScorer();
 
+    this.players[this.active_player - 1].update(currTime);
+
+    var animation = this.players[this.active_player - 1].animation;
+    this.waitingAnimation = animation != null && !animation.done;
+
     this.updatePickingMode();
 
-    // limit player game time
-    if (deltaTime > this.maxMoveTime && !this.waitingProlog) {
-        this.firstTime = currTime;
-        this.timer = 0;
-        this.changePlayer();
-    }
-
-    if (!this.waitingProlog && (this.mode == "cc" || this.mode == "ch" && this.active_player == 1))
-        this.tryMove(); // computer move
-
-    if (this.undo) {
-        if (this.history.length > 0) {
-            var difference = this.history[this.history.length - 1];
-            this.history.pop();
-            var xy1 = difference["oldPos"];
-            var xy2 = difference["newPos"];
-            this.movePiece(xy2, xy1);
-        }
-        this.undo = false;
-    }
-
-    if (this.reset) {
-        this.firstTime = currTime;
-        this.timer = 0;
-        while (this.active_player != 1)
+    if (!this.waitingAnimation) {
+        // limit player game time
+        if (deltaTime > this.maxMoveTime && !this.waitingProlog) {
+            this.firstTime = currTime;
+            this.timer = 0;
             this.changePlayer();
-        this.updateBoards(this.initialLogicBoard);
-        this.reset = false;
-    }
+        }
 
-    if (this.movie)
-        this.showMovie();
+        if (!this.waitingProlog && (this.mode == "cc" || this.mode == "ch" && this.active_player == 1))
+            this.tryMove(); // computer move
+
+        if (this.undo) {
+            if (this.history.length > 0) {
+                var difference = this.history[this.history.length - 1];
+                this.history.pop();
+                var xy1 = difference["oldPos"];
+                var xy2 = difference["newPos"];
+                this.movePiece(xy2, xy1);
+            }
+            this.undo = false;
+        }
+
+        if (this.reset) {
+            this.firstTime = currTime;
+            this.timer = 0;
+            while (this.active_player != 1)
+                this.changePlayer();
+            this.updateBoards(this.initialLogicBoard);
+            this.reset = false;
+        }
+
+        if (this.movie)
+            this.showMovie();
+    }
 }
 
 NodesGame.prototype.updatePickingMode = function () {
-    if (this.movie)
+    if (this.waitingAnimation)
+        this.scene.setPickEnabled(false);
+    else if (this.movie)
         this.scene.setPickEnabled(false);
     else if (this.mode == "cc")
         this.scene.setPickEnabled(false);
@@ -284,6 +294,7 @@ NodesGame.prototype.movePiece = function (from, to) {
     var piece = this.logicBoard[from_y][from_x];
     this.logicBoard[from_y][from_x] = 0;  // empty cell
     this.logicBoard[to_y][to_x] = piece;
+    this.players[this.active_player - 1].movePiece(from, to);   // animated movement
     this.updateBoards(this.logicBoard);
 }
 

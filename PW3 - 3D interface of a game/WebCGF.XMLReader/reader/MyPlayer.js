@@ -12,6 +12,8 @@ function MyPlayer(scene, player_number, logicBoard) {
 	this.unitsPos = [];
 	this.node = new MyNodePiece(scene);
 	this.nodePos = [];
+	this.animation = null;
+	this.movingPiece = -2;  // unit index or -1 if node
 	
 	this.initPieces(logicBoard);
 };
@@ -53,12 +55,37 @@ MyPlayer.prototype.updatePieces = function (logicBoard) {
     }
 }
 
+MyPlayer.prototype.movePiece = function (from, to) {
+    var gx1 = from[0] / 10;
+    var gx2 = to[0] / 10;
+    var gy1 = (10 - from[1]) / 10;
+    var gy2 = (10 - to[1]) / 10;
+    var gz = 0;
+
+    var length = this.unitsPos.length;
+    for (var i = 0; i < length; i++) {
+        if (this.unitsPos[i][0] == gx1 && this.unitsPos[i][1] == gy1) {
+            this.unitsPos[i][0] == gx2;
+            this.unitsPos[i][1] == gy2;
+            this.movingPiece = i;
+        }
+    }
+
+    this.animation = new AnimationByKeyImages(1, [[gx1, gy1, gz], [gx2, gy2, gz]], 0, 180, [1,1,1]);
+}
+
+MyPlayer.prototype.update = function (currTime) {
+    if(this.animation != null)
+        this.animation.calculateGeometricTransformation(currTime);
+}
+
 MyPlayer.prototype.calculatePickingId = function (pos) {
     return (10 - pos[1] * 10) * 10 + pos[0] * 10;
 }
 
 MyPlayer.prototype.display = function () {
-	for(var i = 1; i <= this.units.length; i++){
+    for (var i = 1; i <= this.units.length; i++) {
+
 		if(this.scene.game.picking_buffer == this.calculatePickingId(this.unitsPos[i - 1]))
 			if(this.player_number == 1)
 				this.scene.green.apply();
@@ -72,8 +99,11 @@ MyPlayer.prototype.display = function () {
 
 		this.scene.pushMatrix();
 			this.scene.scale(3,3,1);
-			this.scene.registerForPick(this.calculatePickingId(this.unitsPos[i-1]), this.units[i - 1]);
-			this.scene.translate(this.unitsPos[i - 1][0], this.unitsPos[i - 1][1], this.unitsPos[i - 1][2]);
+			this.scene.registerForPick(this.calculatePickingId(this.unitsPos[i - 1]), this.units[i - 1]);
+			if (this.movingPiece == i - 1 && this.animation != null && !this.animation.done)
+			    this.scene.multMatrix(this.animation.getGeometricTransformation());
+            else
+			    this.scene.translate(this.unitsPos[i - 1][0], this.unitsPos[i - 1][1], this.unitsPos[i - 1][2]);
 			this.units[i - 1].display();
 		this.scene.popMatrix();
     }
@@ -91,7 +121,10 @@ MyPlayer.prototype.display = function () {
 			
 	this.scene.pushMatrix();
 	    this.scene.registerForPick(this.calculatePickingId(this.nodePos), this.node);
-		this.scene.translate(this.nodePos[0] * 3, this.nodePos[1] * 3, this.nodePos[2] * 3);
+	    if (this.movingPiece == -1 && this.animation != null && !this.animation.done)
+	        this.scene.multMatrix(this.animation.getGeometricTransformation());
+	    else
+		    this.scene.translate(this.nodePos[0] * 3, this.nodePos[1] * 3, this.nodePos[2] * 3);
 		this.node.display();
 	this.scene.popMatrix();
 };
