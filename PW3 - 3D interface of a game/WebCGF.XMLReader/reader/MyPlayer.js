@@ -100,9 +100,9 @@ MyPlayer.prototype.calculatePickingId = function (pos) {
 
 MyPlayer.prototype.display = function () {
 	
-    for (var i = 1; i <= this.units.length; i++) {
+    for (var i = 0; i < this.units.length; i++) {
 		var unit_texture_material;
-		if(this.scene.game.picking_buffer == this.calculatePickingId(this.unitsPos[i - 1])){
+		if(this.scene.game.picking_buffer == this.calculatePickingId(this.unitsPos[i])){
 			if(this.player_number == 1){
 				this.scene.green.apply();
 				unit_texture_material = this.scene.green_texture;
@@ -121,12 +121,12 @@ MyPlayer.prototype.display = function () {
 		}
 		this.scene.pushMatrix();
 			this.scene.scale(3,3,1);
-			this.scene.registerForPick(this.calculatePickingId(this.unitsPos[i - 1]), this.units[i - 1]);
-			if (this.movingPiece == i - 1 && this.animation != null && !this.animation.done)
+			this.scene.registerForPick(this.calculatePickingId(this.unitsPos[i]), this.units[i]);
+			if (this.movingPiece == i && this.animation != null && !this.animation.done)
 			    this.scene.multMatrix(this.animation.getGeometricTransformation());
             else
-			    this.scene.translate(this.unitsPos[i - 1][0], this.unitsPos[i - 1][1], this.unitsPos[i - 1][2]);
-			this.units[i - 1].display(unit_texture_material);
+			    this.scene.translate(this.unitsPos[i][0], this.unitsPos[i][1], this.unitsPos[i][2]);
+			this.units[i].display(unit_texture_material);
 		this.scene.popMatrix();
     }
 	
