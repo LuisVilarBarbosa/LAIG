@@ -53,7 +53,7 @@ LinearAnimation.prototype.calculateGeometricTransformation = function (currTime)
             var actualLineLength, i = 1, distanceCompletedLines = 0;
             for (var stop = false; !stop;) {
                 actualLineLength = this.calculateLineLength(this.controlPoints[i - 1], this.controlPoints[i]);
-                if (distanceCompletedLines + actualLineLength <= newTotalDistanceDone) {
+                if (distanceCompletedLines + actualLineLength < newTotalDistanceDone) {
                     distanceCompletedLines += actualLineLength;
                     i++;
                 }
