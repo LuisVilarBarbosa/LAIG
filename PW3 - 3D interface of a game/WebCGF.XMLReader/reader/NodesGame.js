@@ -26,7 +26,7 @@ function NodesGame(scene) {
 	this.waitingProlog = false; // while waiting, the game is stopped
 	this.waitingAnimation = false; // while waiting, the game is stopped
 	this.history = [];  // to undo and movie
-	this.game_over = false;
+	this.game_over = false; // while game over, the game is stopped and waits for reset
 	
 	this.scenes = [new MySnowScene(this.scene), new MyEgyptScene(this.scene), new MyOuterSpaceScene(this.scene)];
 
