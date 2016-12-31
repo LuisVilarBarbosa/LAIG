@@ -64,7 +64,7 @@ MyPlayer.prototype.movePiece = function (from, to) {
 
     var length = this.unitsPos.length;
     for (var i = 0; i < length; i++) {
-        if (this.unitsPos[i][0] == gx2 && this.unitsPos[i][1] == gy2) {
+        if (this.unitsPos[i][0] == gx1 && this.unitsPos[i][1] == gy1) {
             this.unitsPos[i][0] == gx2;
             this.unitsPos[i][1] == gy2;
             this.movingPiece = i;
