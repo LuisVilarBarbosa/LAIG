@@ -68,14 +68,14 @@
 
     <!-- Deve existir um ou mais blocos "omni" ou "spot" -->
     <!-- Os identificadores "id" nao podem ser repetidos -->
-    <omni id="mesa" enabled="1" >
+    <omni id="omni_1" enabled="1" >
       <location x="3" y="3" z="4" w="1" />
       <ambient r="0" g="0" b="0" a="1" />
       <diffuse r="0.9" g="0.9" b="0.9" a="1" />
       <specular r="0" g="0" b="0" a="1" />
     </omni>
 
-    <omni id="candeeiro" enabled="1" >
+    <omni id="omni_2" enabled="1" >
       <location x="2.1" y="4" z="6" w="1" />
       <ambient r="0.4" g="0.4" b="0.4" a="1" />
       <diffuse r="0.9" g="0.9" b="0.9" a="1" />
@@ -174,15 +174,11 @@
 
     <!-- Deve existir um ou mais blocos "primitive" -->
     <!-- Os identificadores "id" nao podem ser repetidos -->
-    <primitive id="rectangle">
+    <primitive id="nodesboard">
       <!-- apenas pode existir UMA das seguintes tags: -->
       <!-- rectangle, triangle, cylinder, sphere, torus -->
       <!-- os parametros devem ser interpretados, genericamente como-->
       <!-- em OpenGL/GLUT; o cilindro deve adicionalmente ter tampas -->
-      <rectangle x1="-0.5" y1="-0.5" x2="0.5" y2="0.5" />
-    </primitive>
-
-    <primitive id="chessboard2">
       <chessboard du="16" dv="32" textureref="wood" su="8" sv="25">
         <c1 r="0" g="1" b="0" a="1" />
         <c2 r="0" g="0" b="1" a="1" />
@@ -240,12 +236,11 @@
         <!-- deve existir uma ou mais tags "componentref" e/ou -->
         <!-- "primitiveref", identificando outros -->
         <!-- componentes ou primitivas -->
-        <componentref id="board2" />
+        <componentref id="board" />
       </children>
     </component>
-
-    <!-- CHESSBOARD2 -->
-    <component id="board2">
+    
+    <component id="board">
       <transformation>
         <translate x="1" y="1.11" z="2.0" />
         <scale x="0.9" y="1" z="0.9" />
@@ -260,12 +255,10 @@
       <texture id="inherit" />
 
       <children>
-        <primitiveref id="chessboard2" visible="1" selectable="0" />
+        <primitiveref id="nodesboard" visible="1" selectable="0" />
       </children>
     </component>
-
-   
-
+    
   </components>
 
 </dsx>
