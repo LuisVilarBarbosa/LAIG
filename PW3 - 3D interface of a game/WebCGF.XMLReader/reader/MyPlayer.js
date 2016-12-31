@@ -85,7 +85,7 @@ MyPlayer.prototype.movePiece = function (from, to) {
 	
 	if(this.movingPiece == -1)
 		this.animation = new AnimationByKeyImages(1, [[gx1*3, gy1*3, gz], [gx2*3, gy2*3, gz]], angle, 0, [1,1,1]);
-	if(this.movingPiece >= 0)
+	else if(this.movingPiece >= 0)
 		this.animation = new AnimationByKeyImages(1, [[gx1, gy1, gz], [gx2, gy2, gz]], angle, 0, [1,1,1]);
 }
 
