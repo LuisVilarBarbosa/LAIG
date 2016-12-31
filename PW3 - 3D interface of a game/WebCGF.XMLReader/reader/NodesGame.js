@@ -26,6 +26,7 @@ function NodesGame(scene) {
 	this.waitingProlog = false; // while waiting, the game is stopped
 	this.waitingAnimation = false; // while waiting, the game is stopped
 	this.history = [];  // to undo and movie
+	this.game_over = false;
 	
 	this.scenes = [new MySnowScene(this.scene), new MyEgyptScene(this.scene), new MyOuterSpaceScene(this.scene)];
 
@@ -149,8 +150,11 @@ NodesGame.prototype.receiveFromProlog = function (data) {
 // This function simulates, if necessary, what the Prolog 'burstMove' predicate was doing
 NodesGame.prototype.applyMove = function (response) {
     if (response == "yes" || response == "no") {    // verification of game over
-        if (response == "yes")
+        if (response == "yes") {
             this.scores[this.active_player - 1]++;
+            this.game_over = true;
+            this.setMessage("Game over");
+        }
     }
     else if (response != "Invalid move (wrong piece?)" && response != "Bad Request" && response != "Syntax Error") {    // board received
         response = JSON.parse(response);
@@ -199,17 +203,17 @@ NodesGame.prototype.update = function (currTime) {
 
     if (!this.waitingAnimation) {
         // limit player game time
-        if (deltaTime > this.maxMoveTime && !this.waitingProlog) {
+        if (deltaTime > this.maxMoveTime && !this.waitingProlog && !this.game_over) {
             this.firstTime = currTime;
             this.timer = 0;
             this.changePlayer();
         }
 
-        if (!this.waitingProlog && (this.mode == "cc" || this.mode == "ch" && this.active_player == 1))
+        if (!this.waitingProlog && (this.mode == "cc" || this.mode == "ch" && this.active_player == 1) && !this.game_over)
             this.tryMove(); // computer move
 
         if (this.undo) {
-            if (this.history.length > 0) {
+            if (this.history.length > 0 && !this.game_over) {
                 var difference = this.history[this.history.length - 1];
                 this.history.pop();
                 var xy1 = difference["oldPos"];
@@ -225,6 +229,8 @@ NodesGame.prototype.update = function (currTime) {
             while (this.active_player != 1)
                 this.changePlayer();
             this.updateBoards(this.initialLogicBoard);
+            this.history = [];
+            this.game_over = false;
             this.reset = false;
         }
 
