@@ -75,6 +75,7 @@ NodesGame.prototype.display = function () {
 
 NodesGame.prototype.changePlayer = function () {
     this.active_player = this.active_player /*- 1 + 1*/ % this.players.length + 1;
+    this.resetTimer();
     this.setMessage();
 }
 
@@ -188,6 +189,11 @@ NodesGame.prototype.updateBoards = function (logicBoard) {
         this.players[i].updatePieces(this.logicBoard);
 }
 
+NodesGame.prototype.resetTimer = function (currTime) {
+    this.firstTime = undefined;
+    this.timer = 0;
+}
+
 NodesGame.prototype.update = function (currTime) {
     this.firstTime = this.firstTime || currTime;
     var deltaTime = (currTime - this.firstTime) / 1000;
@@ -205,8 +211,7 @@ NodesGame.prototype.update = function (currTime) {
     if (!this.waitingAnimation) {
         // limit player game time
         if (deltaTime > this.maxMoveTime && !this.waitingProlog && !this.game_over) {
-            this.firstTime = currTime;
-            this.timer = 0;
+            this.resetTimer();
             this.changePlayer();
         }
 
@@ -225,8 +230,7 @@ NodesGame.prototype.update = function (currTime) {
         }
 
         if (this.reset) {
-            this.firstTime = currTime;
-            this.timer = 0;
+            this.resetTimer();
             while (this.active_player != 1)
                 this.changePlayer();
             this.updateBoards(this.initialLogicBoard);
