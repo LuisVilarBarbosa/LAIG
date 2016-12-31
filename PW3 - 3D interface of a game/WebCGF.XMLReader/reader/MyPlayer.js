@@ -64,14 +64,16 @@ MyPlayer.prototype.movePiece = function (from, to) {
 
     var length = this.unitsPos.length;
     for (var i = 0; i < length; i++) {
-        if (this.unitsPos[i][0] == gx1 && this.unitsPos[i][1] == gy1) {
+        if (this.unitsPos[i][0] == gx2 && this.unitsPos[i][1] == gy2) {
             this.unitsPos[i][0] == gx2;
             this.unitsPos[i][1] == gy2;
             this.movingPiece = i;
         }
     }
 
-    this.animation = new AnimationByKeyImages(1, [[gx1, gy1, gz], [gx2, gy2, gz]], 0, 180, [1,1,1]);
+	if((gx2 - gx1) < 0)
+		gz = 0.14;
+    this.animation = new AnimationByKeyImages(1, [[gx1, gy1, gz], [gx2, gy2, gz]], 0, 0, [1,1,1]);
 }
 
 MyPlayer.prototype.update = function (currTime) {
