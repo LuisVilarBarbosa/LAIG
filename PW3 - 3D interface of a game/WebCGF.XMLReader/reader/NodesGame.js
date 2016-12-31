@@ -191,7 +191,8 @@ NodesGame.prototype.updateBoards = function (logicBoard) {
 NodesGame.prototype.update = function (currTime) {
     this.firstTime = this.firstTime || currTime;
     var deltaTime = (currTime - this.firstTime) / 1000;
-    this.timer = deltaTime;
+    if (!this.game_over)
+        this.timer = deltaTime;
     this.setScorer();
 
     this.players[this.active_player - 1].update(currTime);
