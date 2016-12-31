@@ -153,7 +153,7 @@ NodesGame.prototype.applyMove = function (response) {
         if (response == "yes") {
             this.scores[this.active_player - 1]++;
             this.game_over = true;
-            this.setMessage("Game over");
+            this.setMessage("Winner - Game over");
         }
     }
     else if (response != "Invalid move (wrong piece?)" && response != "Bad Request" && response != "Syntax Error") {    // board received
