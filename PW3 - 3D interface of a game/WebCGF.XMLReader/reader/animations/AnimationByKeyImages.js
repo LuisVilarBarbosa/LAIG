@@ -62,8 +62,7 @@ AnimationByKeyImages.prototype.calculateGeometricTransformation = function (curr
             this.circularAnimation.calculateGeometricTransformation(currTime);
         }
     }
-
-    if (deltaTime > this.span)
+    else
         this.done = true;
 
     /* generate transformation matrix */
