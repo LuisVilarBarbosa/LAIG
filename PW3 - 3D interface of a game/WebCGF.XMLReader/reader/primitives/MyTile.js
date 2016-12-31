@@ -43,7 +43,6 @@ MyTile.prototype.getKnotsVector = function (degree) {
 
 /* Based on "NURBS Example" on Moodle */
 MyTile.prototype.init = function () {
-	console.log("hello");
     var knotsU = this.getKnotsVector(1);
     var knotsV = this.getKnotsVector(1);
 
