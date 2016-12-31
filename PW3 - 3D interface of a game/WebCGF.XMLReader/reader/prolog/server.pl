@@ -115,8 +115,11 @@ parse_input(rule(h, Move, Player, X, Y, Board), NewBoard) :-
 	rule(Move, Player, X, Y, TranslatedBoard, NewTranslatedBoard),
 	translate_board(NewTranslatedBoard, NewBoard).
 parse_input(verify_game_over(Board), Message) :-
-	(verify_game_over(Board), Message = 'yes');
-	Message = 'no'.
+	translate_board(Board, TranslatedBoard),
+	(
+		(verify_game_over(TranslatedBoard), Message = 'yes');
+		Message = 'no'
+	).
 parse_input(quit, goodbye).
 parse_input(_, 'Invalid move (wrong piece?)').
 
