@@ -63,13 +63,13 @@ MyPlayer.prototype.movePiece = function (from, to) {
     var gz = 0;
     if ((gx2 - gx1) < 0)
         gz = 0.14;
+	var angle = 0;
 
     if (this.nodePos[0] == gx1 && this.nodePos[1] == gy1) {
         this.nodePos[0] = gx2;
         this.nodePos[1] = gy2;
         this.movingPiece = -1;
-    }
-    else {
+    }else {
         var length = this.unitsPos.length;
         for (var i = 0; i < length; i++) {
             if (this.unitsPos[i][0] == gx1 && this.unitsPos[i][1] == gy1) {
@@ -79,8 +79,14 @@ MyPlayer.prototype.movePiece = function (from, to) {
             }
         }
     }
-
-    this.animation = new AnimationByKeyImages(1, [[gx1, gy1, gz], [gx2, gy2, gz]], 0, 0, [1,1,1]);
+	
+	if((gx2 - gx1) < 0 && this.movingPiece == -1)
+		angle = 180;
+	
+	if(this.movingPiece == -1)
+		this.animation = new AnimationByKeyImages(1, [[gx1*3, gy1*3, gz], [gx2*3, gy2*3, gz]], angle, 0, [1,1,1]);
+	if(this.movingPiece >= 0)
+		this.animation = new AnimationByKeyImages(1, [[gx1, gy1, gz], [gx2, gy2, gz]], angle, 0, [1,1,1]);
 }
 
 MyPlayer.prototype.update = function (currTime) {

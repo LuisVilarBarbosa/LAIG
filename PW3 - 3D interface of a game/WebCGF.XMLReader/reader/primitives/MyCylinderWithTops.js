@@ -21,14 +21,15 @@ MyCylinderWithTops.prototype.display = function (texture_material) {
 
         this.cylinder.display();
 		
+		if(arguments.length == 1)
+			texture_material.apply();
+		
         this.scene.pushMatrix();
             this.scene.scale(this.baseRadius * 2, this.baseRadius * 2, this.baseRadius * 2);
             this.scene.rotate(Math.PI, 0.0, 1.0, 0.0);
             this.top.display();
         this.scene.popMatrix();
-
-		if(arguments.length == 1)
-			texture_material.apply();
+		
         this.scene.pushMatrix();
             this.scene.translate(0.0, 0.0, this.height);
             this.scene.scale(this.topRadius * 2, this.topRadius * 2, this.topRadius * 2);

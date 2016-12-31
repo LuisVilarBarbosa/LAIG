@@ -214,7 +214,8 @@ NodesGame.prototype.update = function (currTime) {
         this.timer = deltaTime;
     this.setScorer();
 
-    this.players[this.active_player - 1].update(currTime);
+    this.players[0].update(currTime);
+    this.players[1].update(currTime);
 
     var animation = this.players[this.active_player - 1].animation;
     this.waitingAnimation = animation != null && !animation.done;
