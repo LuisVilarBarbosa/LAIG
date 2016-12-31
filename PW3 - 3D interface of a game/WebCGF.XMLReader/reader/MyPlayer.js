@@ -55,7 +55,7 @@ MyPlayer.prototype.updatePieces = function (logicBoard) {
     }
 }
 
-MyPlayer.prototype.applyAnimation = function (from, to) {
+MyPlayer.prototype.movePiece = function (from, to) {
     var gx1 = from[0] / 10;
     var gx2 = to[0] / 10;
     var gy1 = (10 - from[1]) / 10;
@@ -64,13 +64,19 @@ MyPlayer.prototype.applyAnimation = function (from, to) {
     if ((gx2 - gx1) < 0)
         gz = 0.14;
 
-    if (this.nodePos[0] == gx2 && this.nodePos[1] == gy2)
+    if (this.nodePos[0] == gx1 && this.nodePos[1] == gy1) {
+        this.nodePos[0] = gx2;
+        this.nodePos[1] = gy2;
         this.movingPiece = -1;
+    }
     else {
         var length = this.unitsPos.length;
         for (var i = 0; i < length; i++) {
-            if (this.unitsPos[i][0] == gx2 && this.unitsPos[i][1] == gy2)
+            if (this.unitsPos[i][0] == gx1 && this.unitsPos[i][1] == gy1) {
+                this.unitsPos[i][0] = gx2;
+                this.unitsPos[i][1] = gy2;
                 this.movingPiece = i;
+            }
         }
     }
 

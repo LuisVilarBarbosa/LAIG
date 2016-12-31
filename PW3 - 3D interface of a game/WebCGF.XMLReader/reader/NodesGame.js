@@ -17,7 +17,7 @@ function NodesGame(scene) {
       [5,0,0,4,4,4,0,0,5],
       [5,5,4,4,3,4,4,5,5]
     ];
-    this.logicBoard = this.initialLogicBoard;
+    this.logicBoard = this.copyMatrix(this.initialLogicBoard);
 	
 	this.board = new MyNodesBoard(this.scene);
 	this.players = [new MyPlayer(this.scene, 1, this.logicBoard), new MyPlayer(this.scene, 2, this.logicBoard)];
@@ -42,6 +42,19 @@ function NodesGame(scene) {
 	this.reset = false;
 	this.movie = false;
 };
+
+NodesGame.prototype.copyMatrix = function (matrix) {
+    var mat = [];
+    var yLength = matrix.length;
+    for (var y = 0; y < yLength; y++) {
+        var temp = [];
+        var xLength = matrix[y].length;
+        for (var x = 0; x < xLength; x++)
+            temp.push(matrix[y][x]);
+        mat.push(temp);
+    }
+    return mat;
+}
 
 NodesGame.prototype.calculateLogicCoords = function (picking_id) {
     var x = picking_id % 10;
@@ -183,8 +196,8 @@ NodesGame.prototype.verify_game_over = function () {
     this.sendToProlog(requestString);
 }
 
-NodesGame.prototype.updateBoards = function (logicBoard) {
-    this.logicBoard = logicBoard;
+NodesGame.prototype.updateBoards = function (logicBoard) {  // fully update boards
+    this.logicBoard = this.copyMatrix(logicBoard);
     for (var i = 0; i < this.players.length; i++)
         this.players[i].updatePieces(this.logicBoard);
 }
@@ -305,8 +318,7 @@ NodesGame.prototype.movePiece = function (from, to) {
     var piece = this.logicBoard[from_y][from_x];
     this.logicBoard[from_y][from_x] = 0;  // empty cell
     this.logicBoard[to_y][to_x] = piece;
-    this.updateBoards(this.logicBoard);
-    this.players[this.active_player - 1].applyAnimation(from, to);   // animated movement
+    this.players[this.active_player - 1].movePiece(from, to);   // animated movement and piece update
 }
 
 NodesGame.prototype.getPiece = function (pos) {
